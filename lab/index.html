@@ -5,977 +5,517 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MUSE Lab · Shenzhen University</title>
   <script>
+    /* Before first paint: pick the language (?lang= → saved choice → browser language),
+       tell the stylesheet scripts run, and enable scroll reveal when motion is allowed. */
     (function () {
       var d = document.documentElement, l = null;
       try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
       if (l !== "zh" && l !== "en") { try { l = localStorage.getItem("lang"); } catch (e) {} }
       if (l !== "zh" && l !== "en") { l = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }
-      d.className = "lang-" + l;
+      d.className = "js lang-" + l;
       d.lang = l === "zh" ? "zh-CN" : "en";
+      var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!still && "IntersectionObserver" in window) {
+        d.classList.add("js-reveal");
+        /* never leave content hidden if lab.js fails to run */
+        setTimeout(function () { if (!window.__labReady) d.classList.remove("js-reveal"); }, 2500);
+      }
     })();
   </script>
-  <meta name="description" content="MUSE Lab (Multimodal Understanding and Synthesis for Explainability) at the College of Artificial Intelligence, Shenzhen University, led by Yifan Yuan. Lab website coming soon.">
-  <!-- Placeholder page: remove noindex when the full lab website goes live. -->
-  <meta name="robots" content="noindex">
+  <meta name="description" content="MUSE Lab (Multimodal Understanding and Synthesis for Explainability) at the College of Artificial Intelligence, Shenzhen University, led by Yifan Yuan. We make generative AI controllable, interpretable and trustworthy. 深圳大学人工智能学院 MUSE 实验室。">
+  <meta name="keywords" content="MUSE Lab, Shenzhen University, 深圳大学, Yifan Yuan, 袁一帆, AIGC, diffusion models, image editing, LLM, agents, emotional agents">
+  <link rel="canonical" href="https://yifanyuan.com/lab/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MUSE Lab">
+  <meta property="og:title" content="MUSE Lab · Shenzhen University">
+  <meta property="og:description" content="Multimodal Understanding and Synthesis for Explainability · Controllable, interpretable and trustworthy generative AI">
+  <meta property="og:url" content="https://yifanyuan.com/lab/">
+  <meta property="og:image" content="https://yifanyuan.com/images/muse-logo.png">
   <meta name="theme-color" content="#fbf8f2">
   <link rel="icon" type="image/png" href="../images/muse-favicon.png">
+  <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/fonts/fraunces-semibold.woff2" as="font" type="font/woff2" crossorigin>
-  <style>
-    @font-face { font-family: "Inter"; src: url("../assets/fonts/inter-latin.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
-    @font-face { font-family: "Fraunces"; src: url("../assets/fonts/fraunces-semibold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
-    @font-face { font-family: "Fraunces"; src: url("../assets/fonts/fraunces-semibold-italic.woff2") format("woff2"); font-weight: 600; font-style: italic; font-display: swap; }
-    @font-face { font-family: "Ma Shan Zheng Subset"; src: url("../assets/fonts/mashanzheng-subset.woff2") format("woff2"); font-display: swap; }
-
-    :root {
-      --navy: #14294a;
-      --slate: #3b4c72;
-      --accent: #506695;
-      --text: #3f4654;
-      --muted: #6f7787;
-      --sky: #aee8f8;
-      --orange: #f7923f;
-      --paper: #fbf8f2;
-      --font: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
-      --font-display: "Fraunces", "Ma Shan Zheng Subset", "Kaiti SC", "STKaiti", "KaiTi", Georgia, serif;
-      --ease-out: cubic-bezier(0.2, 0.65, 0.3, 1);
-      color-scheme: light;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body { height: 100%; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      font-family: var(--font);
-      color: var(--text);
-      background: var(--paper);
-      -webkit-font-smoothing: antialiased;
-      font-synthesis-weight: none;
-    }
-
-    /* paper grain */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .08 0 0 0 0 .12 0 0 0 0 .2 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
-
-    .lang-en .zh, .lang-zh .en { display: none !important; }
-
-    /* watercolour washes drifting behind everything */
-    .washes {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .wash {
-      position: absolute;
-      width: 56vmax;
-      height: 56vmax;
-      border-radius: 50%;
-      opacity: 0.8;
-      will-change: transform;
-      animation: drift 22s ease-in-out infinite alternate;
-    }
-
-    .w1 { left: -20vmax; top: -24vmax; background: radial-gradient(circle, rgba(174, 232, 248, 0.75), rgba(174, 232, 248, 0) 66%); }
-    .w2 { right: -22vmax; top: -6vmax; background: radial-gradient(circle, rgba(255, 210, 173, 0.7), rgba(255, 210, 173, 0) 64%); animation-delay: -7s; }
-    .w3 { left: 6vw; bottom: -34vmax; background: radial-gradient(circle, rgba(212, 202, 247, 0.7), rgba(212, 202, 247, 0) 64%); animation-delay: -12s; }
-    .w4 { right: -8vw; bottom: -30vmax; background: radial-gradient(circle, rgba(196, 236, 216, 0.6), rgba(196, 236, 216, 0) 64%); animation-delay: -16s; }
-
-    @keyframes drift {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(4vmax, 3vmax) scale(1.12); }
-    }
-
-    /* music & painting canvas (multiplied onto the paper like watercolour) */
-    #art {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      mix-blend-mode: multiply;
-      opacity: 0;
-      transition: opacity 1.2s ease;
-    }
-
-    #art.is-ready { opacity: 1; }
-
-    .bar {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 24px;
-    }
-
-    .back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.62);
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
-      font-size: 14px;
-      color: var(--navy);
-      text-decoration: none;
-      transition: background-color 0.25s ease, color 0.25s ease;
-    }
-
-    .back:hover { background: var(--accent); color: #fff; }
-
-    .lang-switch {
-      display: inline-flex;
-      padding: 3px;
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.62);
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
-    }
-
-    .lang-switch button {
-      border: 0;
-      border-radius: 999px;
-      padding: 6px 12px;
-      background: transparent;
-      font: inherit;
-      font-size: 13px;
-      line-height: 1;
-      color: var(--muted);
-      cursor: pointer;
-    }
-
-    .lang-en [data-set-lang="en"], .lang-zh [data-set-lang="zh"] { background: var(--accent); color: #fff; }
-
-    .hero {
-      position: relative;
-      z-index: 2;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 16px 28px;
-      text-align: center;
-    }
-
-    .logo {
-      width: clamp(92px, 12vw, 132px);
-      height: auto;
-      margin-bottom: 14px;
-      filter: drop-shadow(0 10px 18px rgba(20, 41, 74, 0.14));
-      transition: transform 0.5s var(--ease-out);
-    }
-
-    .logo:hover { transform: rotate(-6deg) scale(1.06); }
-
-    .eyebrow {
-      margin: 0;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .title {
-      margin: 10px 0 4px;
-      font-family: var(--font-display);
-      font-size: clamp(58px, 11vw, 128px);
-      font-weight: 600;
-      line-height: 1;
-      letter-spacing: -0.015em;
-      color: var(--slate);
-    }
-
-    /* blue-gray title with a slow light sweeping across */
-    .title .muse {
-      background: linear-gradient(110deg, #3b4c72 0%, #6278a7 35%, #9ea8be 50%, #6278a7 65%, #3b4c72 100%);
-      background-size: 220% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: shimmer 7s linear infinite;
-    }
-
-    @keyframes shimmer {
-      from { background-position: 100% 0; }
-      to { background-position: -120% 0; }
-    }
-
-    .subtitle {
-      margin: 6px 0 0;
-      font-size: clamp(15px, 2.1vw, 20px);
-      color: var(--muted);
-    }
-
-    .tagline {
-      margin: 18px 0 0;
-      font-family: var(--font-display);
-      font-size: clamp(18px, 2.4vw, 24px);
-      font-style: italic;
-      color: var(--text);
-    }
-
-    .tagline .zh { font-style: normal; letter-spacing: 0.04em; }
-
-    .hl {
-      padding: 0 4px;
-      background: linear-gradient(transparent 56%, rgba(247, 146, 63, 0.32) 56%) no-repeat 0 0 / 100% 100%;
-      color: var(--navy);
-      animation: hl-draw 1s var(--ease-out) 1.1s both;
-    }
-
-    @keyframes hl-draw {
-      from { background-size: 0% 100%; }
-      to { background-size: 100% 100%; }
-    }
-
-    .topics {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      max-width: 760px;
-      margin: 28px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .topics li {
-      padding: 7px 15px;
-      border: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.66);
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 14px rgba(36, 52, 88, 0.06);
-      font-size: 13.5px;
-      color: var(--navy);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .topics li:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 22px rgba(36, 52, 88, 0.12);
-    }
-
-    .status {
-      margin: 30px 0 0;
-      padding: 12px 20px;
-      border: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.6);
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      font-size: 14px;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border: 1px solid rgba(20, 41, 74, 0.18);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.75);
-      font-size: 14px;
-      color: var(--navy);
-      text-decoration: none;
-      transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
-    }
-
-    .btn:hover { transform: translateY(-2px); }
-
-    .btn.primary {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 8px 18px rgba(80, 102, 149, 0.28);
-    }
-
-    .btn.primary:hover { background: var(--orange); border-color: var(--orange); color: var(--navy); }
-
-    .btn .arrow { transition: transform 0.25s ease; }
-    .btn:hover .arrow { transform: translateX(4px); }
-
-    .hint {
-      position: relative;
-      z-index: 2;
-      align-self: center;
-      margin: 0 16px 6px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.55);
-      font-size: 12.5px;
-      color: var(--muted);
-      transition: opacity 0.8s ease;
-    }
-
-    .hint.is-hidden { opacity: 0; }
-    .hint-touch { display: none; }
-
-    @media (hover: none), (pointer: coarse) {
-      .hint-mouse { display: none; }
-      .hint-touch { display: inline; }
-    }
-
-    footer {
-      position: relative;
-      z-index: 2;
-      padding: 10px 16px 22px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* entrance: hero lines float up one after another */
-    .hero > * { animation: rise 0.9s var(--ease-out) both; }
-    .hero > :nth-child(2) { animation-delay: 0.08s; }
-    .hero > :nth-child(3) { animation-delay: 0.18s; }
-    .hero > :nth-child(4) { animation-delay: 0.28s; }
-    .hero > :nth-child(5) { animation-delay: 0.38s; }
-    .hero > :nth-child(6) { animation-delay: 0.48s; }
-    .hero > :nth-child(7) { animation-delay: 0.58s; }
-    .hero > :nth-child(8) { animation-delay: 0.68s; }
-
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(26px); }
-      to { opacity: 1; transform: none; }
-    }
-
-    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-    @media (max-width: 560px) {
-      .bar { padding: 14px 16px; }
-      .topics li { font-size: 12.5px; padding: 6px 12px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .hero > *, .title .muse, .wash, .hl { animation: none; }
-      .hint { display: none; }
-      * { transition: none !important; }
-    }
-  </style>
+  <link rel="stylesheet" href="lab.css">
 </head>
 <body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m13.5 4-3 16"/></symbol>
+    <symbol id="i-paper" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></symbol>
+  </svg>
+  <!-- The news, research cards and papers on this page come from data/news.json, data/home.json and
+       data/publications.json (the same files as the homepage); the introduction, PI bio, members and
+       contact come from data/lab.json. They are generated between the "name:start" / "name:end"
+       comment markers below by `node tools/render_site.js`, and again whenever the page editor
+       publishes; hand edits between the markers are overwritten. -->
+
+  <a class="skip-link" href="#about"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
+
   <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>
-  <canvas id="art" aria-hidden="true"></canvas>
 
   <header class="bar">
-    <a class="back" href="../"><span aria-hidden="true">←</span><span class="en">Yifan Yuan</span><span class="zh">袁一帆主页</span></a>
-    <div class="lang-switch" role="group" aria-label="Language / 语言">
-      <button type="button" data-set-lang="en" lang="en">EN</button>
-      <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
+    <a class="brand" href="#top"><img src="../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="#about"><span class="en">About</span><span class="zh">简介</span></a>
+      <a href="#research"><span class="en">Research</span><span class="zh">研究方向</span></a>
+      <a href="#publications"><span class="en">Publications</span><span class="zh">论文</span></a>
+      <a href="#news"><span class="en">News</span><span class="zh">动态</span></a>
+      <a href="#people"><span class="en">People</span><span class="zh">成员</span></a>
+      <a href="#contact"><span class="en">Contact</span><span class="zh">联系</span></a>
+      <a class="nav__pi" href="../"><span class="en">Yifan Yuan</span><span class="zh">袁一帆</span> <span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="tools">
+      <button type="button" class="sound" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 9.5h3l4-3.5v12l-4-3.5h-3z" fill="currentColor"/>
+          <path class="on" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/>
+          <path class="off" d="M15.5 9.5l5 5M20.5 9.5l-5 5"/>
+        </svg>
+        <span class="vh en">Sound</span><span class="vh zh">声音</span>
+      </button>
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button type="button" data-set-lang="en" lang="en">EN</button>
+        <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
+      </div>
+      <button type="button" class="menu-btn" aria-controls="nav" aria-expanded="false">
+        <span class="menu-btn__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="vh en">Menu</span><span class="vh zh">菜单</span>
+      </button>
     </div>
   </header>
 
-  <main class="hero">
-    <img class="logo" src="../images/muse-logo.png" width="480" height="435" alt="MUSE Lab logo">
-    <p class="eyebrow"><span class="en">Shenzhen University · College of Artificial Intelligence</span><span class="zh">深圳大学 · 人工智能学院</span></p>
-    <h1 class="title"><span class="muse">MUSE</span> Lab</h1>
-    <p class="subtitle">Multimodal Understanding and Synthesis for Explainability</p>
-    <p class="tagline">
-      <span class="en">We build <mark class="hl">trustworthy</mark> generative AI</span>
-      <span class="zh">构建<mark class="hl">可信</mark>的生成式 AI</span>
-    </p>
-    <ul class="topics">
-      <li>AIGC</li>
-      <li><span class="en">Multimodal Understanding &amp; Generation</span><span class="zh">多模态理解与生成</span></li>
-      <li><span class="en">LLMs &amp; Agents</span><span class="zh">大模型与智能体</span></li>
-      <li><span class="en">Retrieval-Augmented Generation</span><span class="zh">检索增强生成</span></li>
-      <li><span class="en">Persona Modeling</span><span class="zh">人格化语言建模</span></li>
-      <li><span class="en">Emotional Agents</span><span class="zh">情感智能体</span></li>
-    </ul>
-    <p class="status"><span class="en">🚧 Our lab website is under construction — coming soon.</span><span class="zh">🚧 实验室网站正在建设中，敬请期待。</span></p>
-    <div class="actions">
-      <a class="btn primary" href="../"><span class="en">PI: Yifan Yuan</span><span class="zh">负责人：袁一帆</span><span class="arrow" aria-hidden="true">→</span></a>
-      <a class="btn" href="mailto:yifanyuan@szu.edu.cn"><span class="en">Email</span><span class="zh">邮件联系</span></a>
+  <!-- ===================== Hero: music and painting ===================== -->
+  <section class="hero" id="top">
+    <canvas id="art" aria-hidden="true"></canvas>
+    <div class="hero__inner">
+      <img class="logo" src="../images/muse-logo.png" width="480" height="435" alt="MUSE Lab logo">
+      <p class="eyebrow"><span class="en">Shenzhen University · College of Artificial Intelligence</span><span class="zh">深圳大学 · 人工智能学院</span></p>
+      <h1 class="title"><span class="muse">MUSE</span> Lab</h1>
+      <p class="subtitle">Multimodal Understanding and Synthesis for Explainability</p>
+      <p class="tagline">
+        <span class="en">We build <mark class="hl">trustworthy</mark> generative AI</span>
+        <span class="zh">构建<mark class="hl">可信</mark>的生成式 AI</span>
+      </p>
+      <ul class="topics">
+        <li>AIGC</li>
+        <li><span class="en">Multimodal Understanding &amp; Generation</span><span class="zh">多模态理解与生成</span></li>
+        <li><span class="en">LLMs &amp; Agents</span><span class="zh">大模型与智能体</span></li>
+        <li><span class="en">Retrieval-Augmented Generation</span><span class="zh">检索增强生成</span></li>
+        <li><span class="en">Persona Modeling</span><span class="zh">人格化语言建模</span></li>
+        <li><span class="en">Emotional Agents</span><span class="zh">情感智能体</span></li>
+      </ul>
+      <!-- lab-latest:start -->
+      <a class="latest" href="#news"><span class="latest__tag"><span class="en">New</span><span class="zh">最新</span></span><span class="latest__text"><span class="en">Two EMNLP 2026 papers are on arXiv with code: StateTrack and SurveyGraph.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：StateTrack 与 SurveyGraph。</span></span><span class="latest__arrow" aria-hidden="true">→</span></a>
+      <!-- lab-latest:end -->
+      <div class="actions">
+        <a class="btn primary" href="#research"><span class="en">Our research</span><span class="zh">研究方向</span><span class="arrow arrow--down" aria-hidden="true">↓</span></a>
+        <a class="btn" href="../"><span class="en">PI: Yifan Yuan</span><span class="zh">负责人：袁一帆</span><span class="arrow" aria-hidden="true">→</span></a>
+      </div>
     </div>
+    <p class="hint" aria-hidden="true">
+      <span class="hint-mouse"><span class="en">✎ Move to paint · click to play notes</span><span class="zh">✎ 移动鼠标作画 · 点击奏响音符</span></span>
+      <span class="hint-touch"><span class="en">♪ Tap to play notes</span><span class="zh">♪ 轻点奏响音符</span></span>
+    </p>
+  </section>
+
+  <main id="content">
+    <!-- ===================== About ===================== -->
+    <section class="section" id="about">
+      <div class="sec-head reveal">
+        <span class="sec-num">01</span>
+        <h2 class="sec-title"><span class="en">About the Lab</span><span class="zh">实验室简介</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 50 7, 100 17, 160 11 S 250 8, 296 13"/></svg></h2>
+      </div>
+      <div class="about__grid">
+        <div class="about__text reveal">
+          <!-- lab-about:start -->
+          <p class="en"><strong>MUSE Lab</strong> (Multimodal Understanding and Synthesis for Explainability) is a research group at the <a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">College of Artificial Intelligence</a>, Shenzhen University, led by <a href="../">Yifan Yuan</a>. Our goal is to make generative AI <strong>controllable, interpretable and trustworthy</strong>.</p>
+          <p class="zh"><strong>MUSE Lab</strong>（Multimodal Understanding and Synthesis for Explainability）隶属于<a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">深圳大学人工智能学院</a>，由<a href="../">袁一帆</a>助理教授负责。我们的目标是让生成式 AI 更加<strong>可控、可解释、可信</strong>。</p>
+          <p class="en">We study why text-to-image diffusion models succeed or fail on specific concepts, and how to edit images and videos precisely and consistently; how large language models and agents stay reliable over long-horizon interaction, free of hallucination, bias and state collapse; and how generative agents can perceive and express human emotion.</p>
+          <p class="zh">我们研究文生图扩散模型为何会在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。</p>
+          <!-- lab-about:end -->
+        </div>
+        <ol class="acronym reveal">
+          <!-- lab-acronym:start -->
+          <li class="acro">
+            <span class="acro__letter" aria-hidden="true">M</span>
+            <div class="acro__body">
+              <strong class="acro__word">Multimodal<span class="zh"> · 多模态</span></strong>
+              <p class="en">Images, video and language, modelled together.</p>
+              <p class="zh">联合建模图像、视频与语言。</p>
+            </div>
+          </li>
+          <li class="acro">
+            <span class="acro__letter" aria-hidden="true">U</span>
+            <div class="acro__body">
+              <strong class="acro__word">Understanding<span class="zh"> · 理解</span></strong>
+              <p class="en">Knowing what a model sees, and why it fails.</p>
+              <p class="zh">看懂模型理解了什么、为什么会出错。</p>
+            </div>
+          </li>
+          <li class="acro">
+            <span class="acro__letter" aria-hidden="true">S</span>
+            <div class="acro__body">
+              <strong class="acro__word">Synthesis<span class="zh"> · 生成</span></strong>
+              <p class="en">Generating and editing content with precise control.</p>
+              <p class="zh">精确、可控地生成与编辑内容。</p>
+            </div>
+          </li>
+          <li class="acro">
+            <span class="acro__letter" aria-hidden="true">E</span>
+            <div class="acro__body">
+              <strong class="acro__word">Explainability<span class="zh"> · 可解释</span></strong>
+              <p class="en">Opening the black box, so that people can trust it.</p>
+              <p class="zh">打开黑箱，让人能够信任。</p>
+            </div>
+          </li>
+          <!-- lab-acronym:end -->
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== Research ===================== -->
+    <section class="section" id="research">
+      <div class="sec-head reveal">
+        <span class="sec-num">02</span>
+        <h2 class="sec-title"><span class="en">Research Directions</span><span class="zh">研究方向</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 17, 110 7, 170 12 S 255 15, 296 9"/></svg></h2>
+      </div>
+      <div class="dirs">
+        <!-- lab-research:start -->
+        <article class="dir dir--visual spotlight reveal">
+          <span class="dir__mark" aria-hidden="true">绘</span>
+          <div class="dir__head">
+            <span class="dir__seal" aria-hidden="true">绘</span>
+            <h3 class="dir__title"><span class="en">Controllable &amp; Interpretable Visual Generation</span><span class="zh">可控、可解释的视觉生成与编辑</span></h3>
+          </div>
+          <p class="dir__text en">Why do diffusion models fail on specific concepts, and how can we edit images and videos precisely while keeping semantics consistent and identities intact?</p>
+          <p class="dir__text zh">扩散模型为何会在特定概念上失效？如何在保持语义一致与身份不变的前提下，实现精确的图像与视频编辑？</p>
+          <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
+          <ul class="dir__papers">
+            <li><a href="#p-mm26"><span class="dir__name">Concept Brittleness</span><span class="dir__venue">ACM MM 2026</span></a></li>
+            <li><a href="#p-jas25"><span class="dir__name">Semantic Discrepancy</span><span class="dir__venue">IEEE/CAA JAS 2025</span></a></li>
+            <li><a href="#p-icassp23"><span class="dir__name">DO-FAM</span><span class="dir__venue">ICASSP 2023</span></a></li>
+            <li><a href="#p-icassp22"><span class="dir__name">VR-FAM</span><span class="dir__venue">ICASSP 2022</span></a></li>
+          </ul>
+        </article>
+        <article class="dir dir--trust spotlight reveal">
+          <span class="dir__mark" aria-hidden="true">信</span>
+          <div class="dir__head">
+            <span class="dir__seal" aria-hidden="true">信</span>
+            <h3 class="dir__title"><span class="en">Trustworthy LLMs &amp; Agents</span><span class="zh">可信的大模型与智能体</span></h3>
+          </div>
+          <p class="dir__text en">Keeping LLMs and agents reliable: constraint and state integrity in long-horizon dialogue and agent handoffs, reflective search for code generation, and AI-for-AI systems that write academic surveys.</p>
+          <p class="dir__text zh">让大模型与智能体更可靠：长程对话与多智能体交接中的约束与状态保持、面向代码生成的反思式搜索，以及自动撰写学术综述的 AI for AI 系统。</p>
+          <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
+          <ul class="dir__papers">
+            <li><a href="#p-state"><span class="dir__name">StateTrack</span><span class="dir__venue">EMNLP 2026</span></a></li>
+            <li><a href="#p-remcts"><span class="dir__name">ReMCTS</span><span class="dir__venue">EMNLP 2026</span></a></li>
+            <li><a href="#p-surveygraph"><span class="dir__name">SurveyGraph</span><span class="dir__venue">EMNLP 2026</span></a></li>
+            <li><a href="#p-handoff"><span class="dir__name">Agent Handoffs</span><span class="dir__venue">Preprint 2026</span></a></li>
+          </ul>
+        </article>
+        <article class="dir dir--affect spotlight reveal">
+          <span class="dir__mark" aria-hidden="true">情</span>
+          <div class="dir__head">
+            <span class="dir__seal" aria-hidden="true">情</span>
+            <h3 class="dir__title"><span class="en">Affective &amp; Embodied Intelligence</span><span class="zh">情感智能与具身智能</span></h3>
+          </div>
+          <p class="dir__text en">From facial expression and micro-expression analysis to emotional agents that understand and respond to people, extending toward embodied AI and world models.</p>
+          <p class="dir__text zh">从人脸表情与微表情分析，到能够理解并回应人的情感智能体，并进一步拓展到具身智能与世界模型。</p>
+          <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
+          <ul class="dir__papers">
+            <li><a href="#p-ch7"><span class="dir__name">AU &amp; Expression</span><span class="dir__venue">Book Chapter 2023</span></a></li>
+            <li><a href="#p-ch8"><span class="dir__name">ExpressionFlow</span><span class="dir__venue">Book Chapter 2023</span></a></li>
+            <li><a href="#p-jig20"><span class="dir__name">Micro-expression</span><span class="dir__venue">JIG 2020</span></a></li>
+          </ul>
+        </article>
+        <!-- lab-research:end -->
+      </div>
+      <p class="applications reveal"><!-- lab-applications:start --><span class="en"><strong>Applications:</strong> emotional companionship, virtual try-on, end-to-end apparel automation, and digital humans.</span><span class="zh"><strong>应用场景：</strong>情感陪伴、虚拟试衣、服装全流程自动化、数字人建模。</span><!-- lab-applications:end --></p>
+    </section>
+
+    <!-- ===================== Publications ===================== -->
+    <section class="section" id="publications">
+      <div class="sec-head reveal">
+        <span class="sec-num">03</span>
+        <h2 class="sec-title"><span class="en">Publications</span><span class="zh">论文成果</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 C 45 16, 105 8, 165 13 S 245 9, 296 14"/></svg></h2>
+      </div>
+      <h3 class="sub reveal" id="featured-title"><span class="en">Featured</span><span class="zh">代表性论文</span></h3>
+      <div class="featured reveal">
+        <!-- lab-featured:start -->
+        <div class="ftabs" role="tablist" aria-labelledby="featured-title">
+          <button type="button" class="ftab is-active" role="tab" id="ftab-mm26" aria-controls="feature-mm26" aria-selected="true"><span class="ftab__name">Concept Brittleness</span><span class="ftab__venue">ACM MM 2026</span></button>
+          <button type="button" class="ftab" role="tab" id="ftab-state" aria-controls="feature-state" aria-selected="false" tabindex="-1"><span class="ftab__name">StateTrack</span><span class="ftab__venue">EMNLP 2026</span></button>
+          <button type="button" class="ftab" role="tab" id="ftab-remcts" aria-controls="feature-remcts" aria-selected="false" tabindex="-1"><span class="ftab__name">ReMCTS</span><span class="ftab__venue">EMNLP 2026</span></button>
+          <button type="button" class="ftab" role="tab" id="ftab-surveygraph" aria-controls="feature-surveygraph" aria-selected="false" tabindex="-1"><span class="ftab__name">SurveyGraph</span><span class="ftab__venue">EMNLP 2026</span></button>
+          <button type="button" class="ftab" role="tab" id="ftab-jas25" aria-controls="feature-jas25" aria-selected="false" tabindex="-1"><span class="ftab__name">Semantic Discrepancy</span><span class="ftab__venue">IEEE/CAA JAS 2025</span></button>
+        </div>
+        <div class="features">
+          <article class="feature is-active" role="tabpanel" id="feature-mm26" aria-labelledby="ftab-mm26">
+            <a class="pub-media" href="../images/papers/concept-brittleness.jpg" target="_blank" rel="noopener"><img src="../images/papers/concept-brittleness.jpg" width="1400" height="511" loading="lazy" alt="Two-stage framework: sparse prior construction in SAE space and prior-guided denoising intervention"></a>
+            <div class="feature__body">
+              <div class="pub-meta"><span class="pub-venue">ACM MM 2026</span><span class="pub-badge">CCF A</span></div>
+              <h4 class="feature__title">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</h4>
+              <p class="feature__authors"><span class="me">Yifan Yuan*</span>, Xiangyu Liu*, Hongming Shan, Yu Han, Yu Jiang, Hao Tan, Junping Zhang, Linlin Shen†</p>
+              <p class="feature__desc en">Text-to-image diffusion models usually follow prompts well, yet we found an overlooked failure: a concept such as “ink sketch” works for most objects but fails again and again on a few — Flux draws grapes as an ink sketch but keeps painting a cake in full color. These failures persist across random seeds, revealing systematic blind spots in how the model has learned the concept rather than sampling noise. We train sparse autoencoders at every denoising step, compare successful and failed generations in this sparse space where concepts become separable, locate the missing or weakened concept dimensions, and repair them at inference time by nudging features toward a concept prototype built from reliable samples, with no retraining. Across multiple diffusion backbones this markedly improves concept consistency, text fidelity and repair success, and the earlier the intervention, the stronger the correction.</p>
+              <p class="feature__desc zh">文生图模型通常能很好地按提示词作画，但我们发现了一种被忽视的失败：同一个概念（如“水墨素描”）用在大多数物体上都没问题，却在少数物体上反复失败——Flux 能把“葡萄”画成水墨素描，“蛋糕”却总是彩色的。这类失败换随机种子也照样出现，说明模型对概念的掌握存在系统性盲区，而不是偶然的采样噪声。我们在去噪的每一步训练稀疏自编码器，在这个概念更易区分的稀疏空间里对比成功与失败的生成，找出缺失或减弱的概念维度，再在推理时把特征向由可靠样本构建的概念原型轻量插值，无需重新训练即可修复。在多种主流扩散模型上，概念一致性、文本忠实度和修复成功率都显著提升，而且越早干预、纠正效果越好。</p>
+              <p class="feature__links"><a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/Metecade/Object-Dependent-Concept-Brittleness" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
+            </div>
+          </article>
+          <article class="feature" role="tabpanel" id="feature-state" aria-labelledby="ftab-state">
+            <a class="pub-media" href="../images/papers/statetrack.jpg" target="_blank" rel="noopener"><img src="../images/papers/statetrack.jpg" width="926" height="626" loading="lazy" alt="StateTrack-Bench evaluation protocol"></a>
+            <div class="feature__body">
+              <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span></div>
+              <h4 class="feature__title">When LLMs Forget What They Believe: Characterizing State Integrity Collapse in Long-Horizon Dialogues</h4>
+              <p class="feature__authors">Yancheng Zhu, <span class="me">Yifan Yuan†</span></p>
+              <p class="feature__desc en">Assistants must keep obeying user-set constraints — formats, personas, safety boundaries — over many turns, but evaluations mostly test instruction following in a single turn or a short exchange. We identify a subtle but dangerous failure, State Integrity Collapse: asked about it, the model can still restate the constraint, yet its next answers stop following it — unlike ordinary forgetting, this is not fixed by longer context or memory retrieval. We build StateTrack-Bench, which plants one persistent constraint (numerical, format, persona, factual-memory or logical) in a conversation, checks compliance at increasing dialogue depths, and uses a forked recall audit to tell forgetting apart from remembering without complying. Across seven models, 88.6% of failures are such behavioral drift rather than forgetting, and our Structured State Anchoring recovers up to 24.4 points.</p>
+              <p class="feature__desc zh">对话助手需要在很多轮对话里一直遵守用户设定的约束（格式、角色、安全边界等），但现有评测大多只看单轮或短对话里能否遵守指令。我们发现一种隐蔽而危险的失败：问起来模型还能复述约束，接下来的回答却不再执行——我们称之为“状态完整性崩塌”，它不同于普通的遗忘，单靠更长的上下文或记忆检索解决不了。我们构建了 StateTrack-Bench：在对话中设定一条持续约束（数值、格式、角色、事实记忆、逻辑规则五类），在不同对话深度检验模型是否仍然遵守，并用“分叉回忆审计”区分“记不住”和“记得但不做”。在七个主流模型上，88.6% 的失败属于“记得但不做”的行为漂移而非遗忘；我们提出的结构化状态锚定最多可挽回 24.4 个百分点。</p>
+              <p class="feature__links"><a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/StateTrack" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
+            </div>
+          </article>
+          <article class="feature" role="tabpanel" id="feature-remcts" aria-labelledby="ftab-remcts">
+            <a class="pub-media" href="../images/papers/remcts.jpg" target="_blank" rel="noopener"><img src="../images/papers/remcts.jpg" width="1400" height="595" loading="lazy" alt="Overview of ReMCTS"></a>
+            <div class="feature__body">
+              <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span></div>
+              <h4 class="feature__title">ReMCTS: Reflection-Enhanced Monte Carlo Tree Search for Code Generation</h4>
+              <p class="feature__authors">Wang Huifei, Huang Xinying, Sun Yiheng, <span class="me">Yifan Yuan†</span></p>
+              <p class="feature__desc en">Code written by large language models often looks right yet fails on edge cases and hidden tests, and common self-repair keeps patching a single attempt, so an early wrong algorithmic choice is hard to escape. Existing tree-search methods rank candidates with numeric rewards but do not share the textual diagnoses of failures across branches, and without tests they may mistake missing evidence for success. ReMCTS organizes candidate programs as a search tree, runs them in a sandbox for feedback, keeps each branch's debugging context, stores failure diagnoses in a shared memory that other branches retrieve, and tells failed checks apart from missing evidence. On HumanEval and MBPP it beats direct generation in 8 of 10 model–dataset pairs, and ablations show where the gains come from and where they stop.</p>
+              <p class="feature__desc zh">大模型写的代码常常“看起来对”，却在边界条件或隐藏测试上出错；常见的自我修复只沿着一次尝试反复打补丁，一旦最初的算法思路错了就很难跳出来。已有的树搜索方法又主要依赖数值奖励，失败时的文字诊断没法分享给其他分支，在没有测试用例时还容易把“缺少证据”误当成“通过”。ReMCTS 把多个候选程序组织成一棵搜索树，在沙箱里执行获取反馈，保留每条分支的调试上下文，把失败经验存入全局记忆供其他分支检索复用，并区分“检查未通过”和“证据不足”。在 HumanEval 和 MBPP 上，ReMCTS 在 10 组模型—数据集组合中有 8 组优于直接生成，消融实验也厘清了收益的来源与边界。</p>
+              <p class="feature__links"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/ReMCTS" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
+            </div>
+          </article>
+          <article class="feature" role="tabpanel" id="feature-surveygraph" aria-labelledby="ftab-surveygraph">
+            <a class="pub-media" href="../images/papers/surveygraph.jpg" target="_blank" rel="noopener"><img src="../images/papers/surveygraph.jpg" width="1400" height="732" loading="lazy" alt="The SurveyGraph pipeline"></a>
+            <div class="feature__body">
+              <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span></div>
+              <h4 class="feature__title">SurveyGraph: Generating Academic Surveys via Methods-Entity Knowledge Graphs</h4>
+              <p class="feature__authors"><span class="me">Yifan Yuan</span>, Yancheng Zhu, Zuoyu Zhang, Xiaogang Peng†</p>
+              <p class="feature__desc en">Publications are growing so fast that writing a good survey is ever more costly, and current LLM survey generators mostly retrieve papers as a flat pile of independent documents. A good survey explains how a field evolved — which work extends which, which methods compete, which benchmarks mark turning points — structure that similarity-based retrieval cannot see, so generated surveys read like a collage of summaries. SurveyGraph builds a Methods-Entity Knowledge Graph that records follow-on, competition and shared-resource relations between methods, and uses it as the backbone for core-paper discovery, graph-aware retrieval, outline generation and evolution-aware writing. Graph-aware retrieval nearly doubles recall over flat lexical baselines (p = 0.004), and citation audits find that 80.6% of generated sentences are fully or partly supported by the papers they cite.</p>
+              <p class="feature__desc zh">论文越来越多，写一篇好的综述越来越费时费力，而现有的大模型自动综述系统大多把文献当作一堆彼此独立的文档来检索。好的综述要讲清楚一个领域如何演化——哪项工作延续了谁、哪些方法相互竞争、哪些基准标志着转折，只按相似度检索看不到这些结构，生成的综述容易变成零散摘要的拼贴。SurveyGraph 构建“方法—实体知识图谱”（MEKG），显式记录方法之间的延续、竞争和共享资源等关系，并以它为主干完成核心论文发现、图感知检索、大纲生成和按演化脉络组织的写作。图感知检索的召回率接近平面检索基线的两倍（p=0.004），引用核查显示 80.6% 的生成句子能在所引文献中找到完全或部分支撑。</p>
+              <p class="feature__links"><a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/SurveyGraph" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
+            </div>
+          </article>
+          <article class="feature" role="tabpanel" id="feature-jas25" aria-labelledby="ftab-jas25">
+            <a class="pub-media" href="../images/papers/semantic-discrepancy.jpg" target="_blank" rel="noopener"><img src="../images/papers/semantic-discrepancy.jpg" width="1400" height="595" loading="lazy" alt="Overview of the training-free semantic discrepancy correction with single-step DDIM inversion"></a>
+            <div class="feature__body">
+              <div class="pub-meta"><span class="pub-venue">IEEE/CAA JAS 2025</span><span class="pub-badge">JCR Q1 · IF 19.3</span></div>
+              <h4 class="feature__title">Dissecting and Mitigating Semantic Discrepancy in Stable Diffusion for Image-to-Image Translation</h4>
+              <p class="feature__authors"><span class="me">Yifan Yuan</span>, Guanqun Yang, James Z. Wang, Hui Zhang, Hongming Shan, Feiyue Wang†, Junping Zhang</p>
+              <p class="feature__desc en">When a text-to-image diffusion model is used for image-to-image translation — turning a photo into a painting, say — everything hinges on an initial noise that keeps the original image's information, and the common choice, SDEdit, simply adds random noise to the image. We find that this causes “semantic discrepancy”: the model misreads relations in the image and invents content that was never there, because the noise breaks the image's semantic integrity and makes U-Net upsampling link unrelated regions. We propose a training-free, plug-and-play fix for Stable Diffusion that exploits the determinism of DDIM inversion: a single inversion step of the reference image supplies accurate features and correlations, which replace the faulty ones in generation. Across translation tasks on COCO, ImageNet and ImageNet-R, it reduces semantic discrepancy and improves fidelity, outperforming PnP and similar methods with fewer priors while running 11.2× faster.</p>
+              <p class="feature__desc zh">用文生图扩散模型做图像转换（比如把照片变成油画）时，关键是找到既保留原图信息、又便于转换的初始噪声，常用的 SDEdit 做法是直接给原图加随机噪声。我们发现这会引起“语义偏差”：模型误解原图中物体之间的关系，凭空生成原图里没有的内容；剖析 Stable Diffusion 的网络后，我们定位到原因是加噪破坏了图像的语义完整性，使 U-Net 上采样时在不相关的区域之间建立了错误关联。我们提出一种免训练、即插即用的方法，利用 DDIM 反演的确定性，只需对参考图做一步反演，就能得到正确的特征和关联，用来替换生成过程中的错误部分。在 COCO、ImageNet 和 ImageNet-R 的多种图像转换任务上，该方法有效缓解了语义偏差、提升了保真度，用更少的先验超过 PnP 等方法，速度快 11.2 倍。</p>
+              <p class="feature__links"><a href="https://doi.org/10.1109/JAS.2024.124800" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
+            </div>
+          </article>
+        </div>
+        <!-- lab-featured:end -->
+      </div>
+      <h3 class="sub sub--list reveal" id="all-title"><span class="en">All Publications</span><span class="zh">全部论文</span></h3>
+      <div class="chips reveal" role="group" aria-labelledby="all-title">
+        <!-- lab-filters:start -->
+        <button type="button" class="chip is-active" data-filter="all" aria-pressed="true"><span class="en">All</span><span class="zh">全部</span><span class="chip__n">11</span></button>
+        <button type="button" class="chip chip--visual" data-filter="visual" aria-pressed="false"><span class="chip__seal" aria-hidden="true">绘</span><span class="en">Visual Generation</span><span class="zh">视觉生成</span><span class="chip__n">4</span></button>
+        <button type="button" class="chip chip--trust" data-filter="trust" aria-pressed="false"><span class="chip__seal" aria-hidden="true">信</span><span class="en">Trustworthy LLMs &amp; Agents</span><span class="zh">可信大模型</span><span class="chip__n">4</span></button>
+        <button type="button" class="chip chip--affect" data-filter="affect" aria-pressed="false"><span class="chip__seal" aria-hidden="true">情</span><span class="en">Affective &amp; Embodied AI</span><span class="zh">情感与具身智能</span><span class="chip__n">3</span></button>
+        <!-- lab-filters:end -->
+      </div>
+      <div class="years">
+        <!-- lab-publications:start -->
+        <section class="year reveal" data-year="2026">
+          <h3 class="year__label">2026</h3>
+          <ol class="plist">
+            <li class="pitem" id="p-mm26" data-theme="visual">
+              <span class="pitem__venue">ACM MM 2026</span>
+              <div class="pitem__body">
+                <span class="pitem__title">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</span>
+                <span class="pitem__authors"><span class="me">Yifan Yuan*</span>, Xiangyu Liu*, Hongming Shan, Yu Han, Yu Jiang, Hao Tan, Junping Zhang, Linlin Shen†.</span>
+                <span class="pitem__extra"><span class="pitem__note">CCF A</span><span class="pitem__links"><a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/Metecade/Object-Dependent-Concept-Brittleness" target="_blank" rel="noopener">[Code]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--visual" aria-hidden="true">绘</span>
+            </li>
+            <li class="pitem" id="p-state" data-theme="trust">
+              <span class="pitem__venue">EMNLP 2026</span>
+              <div class="pitem__body">
+                <span class="pitem__title">When LLMs Forget What They Believe: Characterizing State Integrity Collapse in Long-Horizon Dialogues</span>
+                <span class="pitem__authors">Yancheng Zhu, <span class="me">Yifan Yuan†</span>.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/MUSE-AI-Lab/StateTrack" target="_blank" rel="noopener">[Code]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--trust" aria-hidden="true">信</span>
+            </li>
+            <li class="pitem" id="p-remcts" data-theme="trust">
+              <span class="pitem__venue">EMNLP 2026</span>
+              <div class="pitem__body">
+                <span class="pitem__title">ReMCTS: Reflection-Enhanced Monte Carlo Tree Search for Code Generation</span>
+                <span class="pitem__authors">Wang Huifei, Huang Xinying, Sun Yiheng, <span class="me">Yifan Yuan†</span>.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/MUSE-AI-Lab/ReMCTS" target="_blank" rel="noopener">[Code]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--trust" aria-hidden="true">信</span>
+            </li>
+            <li class="pitem" id="p-surveygraph" data-theme="trust">
+              <span class="pitem__venue">EMNLP 2026</span>
+              <div class="pitem__body">
+                <span class="pitem__title">SurveyGraph: Generating Academic Surveys via Methods-Entity Knowledge Graphs</span>
+                <span class="pitem__authors"><span class="me">Yifan Yuan</span>, Yancheng Zhu, Zuoyu Zhang, Xiaogang Peng†.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/MUSE-AI-Lab/SurveyGraph" target="_blank" rel="noopener">[Code]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--trust" aria-hidden="true">信</span>
+            </li>
+            <li class="pitem" id="p-handoff" data-theme="trust">
+              <span class="pitem__venue pitem__venue--muted">Preprint 2026</span>
+              <div class="pitem__body">
+                <span class="pitem__title">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</span>
+                <span class="pitem__authors">Yiheng Sun, Huifei Wang, Yancheng Zhu, Zhenyu Li, Zebin Zhao, <span class="me">Yifan Yuan</span>. arXiv:2608.24569.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">[Paper]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--trust" aria-hidden="true">信</span>
+            </li>
+          </ol>
+        </section>
+        <section class="year reveal" data-year="2025">
+          <h3 class="year__label">2025</h3>
+          <ol class="plist">
+            <li class="pitem" id="p-jas25" data-theme="visual">
+              <span class="pitem__venue">IEEE/CAA JAS 2025</span>
+              <div class="pitem__body">
+                <span class="pitem__title">Dissecting and Mitigating Semantic Discrepancy in Stable Diffusion for Image-to-Image Translation</span>
+                <span class="pitem__authors"><span class="me">Yifan Yuan</span>, Guanqun Yang, James Z. Wang, Hui Zhang, Hongming Shan, Feiyue Wang†, Junping Zhang. IEEE/CAA Journal of Automatica Sinica, 2025, 12(4): 705–718.</span>
+                <span class="pitem__extra"><span class="pitem__note">JCR Q1 · IF 19.3</span><span class="pitem__links"><a href="https://doi.org/10.1109/JAS.2024.124800" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">[Code]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--visual" aria-hidden="true">绘</span>
+            </li>
+          </ol>
+        </section>
+        <section class="year reveal" data-year="2023">
+          <h3 class="year__label">2023</h3>
+          <ol class="plist">
+            <li class="pitem" id="p-icassp23" data-theme="visual">
+              <span class="pitem__venue">ICASSP 2023</span>
+              <div class="pitem__body">
+                <span class="pitem__title">DO-FAM: Disentangled Non-Linear Latent Navigation for Facial Attribute Manipulation</span>
+                <span class="pitem__authors"><span class="me">Yifan Yuan*</span>, Siteng Ma*, Hongming Shan, Junping Zhang. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2023.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://doi.org/10.1109/ICASSP49357.2023.10095959" target="_blank" rel="noopener">[Paper]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--visual" aria-hidden="true">绘</span>
+            </li>
+            <li class="pitem" id="p-ch7" data-theme="affect">
+              <span class="pitem__venue pitem__venue--muted">Book Chapter 2023</span>
+              <div class="pitem__body">
+                <span class="pitem__title">High-Speed Joint Learning of Action Units and Facial Expressions</span>
+                <span class="pitem__authors">Feng Xu, <span class="me">Yifan Yuan</span>, Junping Zhang, James Z. Wang. Chapter 7 in <em>Modeling Visual Aesthetics, Emotion, and Artistic Style</em>, Springer, 2023.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://doi.org/10.1007/978-3-031-50269-9_7" target="_blank" rel="noopener">[Paper]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--affect" aria-hidden="true">情</span>
+            </li>
+            <li class="pitem" id="p-ch8" data-theme="affect">
+              <span class="pitem__venue pitem__venue--muted">Book Chapter 2023</span>
+              <div class="pitem__body">
+                <span class="pitem__title">ExpressionFlow: A Microexpression Descriptor for Efficient Recognition</span>
+                <span class="pitem__authors">Feng Xu, <span class="me">Yifan Yuan</span>, Junping Zhang, James Z. Wang. Chapter 8 in <em>Modeling Visual Aesthetics, Emotion, and Artistic Style</em>, Springer, 2023.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://doi.org/10.1007/978-3-031-50269-9_8" target="_blank" rel="noopener">[Paper]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--affect" aria-hidden="true">情</span>
+            </li>
+          </ol>
+        </section>
+        <section class="year reveal" data-year="2022">
+          <h3 class="year__label">2022</h3>
+          <ol class="plist">
+            <li class="pitem" id="p-icassp22" data-theme="visual">
+              <span class="pitem__venue">ICASSP 2022</span>
+              <div class="pitem__body">
+                <span class="pitem__title">VR-FAM: Variance-Reduced Encoder with Nonlinear Transformation for Facial Attribute Manipulation</span>
+                <span class="pitem__authors"><span class="me">Yifan Yuan</span>, Siteng Ma, Junping Zhang. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2022: 1755–1759.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://doi.org/10.1109/ICASSP43922.2022.9746046" target="_blank" rel="noopener">[Paper]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--visual" aria-hidden="true">绘</span>
+            </li>
+          </ol>
+        </section>
+        <section class="year reveal" data-year="2020">
+          <h3 class="year__label">2020</h3>
+          <ol class="plist">
+            <li class="pitem" id="p-jig20" data-theme="affect">
+              <span class="pitem__venue">JIG 2020</span>
+              <div class="pitem__body">
+                <span class="pitem__title">Spatiotemporal Attention Network for Microexpression Recognition</span>
+                <span class="pitem__authors">Guohao Li, <span class="me">Yifan Yuan</span>, Xianye Ben, Junping Zhang. Journal of Image and Graphics (中国图象图形学报), 2020, 25(11): 2380–2390.</span>
+                <span class="pitem__extra"><span class="pitem__links"><a href="https://doi.org/10.11834/jig.200325" target="_blank" rel="noopener">[Paper]</a></span></span>
+              </div>
+              <span class="pitem__seal pitem__seal--affect" aria-hidden="true">情</span>
+            </li>
+          </ol>
+        </section>
+        <!-- lab-publications:end -->
+      </div>
+    </section>
+
+    <!-- ===================== News ===================== -->
+    <section class="section" id="news">
+      <div class="sec-head reveal">
+        <span class="sec-num">04</span>
+        <h2 class="sec-title"><span class="en">News</span><span class="zh">最新动态</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 55 9, 115 16, 175 11 S 255 13, 296 10"/></svg></h2>
+      </div>
+      <div class="news__box reveal">
+        <!-- lab-news:start -->
+        <ol class="nlist">
+          <li class="nitem"><span class="nitem__date">2026.10</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en">Two EMNLP 2026 papers are on arXiv with code: <a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> and <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：<a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> 与 <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>。</span></p></li>
+          <li class="nitem"><span class="nitem__date">2026.09</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a> (EMNLP 2026) and our ACM MM 2026 paper on <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">object-dependent concept brittleness</a> are on arXiv with code.</span><span class="zh"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a>（EMNLP 2026）与 ACM MM 2026 论文 <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</a> 已公开于 arXiv 并开源代码。</span></p></li>
+          <li class="nitem"><span class="nitem__date">2026.08</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en">New preprint on how LLM agent handoffs erode workflow constraints: <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”</a>.</span><span class="zh">新 Preprint <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</a>，研究多智能体交接过程中工作流约束的流失。</span></p></li>
+          <li class="nitem"><span class="nitem__date">2026.08</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">Three papers accepted to <strong>EMNLP 2026</strong>.</span><span class="zh">三篇论文被 <strong>EMNLP 2026</strong> 接收。</span></p></li>
+          <li class="nitem"><span class="nitem__date">2026.07</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper accepted to <strong>ACM MM 2026</strong>.</span><span class="zh">一篇论文被 <strong>ACM MM 2026</strong> 接收。</span></p></li>
+          <li class="nitem"><span class="nitem__date">2025.04</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper published in <strong>IEEE/CAA Journal of Automatica Sinica</strong>, with <a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">code</a>.</span><span class="zh">一篇论文发表于 <strong>IEEE/CAA Journal of Automatica Sinica</strong>，<a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">代码</a>已开源。</span></p></li>
+        </ol>
+        <!-- lab-news:end -->
+      </div>
+    </section>
+
+    <!-- ===================== People ===================== -->
+    <section class="section" id="people">
+      <div class="sec-head reveal">
+        <span class="sec-num">05</span>
+        <h2 class="sec-title"><span class="en">People</span><span class="zh">团队成员</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 11 C 50 16, 110 9, 170 13 S 250 10, 296 13"/></svg></h2>
+      </div>
+      <!-- lab-people:start -->
+      <article class="pi spotlight reveal">
+        <img class="pi__photo" src="../images/yifan-yuan.jpg" width="1122" height="1402" loading="lazy" alt="Yifan Yuan 袁一帆">
+        <div class="pi__body">
+          <p class="pi__role"><span class="en">Principal Investigator</span><span class="zh">实验室负责人</span></p>
+          <h3 class="pi__name"><span class="en">Yifan Yuan <span class="pi__alt" lang="zh-CN">袁一帆</span></span><span class="zh">袁一帆 <span class="pi__alt" lang="en">Yifan Yuan</span></span></h3>
+          <p class="pi__title"><span class="en">Assistant Professor, College of AI, Shenzhen University</span><span class="zh">深圳大学人工智能学院 助理教授 · 硕士生导师</span></p>
+          <p class="pi__bio en">Ph.D. in Computer Science, Fudan University (2025), advised by Prof. Junping Zhang; B.S. in Physics, Fudan University (2019). AIGC research intern on text-to-image generation at Tencent Hunyuan and SenseTime during the Ph.D. Member of the Technical Committee on Hybrid Intelligence and the Science Popularization Committee, Chinese Association of Automation (CAA).</p>
+          <p class="pi__bio zh">2025 年博士毕业于复旦大学计算机科学技术专业，师从张军平教授；2019 年本科毕业于复旦大学物理学专业。读博期间曾在腾讯混元文生图组、商汤科技从事 AIGC 算法研究实习。现为中国自动化学会混合智能专委会、普及工作专委会会员。</p>
+          <p class="pi__links"><a href="../" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span class="en">Homepage</span><span class="zh">个人主页</span></a><a href="mailto:yifanyuan@szu.edu.cn" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="en">Email</span><span class="zh">邮箱</span></a><a href="https://ai.szu.edu.cn/info/1075/1315.htm" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="en">Faculty Profile</span><span class="zh">学院主页</span></a></p>
+        </div>
+      </article>
+      <!-- lab-people:end -->
+    </section>
+
+    <!-- ===================== Contact ===================== -->
+    <section class="section" id="contact">
+      <div class="sec-head reveal">
+        <span class="sec-num">06</span>
+        <h2 class="sec-title"><span class="en">Contact</span><span class="zh">联系我们</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 8, 120 16, 180 11 S 255 12, 296 12"/></svg></h2>
+      </div>
+      <ul class="contact__list reveal">
+        <!-- lab-contact:start -->
+        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="crow__label"><span class="en">Email</span><span class="zh">邮箱</span></span><span class="crow__value"><a href="mailto:yifanyuan@szu.edu.cn">yifanyuan@szu.edu.cn</a></span></li>
+        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span class="crow__label"><span class="en">Address</span><span class="zh">地址</span></span><span class="crow__value"><span class="en">College of Artificial Intelligence, Shenzhen University, Shenzhen, China</span><span class="zh">中国 · 深圳 · 深圳大学人工智能学院</span></span></li>
+        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span class="crow__label"><span class="en">Code</span><span class="zh">代码</span></span><span class="crow__value"><a href="https://github.com/MUSE-AI-Lab" target="_blank" rel="noopener">github.com/MUSE-AI-Lab</a></span></li>
+        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="crow__label"><span class="en">PI</span><span class="zh">负责人</span></span><span class="crow__value"><a href="../"><span class="en">Yifan Yuan · yifanyuan.com</span><span class="zh">袁一帆 · yifanyuan.com</span></a></span></li>
+        <!-- lab-contact:end -->
+      </ul>
+    </section>
   </main>
 
-  <p class="hint" aria-hidden="true">
-    <span class="hint-mouse"><span class="en">✎ Move to paint · click to play notes</span><span class="zh">✎ 移动鼠标作画 · 点击奏响音符</span></span>
-    <span class="hint-touch"><span class="en">♪ Tap anywhere to play notes</span><span class="zh">♪ 轻点屏幕奏响音符</span></span>
-  </p>
+  <footer class="foot">
+    <p>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>
+    <a class="to-top" href="#top"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg><span class="en">Back to top</span><span class="zh">回到顶部</span></a>
+  </footer>
 
-  <footer>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></footer>
-
-  <script>
-    (function () {
-      "use strict";
-      var root = document.documentElement;
-      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      /* ---------- language ---------- */
-      function setLang(l, persist) {
-        root.classList.remove("lang-en", "lang-zh");
-        root.classList.add("lang-" + l);
-        root.lang = l === "zh" ? "zh-CN" : "en";
-        document.title = l === "zh" ? "MUSE Lab · 深圳大学" : "MUSE Lab · Shenzhen University";
-        if (persist) { try { localStorage.setItem("lang", l); } catch (e) {} }
-      }
-      document.querySelectorAll("[data-set-lang]").forEach(function (b) {
-        b.addEventListener("click", function () { setLang(b.getAttribute("data-set-lang"), true); });
-      });
-      setLang(root.classList.contains("lang-zh") ? "zh" : "en", false);
-
-      /* ---------- music & painting canvas ----------
-         A soft brush "M" painted behind the title, a five-line staff that can be
-         plucked, notes that float along it and leap when touched, and a
-         watercolour brush that follows the pointer. */
-      var canvas = document.getElementById("art");
-      var ctx = canvas.getContext("2d");
-      var hint = document.querySelector(".hint");
-      var heroEl = document.querySelector(".hero");
-      var titleEl = document.querySelector(".title");
-      var actions = document.querySelector(".actions");
-      var footerEl = document.querySelector("footer");
-
-      var NAVY = [20, 41, 74], ORANGE = [247, 146, 63], SKY = [72, 170, 210];
-      var LAV = [146, 126, 214], ROSE = [222, 128, 152], MINT = [92, 184, 146];
-      var PAINT = [SKY, LAV, ROSE, ORANGE, MINT];
-      var NOTE_COLORS = [NAVY, ORANGE, SKY, LAV, ROSE];
-      var M_COLOR = [150, 198, 232];
-      var TIP_STEPS = 40, STEP = 14;
-
-      var W = 0, H = 0, NP = 0, GAP = 12, mobile = false, mid = 0.88, dpr = 1;
-      var baseY = new Float32Array(0), spread = new Float32Array(0);
-      var disp = [], vel = [], tips = [], stamps = [], notes = [];
-      var pointer = { x: -1e4, y: -1e4, px: -1e4, py: -1e4, vx: 0, active: false, lastMove: -1e9 };
-      var lastPluck = [0, 0, 0, 0, 0];
-      var brush = null, ghost = null, ghostEnd = 0, hue = 0, lastRider = 0;
-      var start = performance.now(), last = start;
-
-      function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
-      function pick(list) { return list[(Math.random() * list.length) | 0]; }
-      function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
-      function smoothstep(a, b, x) { var q = clamp((x - a) / (b - a), 0, 1); return q * q * (3 - 2 * q); }
-
-      function makeTip(c, core, midA) {
-        var tip = document.createElement("canvas");
-        tip.width = tip.height = 64;
-        var g = tip.getContext("2d");
-        var grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-        grad.addColorStop(0, rgba(c, core));
-        grad.addColorStop(0.5, rgba(c, midA));
-        grad.addColorStop(1, rgba(c, 0));
-        g.fillStyle = grad;
-        g.fillRect(0, 0, 64, 64);
-        return tip;
-      }
-
-      /* soft round brush tips, one per colour step along the palette */
-      function buildTips() {
-        for (var i = 0; i < TIP_STEPS; i++) {
-          var p = (i / TIP_STEPS) * PAINT.length, a = PAINT[Math.floor(p) % PAINT.length];
-          var b = PAINT[(Math.floor(p) + 1) % PAINT.length], f = p - Math.floor(p);
-          tips.push(makeTip([0, 1, 2].map(function (j) { return Math.round(a[j] + (b[j] - a[j]) * f); }), 1, 0.55));
-        }
-      }
-
-      /* ---- the soft brush "M": one continuous stroke with a tapering, arcing tail ---- */
-      var M_PATH = [                    // in units of the M box (x right, y down); the tail runs past it
-        [0.02, 0.96], [0.06, 0.60], [0.11, 0.22], [0.16, 0.05],
-        [0.23, 0.30], [0.32, 0.60], [0.40, 0.70],
-        [0.48, 0.50], [0.56, 0.22], [0.62, 0.06],
-        [0.68, 0.32], [0.74, 0.68], [0.80, 0.92],
-        [0.92, 1.10], [1.20, 1.24], [1.70, 1.27], [2.30, 1.22], [2.85, 1.02], [3.25, 0.75], [3.55, 0.48], [3.70, 0.32]
-      ];
-      var M_TAIL_FROM = 12, M_DELAY = 900, M_DUR = 3600;
-      var mLayer = document.createElement("canvas"), mctx = mLayer.getContext("2d");
-      var mTip = makeTip(M_COLOR, 0.8, 0.36), mStamps = [], mDrawn = 0;
-
-      function buildM() {
-        var left = heroEl.offsetLeft + titleEl.offsetLeft, top = heroEl.offsetTop + titleEl.offsetTop;
-        var w = clamp(titleEl.offsetWidth * 0.42, 110, 300), h = w * 1.1;
-        var x0 = left - w * 0.18, y0 = top - h * 0.08;
-        var pts = M_PATH.map(function (p) { return [x0 + p[0] * w, y0 + p[1] * h]; });
-        /* Catmull-Rom through the control points: rounded peaks, a curved tail */
-        var dense = [], seg = 24;
-        for (var i = 0; i < pts.length - 1; i++) {
-          var p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
-          for (var s = 0; s < seg; s++) {
-            var t = s / seg, t2 = t * t, t3 = t2 * t, xy = [0, 1].map(function (k) {
-              return 0.5 * (2 * p1[k] + (p2[k] - p0[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (3 * p1[k] - p0[k] - 3 * p2[k] + p3[k]) * t3);
-            });
-            dense.push(xy);
-          }
-        }
-        dense.push(pts[pts.length - 1]);
-        var lens = [0];
-        for (i = 1; i < dense.length; i++) lens.push(lens[i - 1] + Math.hypot(dense[i][0] - dense[i - 1][0], dense[i][1] - dense[i - 1][1]));
-        var total = lens[lens.length - 1], tail0 = lens[M_TAIL_FROM * seg], base = w * 0.075, j = 1;
-        mStamps = [];
-        for (var d = 0; d <= total; d += 2.2) {
-          while (j < lens.length - 1 && lens[j] < d) j++;
-          var sl = Math.max(1e-6, lens[j] - lens[j - 1]), f = (d - lens[j - 1]) / sl;
-          var dy = (dense[j][1] - dense[j - 1][1]) / sl;               // > 0 on downstrokes
-          var r = base * (0.6 + 0.4 * clamp(dy, 0, 1)), a = 0.065;     // heavier downstrokes, light upstrokes
-          if (d < total * 0.04) r *= 0.5 + 0.5 * d / (total * 0.04);   // brush touches down softly
-          if (d > tail0) {                                             // full through the arc, trailing off at the end
-            var q = Math.pow((d - tail0) / (total - tail0), 1.6);
-            r = Math.max(r, base * 0.78) * (1 - 0.75 * q);
-            a *= 1 - 0.55 * q;
-          }
-          mStamps.push({ x: dense[j - 1][0] + (dense[j][0] - dense[j - 1][0]) * f, y: dense[j - 1][1] + (dense[j][1] - dense[j - 1][1]) * f, r: r, a: a });
-        }
-        mctx.setTransform(1, 0, 0, 1, 0, 0);
-        mctx.clearRect(0, 0, mLayer.width, mLayer.height);
-        mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        mDrawn = 0;
-      }
-
-      /* paints the M progressively (ease-in-out, so the tail trails off slowly) */
-      function paintM(now, instant) {
-        var p = instant ? 1 : clamp((now - start - M_DELAY) / M_DUR, 0, 1);
-        var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-        var upto = Math.floor(e * mStamps.length);
-        if (upto <= mDrawn) return;
-        mctx.globalCompositeOperation = "multiply";
-        for (; mDrawn < upto; mDrawn++) {
-          var s = mStamps[mDrawn];
-          mctx.globalAlpha = s.a;
-          mctx.drawImage(mTip, s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
-        }
-        mctx.globalAlpha = 1;
-        mctx.globalCompositeOperation = "source-over";
-      }
-
-      /* the staff runs through the free band between the buttons and the footer
-         and, on wide screens, sweeps up the empty right margin, gently waving */
-      function staffY(x, t) {
-        var u = x / W;
-        var base = mobile
-          ? mid + 0.015 * Math.sin(u * Math.PI)
-          : mid - 0.02 + 0.02 * Math.sin(u * Math.PI) - (mid - 0.52) * smoothstep(0.72, 1, u);
-        return H * (base + 0.014 * Math.sin(u * 5.6 + t * 0.35) + 0.005 * Math.sin(u * 16 - t * 0.7));
-      }
-
-      function computeStaff(t) {
-        for (var k = 0; k < NP; k++) baseY[k] = staffY(k * STEP, t);
-        for (k = 0; k < NP; k++) {
-          var k0 = Math.max(0, k - 1), k1 = Math.min(NP - 1, k + 1);
-          var slope = (baseY[k1] - baseY[k0]) / ((k1 - k0) * STEP);
-          spread[k] = Math.sqrt(1 + slope * slope);   // keeps the five lines evenly spaced on slopes
-        }
-      }
-
-      function lineAt(i, k) { return baseY[k] + (i - 2) * GAP * spread[k] + disp[i][k]; }
-
-      /* y of a staff position (-2..2 = bottom..top line, halves are spaces) at any x */
-      function staffPos(pos, x) {
-        var fx = clamp(x / STEP, 0, NP - 1.001), k = Math.floor(fx), f = fx - k;
-        var li = clamp(Math.round(pos + 2), 0, 4);
-        var y0 = baseY[k] + pos * GAP * spread[k] + disp[li][k];
-        var y1 = baseY[k + 1] + pos * GAP * spread[k + 1] + disp[li][k + 1];
-        return y0 + (y1 - y0) * f;
-      }
-
-      /* find the free band from the layout (offsets ignore the entrance transforms) */
-      function measure() {
-        var bottom = heroEl.offsetTop + actions.offsetTop + actions.offsetHeight;
-        var below = hint && hint.offsetParent ? hint.offsetTop : footerEl.offsetTop;
-        mid = clamp((bottom + below) / 2 / H, 0.55, 0.95);
-        GAP = clamp(Math.round((below - bottom - 24) / 4.5), 7, mobile ? 9 : 12);   // fit the staff into the band
-      }
-
-      function resize() {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        W = window.innerWidth;
-        H = window.innerHeight;
-        mobile = W < 700;
-        canvas.width = mLayer.width = Math.round(W * dpr);
-        canvas.height = mLayer.height = Math.round(H * dpr);
-        canvas.style.width = W + "px";
-        canvas.style.height = H + "px";
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        NP = Math.ceil(W / STEP) + 2;
-        baseY = new Float32Array(NP);
-        spread = new Float32Array(NP);
-        disp = [];
-        vel = [];
-        for (var i = 0; i < 5; i++) {
-          disp.push(new Float32Array(NP));
-          vel.push(new Float32Array(NP));
-        }
-        measure();
-        buildM();
-      }
-
-      /* ---- strings: spring + neighbour coupling, pushed aside by the pointer ---- */
-      function stepStaff(f) {
-        var R = 70;
-        for (var i = 0; i < 5; i++) {
-          var d = disp[i], v = vel[i];
-          for (var k = 1; k < NP - 1; k++) {
-            var acc = -0.02 * d[k] + 0.24 * (d[k - 1] + d[k + 1] - 2 * d[k]);
-            if (pointer.active) {
-              var dx = k * STEP - pointer.x;
-              if (dx > -R && dx < R) {
-                var dy = lineAt(i, k) - pointer.y;
-                var dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < R) {
-                  var s = 1 - dist / R;
-                  acc += (dy >= 0 ? 1 : -1) * s * s * 0.8;
-                }
-              }
-            }
-            v[k] = (v[k] + acc * f) * Math.pow(0.93, f);
-          }
-          for (k = 1; k < NP - 1; k++) d[k] = clamp(d[k] + v[k] * f, -34, 34);
-        }
-      }
-
-      /* crossing a string plucks it and releases a note */
-      function checkPluck(now) {
-        if (!pointer.active || pointer.px < -1e3 || pointer.x < 0 || pointer.x > W) return;
-        for (var i = 0; i < 5; i++) {
-          var before = staffPos(i - 2, pointer.px) - pointer.py;
-          var after = staffPos(i - 2, pointer.x) - pointer.y;
-          if (before * after >= 0) continue;
-          var k = Math.round(pointer.x / STEP), dir = pointer.y > pointer.py ? 1 : -1;
-          for (var j = -2; j <= 2; j++) {
-            if (k + j > 0 && k + j < NP - 1) vel[i][k + j] += dir * (3.4 - Math.abs(j) * 0.9);
-          }
-          if (now - lastPluck[i] > 140) {
-            lastPluck[i] = now;
-            fly({ x: pointer.x, y: staffPos(i - 2, pointer.x) }, NOTE_COLORS[i], (Math.random() - 0.5) * 1.4, -2.4 - Math.random() * 1.2);
-          }
-        }
-      }
-
-      /* ---- watercolour brush: overlapping soft stamps that fade and bleed.
-         The path is smoothed (quadratic curves through the midpoints), so fast
-         strokes bend into arcs; a big jump starts a new stroke instead of a line. ---- */
-      function paintTo(x, y, ghostly) {
-        var now = performance.now();
-        if (!brush) { brush = { x: x, y: y, mx: x, my: y, t: now, w: 8 }; return; }
-        var dx = x - brush.x, dy = y - brush.y, dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 2) return;
-        if (dist > 160) { brush = { x: x, y: y, mx: x, my: y, t: now, w: 8 }; return; }
-        var speed = dist / Math.max(8, now - brush.t);
-        var target = clamp((mobile ? 15 : 22) - speed * 7, 5, mobile ? 15 : 22);
-        var w = brush.w + (target - brush.w) * 0.25;
-        var mx = (brush.x + x) / 2, my = (brush.y + y) / 2;
-        var len = Math.hypot(brush.x - brush.mx, brush.y - brush.my) + Math.hypot(mx - brush.x, my - brush.y);
-        var n = Math.max(1, Math.ceil(len / 2.6)), tip = tips[(hue | 0) % TIP_STEPS];
-        for (var j = 1; j <= n; j++) {
-          var t = j / n, u = 1 - t;
-          stamps.push({
-            x: u * u * brush.mx + 2 * u * t * brush.x + t * t * mx + (Math.random() - 0.5) * 1.2,
-            y: u * u * brush.my + 2 * u * t * brush.y + t * t * my + (Math.random() - 0.5) * 1.2,
-            r: brush.w + (w - brush.w) * t,
-            tip: tip,
-            born: now,
-            life: ghostly ? 2400 : 1800,
-            a: ghostly ? 0.07 : 0.1
-          });
-        }
-        if (stamps.length > 1600) stamps.splice(0, stamps.length - 1600);
-        hue = (hue + dist / 90) % TIP_STEPS;
-        brush = { x: x, y: y, mx: mx, my: my, t: now, w: w };
-      }
-
-      function splash(x, y) {
-        var now = performance.now(), tip = tips[(hue | 0) % TIP_STEPS];
-        for (var i = 0; i < 12; i++) {
-          var ang = Math.random() * Math.PI * 2, rad = Math.random() * 26;
-          stamps.push({ x: x + Math.cos(ang) * rad, y: y + Math.sin(ang) * rad, r: 14 + Math.random() * 18, tip: tip, born: now, life: 2200, a: 0.085 });
-        }
-        hue = (hue + 6) % TIP_STEPS;
-      }
-
-      function drawStamps(now) {
-        ctx.globalCompositeOperation = "multiply";
-        var alive = 0;
-        for (var i = 0; i < stamps.length; i++) {
-          var s = stamps[i], age = now - s.born;
-          if (age > s.life) continue;
-          stamps[alive++] = s;
-          var k = 1 - age / s.life, r = s.r * (1 + 0.3 * (1 - k));
-          ctx.globalAlpha = s.a * Math.pow(k, 1.6);
-          ctx.drawImage(s.tip, s.x - r, s.y - r, r * 2, r * 2);
-        }
-        stamps.length = alive;
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = "source-over";
-      }
-
-      /* an invisible painter keeps the canvas alive when nobody is moving the mouse:
-         it sweeps soft arcs in the empty margins */
-      function startGhost(now) {
-        var cx, cy, r;
-        if (mobile) {
-          cx = W * (0.2 + Math.random() * 0.6);
-          cy = Math.random() < 0.5 ? H * 0.06 : H * 0.94;
-          r = W * (0.25 + Math.random() * 0.15);
-        } else {
-          var left = Math.random() < 0.5;
-          cx = W * (left ? 0.1 + Math.random() * 0.06 : 0.84 + Math.random() * 0.06);
-          cy = H * (0.35 + Math.random() * 0.3);
-          r = Math.min(W * 0.09, H * 0.22) * (0.8 + Math.random() * 0.4);
-        }
-        var sweep = Math.PI * (0.8 + Math.random() * 0.6) * (Math.random() < 0.5 ? 1 : -1);
-        ghost = { start: now, dur: 2400 + Math.random() * 900, cx: cx, cy: cy, r: r, a0: Math.random() * Math.PI * 2, sweep: sweep };
-        brush = null;
-      }
-
-      function stepGhost(now) {
-        if (ghost) {
-          var q = (now - ghost.start) / ghost.dur;
-          if (q >= 1) { ghost = null; brush = null; ghostEnd = now; return; }
-          var e = q < 0.5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2;
-          var a = ghost.a0 + ghost.sweep * e, rr = ghost.r * (1 + 0.12 * Math.sin(e * Math.PI));
-          paintTo(ghost.cx + Math.cos(a) * rr, ghost.cy + Math.sin(a) * rr * 0.85, true);
-        } else if (now - pointer.lastMove > 3800 && now - ghostEnd > 2600) {
-          startGhost(now);
-        }
-      }
-
-      /* ---- notes ---- */
-      function spawnRider(x) {
-        notes.push({
-          mode: "ride", x: x, y: 0, pos: (((Math.random() * 9) | 0) - 4) * 0.5,
-          speed: mobile ? 26 + Math.random() * 4 : 38 + Math.random() * 6, size: GAP * 0.92,
-          type: (Math.random() * 3) | 0, col: pick(NOTE_COLORS), rot: 0, phase: Math.random() * 6.3, age: 0
-        });
-      }
-
-      function launch(n, vx, vy) {
-        n.mode = "fly";
-        n.vx = vx;
-        n.vy = vy;
-        n.vr = (Math.random() - 0.5) * 0.12;
-        n.age = 0;
-        n.life = 1500 + Math.random() * 600;
-      }
-
-      function fly(at, col, vx, vy) {
-        var n = { x: at.x, y: at.y, size: GAP * (0.95 + Math.random() * 0.35), type: (Math.random() * 3) | 0, col: col || pick(NOTE_COLORS), rot: (Math.random() - 0.5) * 0.4 };
-        launch(n, vx, vy);
-        notes.push(n);
-      }
-
-      function burst(x, y) {
-        for (var i = 0; i < 5; i++) {
-          var ang = -Math.PI / 2 + (i - 2) * 0.42 + (Math.random() - 0.5) * 0.2, sp = 2.4 + Math.random() * 1.6;
-          fly({ x: x, y: y }, null, Math.cos(ang) * sp, Math.sin(ang) * sp);
-        }
-      }
-
-      function stepNotes(t, dt) {
-        var f = dt / 16.67, alive = 0;
-        for (var i = 0; i < notes.length; i++) {
-          var n = notes[i];
-          n.age += dt;
-          if (n.mode === "ride") {
-            n.x += (n.speed * dt) / 1000;
-            if (n.x > W + 40) continue;
-            n.y = staffPos(n.pos, n.x) + Math.sin(t * 2 + n.phase) * 1.2;
-            var dx = n.x - pointer.x, dy = n.y - pointer.y;
-            if (pointer.active && dx * dx + dy * dy < 46 * 46) launch(n, (Math.random() - 0.5) * 1.6 + pointer.vx * 0.12, -2.6 - Math.random() * 1.4);
-          } else {
-            n.x += n.vx * f;
-            n.y += n.vy * f;
-            n.vy += 0.03 * f;
-            n.vx *= Math.pow(0.985, f);
-            n.rot += n.vr * f;
-            if (n.age > n.life) continue;
-          }
-          notes[alive++] = n;
-        }
-        notes.length = alive;
-      }
-
-      function head(x, y, s) {
-        ctx.beginPath();
-        ctx.ellipse(x, y, s * 0.6, s * 0.44, -0.35, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      function stem(x, y, s, top) {
-        ctx.beginPath();
-        ctx.moveTo(x + s * 0.53, y - s * 0.12);
-        ctx.lineTo(x + s * 0.53, y - top);
-        ctx.stroke();
-      }
-
-      function drawNote(n, alpha, scale) {
-        var s = n.size * scale;
-        ctx.save();
-        ctx.translate(n.x, n.y);
-        ctx.rotate(n.rot);
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = ctx.strokeStyle = rgba(n.col, 1);
-        ctx.lineWidth = Math.max(1.2, s * 0.14);
-        ctx.lineCap = "round";
-        if (n.type === 2) {
-          head(0, 0, s);
-          head(s * 2.1, -s * 0.45, s);
-          stem(0, 0, s, s * 2.95);
-          stem(s * 2.1, -s * 0.45, s, s * 2.95);
-          ctx.lineWidth = s * 0.42;
-          ctx.beginPath();
-          ctx.moveTo(s * 0.53, -s * 2.95);
-          ctx.lineTo(s * 2.63, -s * 3.4);
-          ctx.stroke();
-        } else {
-          head(0, 0, s);
-          stem(0, 0, s, s * 2.9);
-          if (n.type === 1) {
-            ctx.beginPath();
-            ctx.moveTo(s * 0.53, -s * 2.9);
-            ctx.bezierCurveTo(s * 1.35, -s * 2.3, s * 1.45, -s * 1.6, s * 1.05, -s * 1.15);
-            ctx.stroke();
-          }
-        }
-        ctx.restore();
-      }
-
-      function drawNotes() {
-        for (var i = 0; i < notes.length; i++) {
-          var n = notes[i];
-          if (n.mode === "ride") {
-            var a = clamp((n.x + 24) / 80, 0, 1) * clamp((W + 40 - n.x) / 100, 0, 1);
-            drawNote(n, a * (n.col === NAVY ? 0.55 : 0.85), 1);
-          } else {
-            var q = n.age / n.life, pop = n.age < 200 ? n.age / 200 : Math.max(0, 1 - (n.age - 200) / 600);
-            drawNote(n, Math.pow(1 - q, 1.3) * 0.9, 1 + 0.35 * pop);
-          }
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      function drawStaff() {
-        ctx.lineWidth = 1.15;
-        for (var i = 0; i < 5; i++) {
-          ctx.strokeStyle = rgba(NAVY, i === 2 ? 0.18 : 0.14);
-          ctx.beginPath();
-          var px = 0, py = lineAt(i, 0);
-          ctx.moveTo(px, py);
-          for (var k = 1; k < NP; k++) {
-            var x = k * STEP, y = lineAt(i, k);
-            ctx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2);
-            px = x;
-            py = y;
-          }
-          ctx.lineTo(px, py);
-          ctx.stroke();
-        }
-      }
-
-      function frame(now) {
-        var dt = Math.min(48, now - last), t = (now - start) / 1000;
-        last = now;
-        ctx.clearRect(0, 0, W, H);
-        paintM(now, false);
-        ctx.drawImage(mLayer, 0, 0, W, H);
-        computeStaff(t);
-        stepGhost(now);
-        stepStaff(dt / 16.67);
-        checkPluck(now);
-        drawStamps(now);
-        drawStaff();
-        if (now - lastRider > (mobile ? 3400 : 3000)) {
-          spawnRider(-24);
-          lastRider = now;
-        }
-        stepNotes(t, dt);
-        drawNotes();
-        pointer.px = pointer.x;
-        pointer.py = pointer.y;
-        requestAnimationFrame(frame);
-      }
-
-      /* start with a melody already spread along the staff */
-      function seedRiders() {
-        notes = [];
-        var spacing = mobile ? 95 : 123;
-        for (var x = W + 20; x > -24; x -= spacing) spawnRider(x - Math.random() * spacing * 0.3);
-      }
-
-      function staticScene() {
-        ctx.clearRect(0, 0, W, H);
-        paintM(0, true);
-        ctx.drawImage(mLayer, 0, 0, W, H);
-        computeStaff(0);
-        drawStaff();
-        seedRiders();
-        stepNotes(0, 0);
-        drawNotes();
-      }
-
-      var hideTimer = null;
-      function hideHintSoon() {
-        if (hideTimer || !hint) return;
-        hideTimer = setTimeout(function () { hint.classList.add("is-hidden"); }, 2600);
-      }
-
-      buildTips();
-      resize();
-      if (reduce) {
-        staticScene();
-        window.addEventListener("resize", function () { resize(); staticScene(); });
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); buildM(); staticScene(); });
-      } else {
-        /* re-measure once the web fonts have set the final title width */
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); buildM(); });
-        seedRiders();
-        window.addEventListener("resize", resize);
-        window.addEventListener("pointermove", function (e) {
-          var now = performance.now();
-          if (ghost) { ghost = null; brush = null; }
-          if (now - pointer.lastMove > 250) brush = null;
-          pointer.vx = pointer.x > -1e3 ? e.clientX - pointer.x : 0;
-          pointer.x = e.clientX;
-          pointer.y = e.clientY;
-          pointer.active = true;
-          pointer.lastMove = now;
-          paintTo(e.clientX, e.clientY, false);
-          hideHintSoon();
-        }, { passive: true });
-        window.addEventListener("pointerdown", function (e) {
-          splash(e.clientX, e.clientY);
-          burst(e.clientX, e.clientY);
-          for (var i = 0; i < 5; i++) {
-            if (Math.abs(staffPos(i - 2, e.clientX) - e.clientY) > 70) continue;
-            var k = Math.round(e.clientX / STEP);
-            for (var j = -3; j <= 3; j++) if (k + j > 0 && k + j < NP - 1) vel[i][k + j] += (3 - Math.abs(j) * 0.8) * (i % 2 ? 1 : -1);
-          }
-          pointer.lastMove = performance.now();
-          hideHintSoon();
-        }, { passive: true });
-        document.addEventListener("pointerleave", function () { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; });
-        window.addEventListener("blur", function () { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; });
-        requestAnimationFrame(frame);
-      }
-      canvas.classList.add("is-ready");
-    })();
-  </script>
+  <script src="lab.js"></script>
 </body>
 </html>
