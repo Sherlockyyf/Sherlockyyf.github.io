@@ -22,8 +22,8 @@
       }
     })();
   </script>
-  <meta name="description" content="MUSE Lab (Multimodal Understanding and Synthesis for Explainability), led by Yifan Yuan: trustworthy multimodal generation, multimodal understanding, emotion AI, AI safety and embodied AI.">
-  <meta name="keywords" content="MUSE Lab, Yifan Yuan, 袁一帆, AIGC, diffusion models, multimodal LLM, hallucination, emotion AI, AI safety, embodied AI">
+  <meta name="description" content="MUSE Lab (Multimodal Understanding and Synthesis for Explainability), led by Yifan Yuan: image and video generation and editing, trustworthy LLMs and agents, multimodal understanding, emotion AI, AI safety and embodied AI.">
+  <meta name="keywords" content="MUSE Lab, Yifan Yuan, 袁一帆, AIGC, diffusion models, image editing, video generation, LLM agents, multimodal LLM, hallucination, emotion AI, AI safety, embodied AI">
   <link rel="canonical" href="https://yifanyuan.com/lab/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="MUSE Lab">
@@ -55,14 +55,13 @@
        "name:end" comment markers below by `node tools/render_site.js`, and again whenever the page editor
        publishes; hand edits between the markers are overwritten. -->
 
-  <a class="skip-link" href="#news"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
+  <a class="skip-link" href="#content"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
 
   <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>
 
   <header class="bar">
     <a class="brand" href="#top"><img src="../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>
     <nav class="nav" id="nav" aria-label="Sections">
-      <a href="#news"><span class="en">News</span><span class="zh">动态</span></a>
       <a href="#about"><span class="en">About</span><span class="zh">简介</span></a>
       <a href="#research"><span class="en">Research</span><span class="zh">研究方向</span></a>
       <a href="#publications"><span class="en">Publications</span><span class="zh">论文</span></a>
@@ -82,6 +81,7 @@
         <button type="button" data-set-lang="en" lang="en">EN</button>
         <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
       </div>
+      <a class="corner-logo" href="#top"><img src="../images/muse-logo.png" width="480" height="435" alt="MUSE Lab"></a>
       <button type="button" class="menu-btn" aria-controls="nav" aria-expanded="false">
         <span class="menu-btn__bars" aria-hidden="true"><span></span><span></span><span></span></span>
         <span class="vh en">Menu</span><span class="vh zh">菜单</span>
@@ -93,14 +93,16 @@
   <section class="hero" id="top">
     <canvas id="art" aria-hidden="true"></canvas>
     <div class="hero__inner">
-      <img class="logo" src="../images/muse-logo.png" width="480" height="435" alt="MUSE Lab logo">
-      <p class="eyebrow"><span class="en">Shenzhen University · College of Artificial Intelligence</span><span class="zh">深圳大学 · 人工智能学院</span></p>
       <h1 class="title"><span class="muse">MUSE</span> Lab</h1>
       <p class="subtitle">Multimodal Understanding and Synthesis for Explainability</p>
       <p class="tagline">
         <span class="en">We build <mark class="hl">trustworthy</mark> generative AI</span>
         <span class="zh">构建<mark class="hl">可信</mark>的生成式 AI</span>
       </p>
+      <div class="actions">
+        <a class="btn primary" href="#research"><span class="en">Our research</span><span class="zh">研究方向</span><span class="arrow arrow--down" aria-hidden="true">↓</span></a>
+        <a class="btn" href="../"><span class="en">PI: Yifan Yuan</span><span class="zh">负责人：袁一帆</span><span class="arrow" aria-hidden="true">→</span></a>
+      </div>
       <ul class="topics">
         <li>AIGC</li>
         <li><span class="en">Multimodal Understanding &amp; Generation</span><span class="zh">多模态理解与生成</span></li>
@@ -110,12 +112,20 @@
         <li><span class="en">Emotional Agents</span><span class="zh">情感智能体</span></li>
       </ul>
       <!-- lab-latest:start -->
-      <a class="latest" href="#news"><span class="latest__tag"><span class="en">New</span><span class="zh">最新</span></span><span class="latest__text"><span class="en">Two EMNLP 2026 papers are on arXiv with code: StateTrack and SurveyGraph.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：StateTrack 与 SurveyGraph。</span></span><span class="latest__arrow" aria-hidden="true">→</span></a>
-      <!-- lab-latest:end -->
-      <div class="actions">
-        <a class="btn primary" href="#research"><span class="en">Our research</span><span class="zh">研究方向</span><span class="arrow arrow--down" aria-hidden="true">↓</span></a>
-        <a class="btn" href="../"><span class="en">PI: Yifan Yuan</span><span class="zh">负责人：袁一帆</span><span class="arrow" aria-hidden="true">→</span></a>
+      <div class="ticker">
+        <span class="ticker__tag"><span class="en">News</span><span class="zh">最新</span></span>
+        <div class="ticker__view">
+          <ul class="ticker__list">
+            <li class="ticker__item"><span class="ticker__date">2026.10</span><span class="ticker__text"><span class="en">Two EMNLP 2026 papers are on arXiv with code: <a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> and <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：<a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> 与 <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.09</span><span class="ticker__text"><span class="en"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a> (EMNLP 2026) and our ACM MM 2026 paper on <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">object-dependent concept brittleness</a> are on arXiv with code.</span><span class="zh"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a>（EMNLP 2026）与 ACM MM 2026 论文 <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</a> 已公开于 arXiv 并开源代码。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.08</span><span class="ticker__text"><span class="en">New preprint on how LLM agent handoffs erode workflow constraints: <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”</a>.</span><span class="zh">新 Preprint <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</a>，研究多智能体交接过程中工作流约束的流失。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.08</span><span class="ticker__text"><span class="en">Three papers accepted to <strong>EMNLP 2026</strong>.</span><span class="zh">三篇论文被 <strong>EMNLP 2026</strong> 接收。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.07</span><span class="ticker__text"><span class="en">One paper accepted to <strong>ACM MM 2026</strong>.</span><span class="zh">一篇论文被 <strong>ACM MM 2026</strong> 接收。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2025.04</span><span class="ticker__text"><span class="en">One paper published in <strong>IEEE/CAA Journal of Automatica Sinica</strong>, with <a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">code</a>.</span><span class="zh">一篇论文发表于 <strong>IEEE/CAA Journal of Automatica Sinica</strong>，<a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">代码</a>已开源。</span></span></li>
+          </ul>
+        </div>
       </div>
+      <!-- lab-latest:end -->
     </div>
     <p class="hint" aria-hidden="true">
       <span class="hint-mouse"><span class="en">✎ Move to paint · click to play notes</span><span class="zh">✎ 移动鼠标作画 · 点击奏响音符</span></span>
@@ -124,30 +134,10 @@
   </section>
 
   <main id="content">
-    <!-- ===================== News ===================== -->
-    <section class="section" id="news">
-      <div class="sec-head reveal">
-        <span class="sec-num">01</span>
-        <h2 class="sec-title"><span class="en">News</span><span class="zh">最新动态</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 55 9, 115 16, 175 11 S 255 13, 296 10"/></svg></h2>
-      </div>
-      <div class="news__box reveal">
-        <!-- lab-news:start -->
-        <ol class="nlist">
-          <li class="nitem"><span class="nitem__date">2026.10</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en">Two EMNLP 2026 papers are on arXiv with code: <a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> and <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：<a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> 与 <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.09</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a> (EMNLP 2026) and our ACM MM 2026 paper on <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">object-dependent concept brittleness</a> are on arXiv with code.</span><span class="zh"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a>（EMNLP 2026）与 ACM MM 2026 论文 <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</a> 已公开于 arXiv 并开源代码。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.08</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en">New preprint on how LLM agent handoffs erode workflow constraints: <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”</a>.</span><span class="zh">新 Preprint <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</a>，研究多智能体交接过程中工作流约束的流失。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.08</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">Three papers accepted to <strong>EMNLP 2026</strong>.</span><span class="zh">三篇论文被 <strong>EMNLP 2026</strong> 接收。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.07</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper accepted to <strong>ACM MM 2026</strong>.</span><span class="zh">一篇论文被 <strong>ACM MM 2026</strong> 接收。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2025.04</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper published in <strong>IEEE/CAA Journal of Automatica Sinica</strong>, with <a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">code</a>.</span><span class="zh">一篇论文发表于 <strong>IEEE/CAA Journal of Automatica Sinica</strong>，<a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">代码</a>已开源。</span></p></li>
-        </ol>
-        <!-- lab-news:end -->
-      </div>
-    </section>
-
     <!-- ===================== About ===================== -->
     <section class="section" id="about">
       <div class="sec-head reveal">
-        <span class="sec-num">02</span>
+        <span class="sec-num">01</span>
         <h2 class="sec-title"><span class="en">About the Lab</span><span class="zh">实验室简介</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 50 7, 100 17, 160 11 S 250 8, 296 13"/></svg></h2>
       </div>
       <div class="about__grid">
@@ -156,8 +146,6 @@
             <!-- lab-about:start -->
             <p class="en">MUSE Lab stands for <strong>Multimodal Understanding and Synthesis for Explainability</strong>. The Muses were the Greek goddesses of art and inspiration: we want generative AI to be just as creative, and at the same time <strong>controllable, interpretable and trustworthy</strong>.</p>
             <p class="zh">MUSE Lab 的全称是 <strong>Multimodal Understanding and Synthesis for Explainability</strong>，即“面向可解释性的多模态理解与生成”。MUSE 也是希腊神话中司掌艺术与灵感的缪斯女神：我们希望生成式 AI 像缪斯一样富有创造力，同时<strong>可控、可解释、值得信任</strong>。</p>
-            <p class="en">The lab is led by <a href="../">Yifan Yuan</a>.</p>
-            <p class="zh">实验室负责人是<a href="../">袁一帆</a>。</p>
             <!-- lab-about:end -->
           </div>
           <div class="pi spotlight reveal">
@@ -174,7 +162,7 @@
         </div>
         <ol class="acronym reveal">
           <!-- lab-acronym:start -->
-          <li class="acro">
+          <li class="acro reveal">
             <span class="acro__letter" aria-hidden="true">M</span>
             <div class="acro__body">
               <strong class="acro__word">Multimodal<span class="zh"> · 多模态</span></strong>
@@ -182,7 +170,7 @@
               <p class="zh">联合建模图像、视频与语言。</p>
             </div>
           </li>
-          <li class="acro">
+          <li class="acro reveal">
             <span class="acro__letter" aria-hidden="true">U</span>
             <div class="acro__body">
               <strong class="acro__word">Understanding<span class="zh"> · 理解</span></strong>
@@ -190,7 +178,7 @@
               <p class="zh">看懂模型理解了什么、为什么会出错。</p>
             </div>
           </li>
-          <li class="acro">
+          <li class="acro reveal">
             <span class="acro__letter" aria-hidden="true">S</span>
             <div class="acro__body">
               <strong class="acro__word">Synthesis<span class="zh"> · 生成</span></strong>
@@ -198,7 +186,7 @@
               <p class="zh">精确、可控地生成与编辑内容。</p>
             </div>
           </li>
-          <li class="acro">
+          <li class="acro reveal">
             <span class="acro__letter" aria-hidden="true">E</span>
             <div class="acro__body">
               <strong class="acro__word">Explainability<span class="zh"> · 可解释</span></strong>
@@ -214,67 +202,67 @@
     <!-- ===================== Research ===================== -->
     <section class="section" id="research">
       <div class="sec-head reveal">
-        <span class="sec-num">03</span>
+        <span class="sec-num">02</span>
         <h2 class="sec-title"><span class="en">Research Directions</span><span class="zh">研究方向</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 17, 110 7, 170 12 S 255 15, 296 9"/></svg></h2>
       </div>
       <div class="dirs">
         <!-- lab-research:start -->
-        <article class="dir dir--trust spotlight reveal" id="dir-trust">
+        <article class="dir dir--visual spotlight reveal" id="dir-visual">
           <div class="dir__cover dir__cover--1">
-            <a class="dir__shot dir__shot--zoom" href="../images/papers/concept-brittleness-fig1.jpg" target="_blank" rel="noopener" data-zoom="zoom-trust-0"><img src="../images/papers/concept-brittleness-fig1.jpg" alt="Flux images for fixed concepts: correct ink sketches of grapes, vintage photos of trains and pink bananas, but repeated failures for cakes, LEGO and carrots" loading="lazy" style="object-position:50% 0%"></a>
-            <template id="zoom-trust-0"><span class="en">Object-dependent concept brittleness: for a fixed concept, Flux succeeds on most objects but keeps failing on a few semantically related ones, whatever the random seed.</span><span class="zh">物体依赖的概念脆弱性：同一个概念，Flux 对大多数物体都能画对，却在少数语义相关的物体上反复失败，换随机种子也一样。</span> <a class="dfig__paper" href="#p-mm26">Concept Brittleness · ACM MM 2026</a></template>
+            <span class="dir__shot"><img src="../images/dir-visual.webp" alt="Illustration: a canvas of noise turning into a mountain landscape, with a film strip and a paintbrush" loading="lazy"></span>
           </div>
           <div class="dir__body">
             <div class="dir__head">
-              <span class="dir__seal" aria-hidden="true">信</span>
-              <h3 class="dir__title"><span class="en">Trustworthy Multimodal Generation</span><span class="zh">多模态可信生成</span></h3>
+              <span class="dir__seal" aria-hidden="true">绘</span>
+              <h3 class="dir__title"><span class="en">Image &amp; Video Generation and Editing</span><span class="zh">图像视频生成与编辑</span></h3>
             </div>
-            <p class="dir__text en">From models that can generate to models you can trust: grounded, self-aware and correctable.</p>
-            <p class="dir__text zh">让多模态大模型与扩散模型从“能够生成”走向“可信生成”。</p>
+            <p class="dir__text en">Why diffusion models fail on certain concepts, and how to generate and edit images and videos precisely while keeping meaning and identity intact.</p>
+            <p class="dir__text zh">探究扩散模型为何在特定概念上失效，在保持语义与身份不变的前提下，精确地生成与编辑图像和视频。</p>
             <ul class="dir__topics">
-              <li><span class="en">Predicting and steering hallucinations</span><span class="zh">幻觉风险的预测与干预</span></li>
               <li><span class="en">Inside diffusion models</span><span class="zh">扩散模型的内部机理</span></li>
-              <li><span class="en">Attribute binding and control</span><span class="zh">属性解耦与可控生成</span></li>
-              <li><span class="en">Reliable LLMs and agents</span><span class="zh">可信的大模型与智能体</span></li>
+              <li><span class="en">Disentangled, controllable editing</span><span class="zh">属性解耦与可控编辑</span></li>
+              <li><span class="en">Identity-preserving image and video editing</span><span class="zh">保持身份的图像与视频编辑</span></li>
+              <li><span class="en">Reliability of generative editing</span><span class="zh">生成式编辑的可靠性评估</span></li>
             </ul>
             <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
             <ul class="dir__papers">
               <li><a href="#p-mm26"><span class="dir__name">Concept Brittleness</span><span class="dir__venue">ACM MM 2026</span></a></li>
               <li><a href="#p-jas25"><span class="dir__name">Semantic Discrepancy</span><span class="dir__venue">IEEE/CAA JAS 2025</span></a></li>
-              <li><a href="#p-state"><span class="dir__name">StateTrack</span><span class="dir__venue">EMNLP 2026</span></a></li>
-              <li><a href="#p-remcts"><span class="dir__name">ReMCTS</span><span class="dir__venue">EMNLP 2026</span></a></li>
+              <li><a href="#p-icassp23"><span class="dir__name">DO-FAM</span><span class="dir__venue">ICASSP 2023</span></a></li>
+              <li><a href="#p-icassp22"><span class="dir__name">VR-FAM</span><span class="dir__venue">ICASSP 2022</span></a></li>
             </ul>
           </div>
         </article>
-        <article class="dir dir--perceive spotlight reveal" id="dir-perceive">
-          <div class="dir__cover dir__cover--2">
-            <span class="dir__shot"><img src="../images/dir-perceive-clapper.jpg" alt="A film clapperboard held up on set" loading="lazy" style="object-position:50% 45%"></span>
-            <span class="dir__shot"><img src="../images/dir-perceive-clothes.jpg" alt="A rack of clothes at a fashion show" loading="lazy" style="object-position:50% 30%"></span>
+        <article class="dir dir--trust spotlight reveal" id="dir-trust">
+          <div class="dir__cover dir__cover--1">
+            <span class="dir__shot"><img src="../images/dir-trust.webp" alt="Illustration: AI agents linked in a network above a chat bubble, a shield with a check mark and a checklist" loading="lazy"></span>
           </div>
           <div class="dir__body">
             <div class="dir__head">
-              <span class="dir__seal" aria-hidden="true">观</span>
-              <h3 class="dir__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></h3>
+              <span class="dir__seal" aria-hidden="true">信</span>
+              <h3 class="dir__title"><span class="en">Trustworthy LLMs &amp; Agents</span><span class="zh">可信大模型与智能体</span></h3>
             </div>
-            <p class="dir__text en">Models that understand video, images and text, put to work on real tasks.</p>
-            <p class="dir__text zh">让模型读懂视频、图像与文字，并落到真实场景中。</p>
+            <p class="dir__text en">LLMs and agents that stay reliable through long dialogues and multi-agent workflows: they keep to their constraints, catch their own mistakes and can show their sources.</p>
+            <p class="dir__text zh">让大模型与智能体在长程对话与多智能体协作中保持可靠：守得住约束、查得出错误、说得出依据。</p>
             <ul class="dir__topics">
-              <li><span class="en">Moment retrieval and highlights</span><span class="zh">视频时刻检索与高光检测</span></li>
-              <li><span class="en">Story-aware video editing</span><span class="zh">懂剧情的智能剪辑</span></li>
-              <li><span class="en">Virtual try-on quality checks</span><span class="zh">虚拟试衣失真检测</span></li>
+              <li><span class="en">Predicting and steering hallucinations</span><span class="zh">幻觉风险的预测与干预</span></li>
+              <li><span class="en">State integrity in long dialogues</span><span class="zh">长程对话的状态保持</span></li>
+              <li><span class="en">Constraints across agent handoffs</span><span class="zh">多智能体交接中的约束保持</span></li>
+              <li><span class="en">Reflective search for code generation</span><span class="zh">代码生成的反思式搜索</span></li>
               <li><span class="en">Grounded survey writing</span><span class="zh">有依据的综述写作</span></li>
             </ul>
-            <p class="dir__figs"><span class="dir__figs-label"><span class="en">Figures</span><span class="zh">配图</span></span><a class="dir__figlink" href="../images/papers/surveygraph-pipeline.jpg" target="_blank" rel="noopener" data-zoom="zoom-perceive-f0" data-alt="SurveyGraph pipeline: knowledge-graph construction, graph-driven survey generation, and integrated evaluation"><span class="en">SurveyGraph pipeline</span><span class="zh">SurveyGraph 流程</span></a><template id="zoom-perceive-f0"><span class="en">SurveyGraph in three phases: building the methods–entity knowledge graph, writing the survey along it, and evaluating the result with several models.</span><span class="zh">SurveyGraph 的三个阶段：构建方法—实体知识图谱，沿图谱生成综述，再由多个模型综合评估。</span> <a class="dfig__paper" href="#p-surveygraph">SurveyGraph · EMNLP 2026</a></template><span class="dir__dot" aria-hidden="true">·</span><a class="dir__figlink" href="../images/papers/surveygraph-mekg.jpg" target="_blank" rel="noopener" data-zoom="zoom-perceive-f1" data-alt="Schema of the methods–entity knowledge graph: a focal paper linked to prior work, baselines, cited work, methods, tasks, datasets and metrics"><span class="en">knowledge-graph schema</span><span class="zh">知识图谱结构</span></a><template id="zoom-perceive-f1"><span class="en">The knowledge-graph schema: how a paper relates to prior work, baselines and citations, and to methods, tasks, datasets and metrics.</span><span class="zh">知识图谱的结构：一篇论文与前序工作、基线、被引文献的关系，以及与方法、任务、数据集、指标的关系。</span> <a class="dfig__paper" href="#p-surveygraph">SurveyGraph · EMNLP 2026</a></template></p>
             <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
             <ul class="dir__papers">
+              <li><a href="#p-state"><span class="dir__name">StateTrack</span><span class="dir__venue">EMNLP 2026</span></a></li>
+              <li><a href="#p-remcts"><span class="dir__name">ReMCTS</span><span class="dir__venue">EMNLP 2026</span></a></li>
               <li><a href="#p-surveygraph"><span class="dir__name">SurveyGraph</span><span class="dir__venue">EMNLP 2026</span></a></li>
+              <li><a href="#p-handoff"><span class="dir__name">Agent Handoffs</span><span class="dir__venue">Preprint 2026</span></a></li>
             </ul>
           </div>
         </article>
         <article class="dir dir--emotion spotlight reveal" id="dir-emotion">
-          <div class="dir__cover dir__cover--2">
-            <span class="dir__shot"><img src="../images/dir-emotion-paro.jpg" alt="PARO, a soft white seal-shaped companion robot" loading="lazy" style="object-position:86% 30%"></span>
-            <span class="dir__shot"><img src="../images/dir-emotion-companions.jpg" alt="Companion robots LOVOT, Buddy, Moxie and Aibo on display" loading="lazy" style="object-position:6% 60%"></span>
+          <div class="dir__cover dir__cover--1">
+            <span class="dir__shot"><img src="../images/dir-emotion.webp" alt="Illustration: a friendly companion robot between speech bubbles and small hearts" loading="lazy"></span>
           </div>
           <div class="dir__body">
             <div class="dir__head">
@@ -297,9 +285,28 @@
             </ul>
           </div>
         </article>
+        <article class="dir dir--understand spotlight reveal" id="dir-understand">
+          <div class="dir__cover dir__cover--1">
+            <span class="dir__shot"><img src="../images/dir-understand.webp" alt="Illustration: an image, a video and a text bubble flowing into an eye that reads them" loading="lazy"></span>
+          </div>
+          <div class="dir__body">
+            <div class="dir__head">
+              <span class="dir__seal" aria-hidden="true">懂</span>
+              <h3 class="dir__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></h3>
+            </div>
+            <p class="dir__text en">Models that understand video, images and text, put to work on real tasks.</p>
+            <p class="dir__text zh">让模型读懂视频、图像与文字，并落到真实场景中。</p>
+            <ul class="dir__topics">
+              <li><span class="en">Moment retrieval and highlights</span><span class="zh">视频时刻检索与高光检测</span></li>
+              <li><span class="en">Story-aware video editing</span><span class="zh">懂剧情的智能剪辑</span></li>
+              <li><span class="en">Virtual try-on quality checks</span><span class="zh">虚拟试衣失真检测</span></li>
+              <li><span class="en">Multimodal retrieval and moderation</span><span class="zh">多模态信息检索与审核</span></li>
+            </ul>
+          </div>
+        </article>
         <article class="dir dir--safety spotlight reveal" id="dir-safety">
           <div class="dir__cover dir__cover--1">
-            <span class="dir__shot"><img src="../images/dir-safety-locks.jpg" alt="Hundreds of padlocks locked onto a fence" loading="lazy" style="object-position:50% 40%"></span>
+            <span class="dir__shot"><img src="../images/dir-safety.webp" alt="Illustration: arrows bouncing off protective rings around a shield with a padlock" loading="lazy"></span>
           </div>
           <div class="dir__body">
             <div class="dir__head">
@@ -316,9 +323,8 @@
           </div>
         </article>
         <article class="dir dir--embodied spotlight reveal" id="dir-embodied">
-          <div class="dir__cover dir__cover--2">
-            <span class="dir__shot"><img src="../images/dir-embodied-humanoid.jpg" alt="A humanoid robot carrying a cardboard box in a lab" loading="lazy" style="object-position:50% 35%"></span>
-            <span class="dir__shot"><img src="../images/dir-embodied-wheeled.jpg" alt="A wheeled humanoid robot with two arms in a lab" loading="lazy" style="object-position:50% 30%"></span>
+          <div class="dir__cover dir__cover--1">
+            <span class="dir__shot"><img src="../images/dir-embodied.webp" alt="Illustration: a robot arm lifting a block to stack it on others" loading="lazy"></span>
           </div>
           <div class="dir__body">
             <div class="dir__head">
@@ -341,7 +347,7 @@
     <!-- ===================== Publications ===================== -->
     <section class="section" id="publications">
       <div class="sec-head reveal">
-        <span class="sec-num">04</span>
+        <span class="sec-num">03</span>
         <h2 class="sec-title"><span class="en">Publications</span><span class="zh">论文成果</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 C 45 16, 105 8, 165 13 S 245 9, 296 14"/></svg></h2>
       </div>
       <h3 class="sub reveal" id="featured-title"><span class="en">Featured</span><span class="zh">代表性论文</span></h3>
@@ -424,10 +430,10 @@
       </div>
       <div class="years">
         <!-- lab-publications:start -->
-        <section class="year reveal" data-year="2026">
-          <h3 class="year__label">2026</h3>
+        <section class="year" data-year="2026">
+          <h3 class="year__label reveal">2026</h3>
           <ol class="plist">
-            <li class="pitem" id="p-mm26" data-theme="visual">
+            <li class="pitem reveal" id="p-mm26" data-theme="visual">
               <span class="pitem__venue">ACM MM 2026</span>
               <div class="pitem__body">
                 <span class="pitem__title">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</span>
@@ -436,7 +442,7 @@
               </div>
               <span class="pitem__seal pitem__seal--visual" aria-hidden="true">绘</span>
             </li>
-            <li class="pitem" id="p-state" data-theme="trust">
+            <li class="pitem reveal" id="p-state" data-theme="trust">
               <span class="pitem__venue">EMNLP 2026</span>
               <div class="pitem__body">
                 <span class="pitem__title">When LLMs Forget What They Believe: Characterizing State Integrity Collapse in Long-Horizon Dialogues</span>
@@ -445,7 +451,7 @@
               </div>
               <span class="pitem__seal pitem__seal--trust" aria-hidden="true">信</span>
             </li>
-            <li class="pitem" id="p-remcts" data-theme="trust">
+            <li class="pitem reveal" id="p-remcts" data-theme="trust">
               <span class="pitem__venue">EMNLP 2026</span>
               <div class="pitem__body">
                 <span class="pitem__title">ReMCTS: Reflection-Enhanced Monte Carlo Tree Search for Code Generation</span>
@@ -454,7 +460,7 @@
               </div>
               <span class="pitem__seal pitem__seal--trust" aria-hidden="true">信</span>
             </li>
-            <li class="pitem" id="p-surveygraph" data-theme="trust">
+            <li class="pitem reveal" id="p-surveygraph" data-theme="trust">
               <span class="pitem__venue">EMNLP 2026</span>
               <div class="pitem__body">
                 <span class="pitem__title">SurveyGraph: Generating Academic Surveys via Methods-Entity Knowledge Graphs</span>
@@ -463,7 +469,7 @@
               </div>
               <span class="pitem__seal pitem__seal--trust" aria-hidden="true">信</span>
             </li>
-            <li class="pitem" id="p-handoff" data-theme="trust">
+            <li class="pitem reveal" id="p-handoff" data-theme="trust">
               <span class="pitem__venue pitem__venue--muted">Preprint 2026</span>
               <div class="pitem__body">
                 <span class="pitem__title">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</span>
@@ -474,10 +480,10 @@
             </li>
           </ol>
         </section>
-        <section class="year reveal" data-year="2025">
-          <h3 class="year__label">2025</h3>
+        <section class="year" data-year="2025">
+          <h3 class="year__label reveal">2025</h3>
           <ol class="plist">
-            <li class="pitem" id="p-jas25" data-theme="visual">
+            <li class="pitem reveal" id="p-jas25" data-theme="visual">
               <span class="pitem__venue">IEEE/CAA JAS 2025</span>
               <div class="pitem__body">
                 <span class="pitem__title">Dissecting and Mitigating Semantic Discrepancy in Stable Diffusion for Image-to-Image Translation</span>
@@ -488,10 +494,10 @@
             </li>
           </ol>
         </section>
-        <section class="year reveal" data-year="2023">
-          <h3 class="year__label">2023</h3>
+        <section class="year" data-year="2023">
+          <h3 class="year__label reveal">2023</h3>
           <ol class="plist">
-            <li class="pitem" id="p-icassp23" data-theme="visual">
+            <li class="pitem reveal" id="p-icassp23" data-theme="visual">
               <span class="pitem__venue">ICASSP 2023</span>
               <div class="pitem__body">
                 <span class="pitem__title">DO-FAM: Disentangled Non-Linear Latent Navigation for Facial Attribute Manipulation</span>
@@ -500,7 +506,7 @@
               </div>
               <span class="pitem__seal pitem__seal--visual" aria-hidden="true">绘</span>
             </li>
-            <li class="pitem" id="p-ch7" data-theme="affect">
+            <li class="pitem reveal" id="p-ch7" data-theme="affect">
               <span class="pitem__venue pitem__venue--muted">Book Chapter 2023</span>
               <div class="pitem__body">
                 <span class="pitem__title">High-Speed Joint Learning of Action Units and Facial Expressions</span>
@@ -509,7 +515,7 @@
               </div>
               <span class="pitem__seal pitem__seal--affect" aria-hidden="true">情</span>
             </li>
-            <li class="pitem" id="p-ch8" data-theme="affect">
+            <li class="pitem reveal" id="p-ch8" data-theme="affect">
               <span class="pitem__venue pitem__venue--muted">Book Chapter 2023</span>
               <div class="pitem__body">
                 <span class="pitem__title">ExpressionFlow: A Microexpression Descriptor for Efficient Recognition</span>
@@ -520,10 +526,10 @@
             </li>
           </ol>
         </section>
-        <section class="year reveal" data-year="2022">
-          <h3 class="year__label">2022</h3>
+        <section class="year" data-year="2022">
+          <h3 class="year__label reveal">2022</h3>
           <ol class="plist">
-            <li class="pitem" id="p-icassp22" data-theme="visual">
+            <li class="pitem reveal" id="p-icassp22" data-theme="visual">
               <span class="pitem__venue">ICASSP 2022</span>
               <div class="pitem__body">
                 <span class="pitem__title">VR-FAM: Variance-Reduced Encoder with Nonlinear Transformation for Facial Attribute Manipulation</span>
@@ -534,10 +540,10 @@
             </li>
           </ol>
         </section>
-        <section class="year reveal" data-year="2020">
-          <h3 class="year__label">2020</h3>
+        <section class="year" data-year="2020">
+          <h3 class="year__label reveal">2020</h3>
           <ol class="plist">
-            <li class="pitem" id="p-jig20" data-theme="affect">
+            <li class="pitem reveal" id="p-jig20" data-theme="affect">
               <span class="pitem__venue">JIG 2020</span>
               <div class="pitem__body">
                 <span class="pitem__title">Spatiotemporal Attention Network for Microexpression Recognition</span>
@@ -555,16 +561,16 @@
     <!-- ===================== Contact ===================== -->
     <section class="section" id="contact">
       <div class="sec-head reveal">
-        <span class="sec-num">05</span>
+        <span class="sec-num">04</span>
         <h2 class="sec-title"><span class="en">Contact</span><span class="zh">联系我们</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 8, 120 16, 180 11 S 255 12, 296 12"/></svg></h2>
       </div>
       <p class="contact__intro reveal"><!-- lab-contact-intro:start --><span class="en">Research and business collaborations are welcome. Get in touch:</span><span class="zh">欢迎科研与商业合作，有合作意向欢迎联系我们：</span><!-- lab-contact-intro:end --></p>
       <ul class="contact__list reveal">
         <!-- lab-contact:start -->
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="crow__label"><span class="en">Email</span><span class="zh">邮箱</span></span><span class="crow__value"><a href="mailto:yifanyuan@szu.edu.cn">yifanyuan@szu.edu.cn</a></span></li>
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span class="crow__label"><span class="en">Address</span><span class="zh">地址</span></span><span class="crow__value"><span class="en">College of Artificial Intelligence, Shenzhen University, Shenzhen, China</span><span class="zh">中国 · 深圳 · 深圳大学人工智能学院</span></span></li>
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span class="crow__label"><span class="en">Code</span><span class="zh">代码</span></span><span class="crow__value"><a href="https://github.com/MUSE-AI-Lab" target="_blank" rel="noopener">github.com/MUSE-AI-Lab</a></span></li>
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="crow__label"><span class="en">PI</span><span class="zh">负责人</span></span><span class="crow__value"><a href="../"><span class="en">Yifan Yuan · yifanyuan.com</span><span class="zh">袁一帆 · yifanyuan.com</span></a></span></li>
+        <li class="crow reveal"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="crow__label"><span class="en">PI</span><span class="zh">负责人</span></span><span class="crow__value"><a href="../"><span class="en">Yifan Yuan · yifanyuan.com</span><span class="zh">袁一帆 · yifanyuan.com</span></a></span></li>
+        <li class="crow reveal"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span class="crow__label"><span class="en">Address</span><span class="zh">地址</span></span><span class="crow__value"><span class="en">College of Artificial Intelligence, Shenzhen University, Shenzhen, China</span><span class="zh">中国 · 深圳 · 深圳大学人工智能学院</span></span></li>
+        <li class="crow reveal"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="crow__label"><span class="en">Email</span><span class="zh">邮箱</span></span><span class="crow__value"><a href="mailto:yifanyuan@szu.edu.cn">yifanyuan@szu.edu.cn</a></span></li>
+        <li class="crow reveal"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span class="crow__label"><span class="en">Code</span><span class="zh">代码</span></span><span class="crow__value"><a href="https://github.com/MUSE-AI-Lab" target="_blank" rel="noopener">github.com/MUSE-AI-Lab</a></span></li>
         <!-- lab-contact:end -->
       </ul>
     </section>
@@ -573,7 +579,7 @@
   <footer class="foot">
     <p>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>
     <a class="to-top" href="#top"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg><span class="en">Back to top</span><span class="zh">回到顶部</span></a>
-    <p class="foot__credits"><!-- lab-credits:start --><span class="en">Photos:</span><span class="zh">图片来源：</span> <a href="https://commons.wikimedia.org/wiki/File:Clapperboard,_O2_film,_September_2008.jpg" target="_blank" rel="noopener"><span class="en">Clapperboard © Mattbr (CC BY 2.0)</span><span class="zh">场记板 © Mattbr（CC BY 2.0）</span></a> · <a href="https://commons.wikimedia.org/wiki/File:2008_Taipei_In_Style_Outdoor_Fashion_Show_Clothes_Racks.jpg" target="_blank" rel="noopener"><span class="en">Clothes racks © Rico Shen (CC BY-SA 4.0)</span><span class="zh">衣架 © Rico Shen（CC BY-SA 4.0）</span></a> · <a href="https://commons.wikimedia.org/wiki/File:Robots%C3%A4len_Paro_TEKS0057912.jpg" target="_blank" rel="noopener"><span class="en">PARO © Tekniska museet / Peter Häll (CC BY-SA 4.0)</span><span class="zh">PARO 陪伴机器人 © Tekniska museet / Peter Häll（CC BY-SA 4.0）</span></a> · <a href="https://commons.wikimedia.org/wiki/File:223_MNACTEC,_exposici%C3%B3_Robots,_rob%C3%B2tica_per_a_la_llar,_LOVOT,_Buddy,_Moxie_i_Aibo.jpg" target="_blank" rel="noopener"><span class="en">LOVOT, Buddy, Moxie and Aibo © Enric (CC BY-SA 4.0)</span><span class="zh">LOVOT、Buddy、Moxie、Aibo © Enric（CC BY-SA 4.0）</span></a> · <a href="https://commons.wikimedia.org/wiki/File:Love_padlocks_Paris_pont_archev%C3%AAch%C3%A9.jpg" target="_blank" rel="noopener"><span class="en">Padlocks by Jebulon (CC0)</span><span class="zh">挂锁 Jebulon（CC0）</span></a><!-- lab-credits:end --></p>
+    <p class="foot__credits"><!-- lab-credits:start --><!-- lab-credits:end --></p>
   </footer>
 
   <script src="lab.js"></script>

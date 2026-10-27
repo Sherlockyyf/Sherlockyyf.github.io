@@ -1,5 +1,5 @@
 /* MUSE Lab page (lab/index.html): language switch, note sounds, the music-and-painting hero,
-   navigation, scroll reveal, featured-paper tabs, publication filters, the folded news and the
+   the news ticker, navigation, scroll reveal, featured-paper tabs, publication filters and the
    viewer for research figures. */
 (function () {
   "use strict";
@@ -54,17 +54,18 @@
     all(".hero, main > section").forEach(function (s) { spy.observe(s); });
   }
 
-  /* ---------- scroll reveal (cards in a row come in one after another) ---------- */
+  /* ---------- scroll reveal, as on the homepage: blocks float up as they come into view,
+     siblings that arrive together one after another ---------- */
   if (root.classList.contains("js-reveal")) {
     all(".reveal").forEach(function (el) {
       var i = all(":scope > .reveal", el.parentNode).indexOf(el);
-      if (i > 0) el.style.setProperty("--d", Math.min(i, 4) * 0.09 + "s");
+      if (i > 0) el.style.setProperty("--d", Math.min(i, 6) * 0.08 + "s");
     });
     var shown = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (en.isIntersecting) { en.target.classList.add("is-in"); shown.unobserve(en.target); }
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.08 });
     all(".reveal").forEach(function (el) { shown.observe(el); });
     window.__labReady = true;
   }
@@ -193,19 +194,36 @@
     box.querySelector(".lightbox__close").focus({ preventScroll: true });
   });
 
-  /* ---------- news: show the folded older entries ---------- */
-  var more = document.querySelector(".more");
-  if (more) {
-    more.addEventListener("click", function () {
-      document.querySelector(".nlist").classList.remove("is-folded");
-      more.setAttribute("aria-expanded", "true");
-      more.hidden = true;
-    });
+  /* ---------- news ticker in the hero: every few seconds the list moves up one item and the
+     top one goes round to the end. It waits while the pointer or keyboard focus is on it;
+     with reduced motion it stays still and scrolls by hand (lab.css). ---------- */
+  var tickList = document.querySelector(".ticker__list");
+  if (tickList && !reduce && tickList.children.length > 2) {
+    var ticker = closest(tickList, ".ticker"), held = false, moving = false;
+    ticker.addEventListener("pointerenter", function () { held = true; });
+    ticker.addEventListener("pointerleave", function () { held = false; });
+    ticker.addEventListener("focusin", function () { held = true; });
+    ticker.addEventListener("focusout", function () { held = false; });
+    setInterval(function () {
+      if (held || moving || document.hidden) return;
+      var first = tickList.firstElementChild;
+      moving = true;
+      tickList.style.transition = "transform 0.7s cubic-bezier(0.2, 0.65, 0.3, 1)";
+      tickList.style.transform = "translateY(" + -first.offsetHeight + "px)";
+      setTimeout(function () {
+        tickList.style.transition = "none";
+        tickList.appendChild(first);
+        tickList.style.transform = "";
+        void tickList.offsetHeight;
+        moving = false;
+      }, 750);
+    }, 3200);
   }
 
-  /* ---------- sound: soft mallet notes on a pentatonic scale, higher on the
-     screen = higher in pitch. Browsers allow audio only after a click, tap
-     or key press, so the first one wakes it up; the speaker button mutes it. ---------- */
+  /* ---------- sound: soft mallet notes on a pentatonic scale for the notes and strings
+     (higher on the screen = higher in pitch), and a short swing riff for a click.
+     Browsers allow audio only after a click, tap or key press, so the first one wakes
+     it up; the speaker button mutes it. ---------- */
   var PENTA = [0, 2, 4, 7, 9];
   var soundBtn = document.querySelector(".sound");
   var soundOn = true, audio = null, nextNote = 0, voices = 0, tapAt = null;
@@ -295,11 +313,88 @@
   /* a note on the staff sounds its place: top line G5 … bottom line C4 */
   function chimeAt(pos, x, level) { chime(Math.round((2 - pos) * 2), x, level); }
 
-  /* a click strums three notes, pitched by how high up the hero it lands */
-  function strum(x, y) {
+  /* the click riff, an original swing lick: a run up to E, a blue-note turn, then a
+     C6/9 chord with a soft brassy swell. Beats at 168 bpm; pitches in semitones from middle C. */
+  var BEAT = 60 / 168;
+  var RIFF = [[0, 0.3, 7, 0.75], [0.33, 0.3, 9, 0.8], [0.66, 0.3, 12, 0.85], [1, 0.45, 16, 1], [1.5, 0.1, 15, 0.6], [1.62, 0.36, 16, 0.85]];
+  var RIFF_CHORD = [-12, 4, 9, 14, 19];   // C3 under E4 A4 D5 G5
+  var riffBus = null;
+
+  function hz(semis) { return 261.63 * Math.pow(2, semis / 12); }
+
+  /* an electric-piano note: a few sine partials, each fading at its own pace, damped at the end */
+  function piano(freq, t, len, level, out) {
+    var ac = audio.ctx;
+    [[1, 1, 0.5], [2, 0.3, 0.2], [3, 0.1, 0.12], [4, 0.04, 0.08]].forEach(function (p) {
+      var o = ac.createOscillator(), g = ac.createGain();
+      o.frequency.value = freq * p[0];
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.125 * level * p[1], t + 0.006);
+      g.gain.setTargetAtTime(0, t + 0.006, p[2]);
+      g.gain.setTargetAtTime(0, t + len, 0.05);
+      o.connect(g);
+      g.connect(out);
+      o.start(t);
+      o.stop(t + len + 0.4);
+    });
+  }
+
+  /* a soft brass note: two detuned saws through a filter that opens ("bwah") and a shake that grows */
+  function brass(freq, t, len, out) {
+    var ac = audio.ctx, f = ac.createBiquadFilter(), g = ac.createGain(), lfo = ac.createOscillator(), shake = ac.createGain();
+    f.type = "lowpass";
+    f.Q.value = 1.5;
+    f.frequency.setValueAtTime(450, t);
+    f.frequency.linearRampToValueAtTime(2000, t + 0.07);
+    f.frequency.setTargetAtTime(1000, t + 0.07, 0.25);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.027, t + 0.035);
+    g.gain.setTargetAtTime(0.018, t + 0.035, 0.2);
+    g.gain.setTargetAtTime(0, t + len, 0.12);
+    lfo.frequency.value = 5.5;
+    shake.gain.setValueAtTime(0, t);
+    shake.gain.linearRampToValueAtTime(12, t + len);   // cents
+    lfo.connect(shake);
+    f.connect(g);
+    g.connect(out);
+    [-7, 7].forEach(function (cents) {
+      var o = ac.createOscillator();
+      o.type = "sawtooth";
+      o.frequency.value = freq;
+      o.detune.value = cents;
+      shake.connect(o.detune);
+      o.connect(f);
+      o.start(t);
+      o.stop(t + len + 0.8);
+    });
+    lfo.start(t);
+    lfo.stop(t + len + 0.8);
+  }
+
+  /* a click plays the riff, panned toward where it lands; a new click cuts the last one off */
+  function riff(x) {
     whenAudible(function () {
-      var step = Math.round(clamp(1 - y / H, 0, 1) * 6);
-      for (var i = 0; i < 3; i++) chime(step + i * 2, x, 0.8);
+      var ac = audio.ctx, t0 = ac.currentTime + 0.02, bus = ac.createGain(), dest = audio.input;
+      if (riffBus) {
+        var old = riffBus;
+        old.gain.setTargetAtTime(0, t0, 0.03);
+        setTimeout(function () { old.disconnect(); }, 400);
+      }
+      if (ac.createStereoPanner) {
+        var pan = ac.createStereoPanner();
+        pan.pan.value = clamp((x / W) * 2 - 1, -1, 1) * 0.4;
+        pan.connect(dest);
+        dest = pan;
+      }
+      bus.connect(dest);
+      riffBus = bus;
+      RIFF.forEach(function (n) { piano(hz(n[2]), t0 + n[0] * BEAT, n[1] * BEAT, n[3], bus); });
+      var tc = t0 + 2 * BEAT;
+      RIFF_CHORD.forEach(function (s, i) {
+        piano(hz(s), tc, 1.3, i ? 0.5 : 0.75, bus);
+        if (i) brass(hz(s), tc, 0.8, bus);
+      });
+      setTimeout(function () { if (riffBus === bus) { riffBus = null; bus.disconnect(); } }, 3500);
     });
   }
 
@@ -338,7 +433,6 @@
   var hint = document.querySelector(".hint");
   var inner = document.querySelector(".hero__inner");
   var titleEl = document.querySelector(".title");
-  var actions = document.querySelector(".actions");
 
   var NAVY = [20, 41, 74], ORANGE = [247, 146, 63], SKY = [72, 170, 210];
   var LAV = [146, 126, 214], ROSE = [222, 128, 152], MINT = [92, 184, 146];
@@ -450,7 +544,7 @@
     mctx.globalCompositeOperation = "source-over";
   }
 
-  /* the staff runs through the free band between the buttons and the hint
+  /* the staff runs through the free band between the hero text and the hint
      and, on wide screens, sweeps up the empty right margin, gently waving */
   function staffY(x, t) {
     var u = x / W;
@@ -482,7 +576,7 @@
 
   /* find the free band from the layout (offsets ignore the entrance transforms) */
   function measure() {
-    var bottom = inner.offsetTop + actions.offsetTop + actions.offsetHeight;
+    var last = inner.lastElementChild, bottom = inner.offsetTop + last.offsetTop + last.offsetHeight;
     var below = hint && hint.offsetParent ? hint.offsetTop : H;
     mid = clamp((bottom + below) / 2 / H, 0.55, 0.95);
     GAP = clamp(Math.round((below - bottom - 24) / 4.5), 7, mobile ? 9 : 12);   // fit the staff into the band
@@ -848,13 +942,13 @@
 
   function leave() { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; }
 
-  /* a click or tap in the hero: paint splash, a fan of notes, nearby strings ring, a strum */
+  /* a click or tap in the hero: paint splash, a fan of notes, nearby strings ring, the riff */
   function play(x, y, target) {
     splash(x, y);
     burst(x, y);
     shake(x, y);
     if (!closest(target, ".sound")) {
-      if (audio) strum(x, y);
+      if (audio) riff(x);
       else tapAt = [x, y];
     }
     pointer.lastMove = performance.now();
@@ -920,7 +1014,7 @@
       if (tap && Math.abs(e.clientX - tap.cx) < 12 && Math.abs(e.clientY - tap.cy) < 12 && performance.now() - tap.t < 600) play(tap.x, tap.y, tap.target);
       tap = null;
       wakeAudio();
-      if (tapAt) { strum(tapAt[0], tapAt[1]); tapAt = null; }
+      if (tapAt) { riff(tapAt[0]); tapAt = null; }
     }, { passive: true });
     window.addEventListener("touchend", wakeAudio, { passive: true });
     window.addEventListener("keydown", wakeAudio);
