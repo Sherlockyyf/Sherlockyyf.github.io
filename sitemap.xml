@@ -2,8 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://yifanyuan.com/</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-27</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://yifanyuan.com/?lang=en"/>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yifanyuan.com/?lang=zh"/>
+  </url>
+  <url>
+    <loc>https://yifanyuan.com/lab/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yifanyuan.com/lab/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yifanyuan.com/lab/?lang=zh"/>
   </url>
 </urlset>

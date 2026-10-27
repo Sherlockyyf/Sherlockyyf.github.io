@@ -152,9 +152,6 @@
 
       <p class="en">My research aims to make generative AI <strong>controllable, interpretable, and trustworthy</strong>. I study why text-to-image diffusion models succeed or fail on specific concepts and how to edit images and videos precisely and consistently; how large language models and agents stay reliable — free of hallucination, bias, and state collapse — over long-horizon interaction; and how generative agents can perceive and express human emotion. I am also interested in bringing these models to real-world applications such as emotional companionship, virtual try-on, and digital humans.</p>
       <p class="zh">我的研究目标是让生成式 AI 更加<strong>可控、可解释、可信</strong>：研究文生图扩散模型为何在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。同时探索这些技术在情感陪伴、虚拟试衣、数字人等真实场景中的落地应用。</p>
-
-      <p class="en">Welcome research or business collaborations!</p>
-      <p class="zh">欢迎科研与商业合作！</p>
       <!-- intro:end -->
 
       <!-- ===================== News ===================== -->
@@ -248,8 +245,8 @@
             <div class="theme-card__refs">
               <a href="#pub-mm26">Concept Brittleness · MM'26</a>
               <a href="#pub-jas25">Semantic Discrepancy · JAS'25</a>
-              <a href="#full-icassp23">DO-FAM · ICASSP'23</a>
-              <a href="#full-icassp22">VR-FAM · ICASSP'22</a>
+              <a href="#full-icassp23">DO-FAM</a>
+              <a href="#full-icassp22">VR-FAM</a>
             </div>
           </article>
           <article class="theme-card theme-card--trust spotlight">
@@ -288,7 +285,7 @@
       <section class="section" id="publications">
         <h2><!-- h-publications:start --><span class="en">Publications</span><span class="zh">论文</span><!-- h-publications:end --></h2>
         <div class="pub-button-container" role="tablist">
-          <button class="pub-button active" type="button" role="tab" aria-selected="true" data-pub-view="core"><span class="en">Selected Publications</span><span class="zh">代表论文</span></button>
+          <button class="pub-button active" type="button" role="tab" aria-selected="true" data-pub-view="core"><span class="en">Selected Publications</span><span class="zh">代表性论文</span></button>
           <button class="pub-button" type="button" role="tab" aria-selected="false" data-pub-view="list"><span class="en">Full Publication List</span><span class="zh">完整列表</span></button>
         </div>
         <p class="pub-legend"><span class="en">(* equal contribution · † corresponding author)</span><span class="zh">（* 共同第一作者 · † 通讯作者）</span></p>
@@ -301,8 +298,8 @@
             <div class="pub-body">
               <strong class="pub-title">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</strong>
               <div class="pub-authors"><span class="me">Yifan Yuan*</span>, Xiangyu Liu*, Hongming Shan, Yu Han, Yu Jiang, Hao Tan, Junping Zhang, Linlin Shen†</div>
-              <p class="pub-desc en">Text-to-image models apply a concept (e.g., “ink sketch”) correctly to most objects yet repeatedly fail on a few. We diagnose this brittleness with step-wise sparse autoencoders on denoising features and repair it at inference time without retraining, across five diffusion backbones.</p>
-              <p class="pub-desc zh">文生图模型能把某一概念（如“水墨素描”）正确施加到大多数物体上，却在少数物体上反复失败。我们用逐时间步的稀疏自编码器诊断这种“物体依赖的概念脆弱性”，并在推理阶段免训练修复，在五种扩散模型上验证有效。</p>
+              <p class="pub-desc en">Text-to-image diffusion models usually follow prompts well, yet we found an overlooked failure: a concept such as “ink sketch” works for most objects but fails again and again on a few — Flux draws grapes as an ink sketch but keeps painting a cake in full color. These failures persist across random seeds, revealing systematic blind spots in how the model has learned the concept rather than sampling noise. We train sparse autoencoders at every denoising step, compare successful and failed generations in this sparse space where concepts become separable, locate the missing or weakened concept dimensions, and repair them at inference time by nudging features toward a concept prototype built from reliable samples, with no retraining. Across multiple diffusion backbones this markedly improves concept consistency, text fidelity and repair success, and the earlier the intervention, the stronger the correction.</p>
+              <p class="pub-desc zh">文生图模型通常能很好地按提示词作画，但我们发现了一种被忽视的失败：同一个概念（如“水墨素描”）用在大多数物体上都没问题，却在少数物体上反复失败——Flux 能把“葡萄”画成水墨素描，“蛋糕”却总是彩色的。这类失败换随机种子也照样出现，说明模型对概念的掌握存在系统性盲区，而不是偶然的采样噪声。我们在去噪的每一步训练稀疏自编码器，在这个概念更易区分的稀疏空间里对比成功与失败的生成，找出缺失或减弱的概念维度，再在推理时把特征向由可靠样本构建的概念原型轻量插值，无需重新训练即可修复。在多种主流扩散模型上，概念一致性、文本忠实度和修复成功率都显著提升，而且越早干预、纠正效果越好。</p>
               <div class="pub-meta"><span class="pub-venue">ACM MM 2026</span><span class="pub-badge">CCF A</span><a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/Metecade/Object-Dependent-Concept-Brittleness" target="_blank" rel="noopener">[Code]</a></div>
             </div>
           </div>
@@ -312,8 +309,8 @@
             <div class="pub-body">
               <strong class="pub-title">When LLMs Forget What They Believe: Characterizing State Integrity Collapse in Long-Horizon Dialogues</strong>
               <div class="pub-authors">Yancheng Zhu, <span class="me">Yifan Yuan†</span></div>
-              <p class="pub-desc en">LLMs can repeat an instruction yet stop obeying it. We define State Integrity Collapse and build StateTrack-Bench: across seven models, 88.6% of failures are behavioral drift rather than forgetting, and Structured State Anchoring recovers up to 24.4 points.</p>
-              <p class="pub-desc zh">大模型能复述指令，却不再遵守它。我们定义了“状态完整性崩塌”并构建 StateTrack-Bench：在七个模型上，88.6% 的失败源于行为漂移而非遗忘；结构化状态锚定最多可挽回 24.4 个百分点。</p>
+              <p class="pub-desc en">Assistants must keep obeying user-set constraints — formats, personas, safety boundaries — over many turns, but evaluations mostly test instruction following in a single turn or a short exchange. We identify a subtle but dangerous failure, State Integrity Collapse: asked about it, the model can still restate the constraint, yet its next answers stop following it — unlike ordinary forgetting, this is not fixed by longer context or memory retrieval. We build StateTrack-Bench, which plants one persistent constraint (numerical, format, persona, factual-memory or logical) in a conversation, checks compliance at increasing dialogue depths, and uses a forked recall audit to tell forgetting apart from remembering without complying. Across seven models, 88.6% of failures are such behavioral drift rather than forgetting, and our Structured State Anchoring recovers up to 24.4 points.</p>
+              <p class="pub-desc zh">对话助手需要在很多轮对话里一直遵守用户设定的约束（格式、角色、安全边界等），但现有评测大多只看单轮或短对话里能否遵守指令。我们发现一种隐蔽而危险的失败：问起来模型还能复述约束，接下来的回答却不再执行——我们称之为“状态完整性崩塌”，它不同于普通的遗忘，单靠更长的上下文或记忆检索解决不了。我们构建了 StateTrack-Bench：在对话中设定一条持续约束（数值、格式、角色、事实记忆、逻辑规则五类），在不同对话深度检验模型是否仍然遵守，并用“分叉回忆审计”区分“记不住”和“记得但不做”。在七个主流模型上，88.6% 的失败属于“记得但不做”的行为漂移而非遗忘；我们提出的结构化状态锚定最多可挽回 24.4 个百分点。</p>
               <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span><a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/MUSE-AI-Lab/StateTrack" target="_blank" rel="noopener">[Code]</a></div>
             </div>
           </div>
@@ -323,8 +320,8 @@
             <div class="pub-body">
               <strong class="pub-title">ReMCTS: Reflection-Enhanced Monte Carlo Tree Search for Code Generation</strong>
               <div class="pub-authors">Wang Huifei, Huang Xinying, Sun Yiheng, <span class="me">Yifan Yuan†</span></div>
-              <p class="pub-desc en">An execution-grounded, memory-augmented tree search for code generation that keeps branch-local debugging context and reuses failure experience across branches; it beats direct generation in 8 of 10 model–dataset pairs on HumanEval and MBPP.</p>
-              <p class="pub-desc zh">面向代码生成的执行驱动、记忆增强的树搜索框架：保留分支内的调试上下文，并跨分支复用失败经验；在 HumanEval 与 MBPP 的 10 组模型—数据集组合中有 8 组优于直接生成。</p>
+              <p class="pub-desc en">Code written by large language models often looks right yet fails on edge cases and hidden tests, and common self-repair keeps patching a single attempt, so an early wrong algorithmic choice is hard to escape. Existing tree-search methods rank candidates with numeric rewards but do not share the textual diagnoses of failures across branches, and without tests they may mistake missing evidence for success. ReMCTS organizes candidate programs as a search tree, runs them in a sandbox for feedback, keeps each branch's debugging context, stores failure diagnoses in a shared memory that other branches retrieve, and tells failed checks apart from missing evidence. On HumanEval and MBPP it beats direct generation in 8 of 10 model–dataset pairs, and ablations show where the gains come from and where they stop.</p>
+              <p class="pub-desc zh">大模型写的代码常常“看起来对”，却在边界条件或隐藏测试上出错；常见的自我修复只沿着一次尝试反复打补丁，一旦最初的算法思路错了就很难跳出来。已有的树搜索方法又主要依赖数值奖励，失败时的文字诊断没法分享给其他分支，在没有测试用例时还容易把“缺少证据”误当成“通过”。ReMCTS 把多个候选程序组织成一棵搜索树，在沙箱里执行获取反馈，保留每条分支的调试上下文，把失败经验存入全局记忆供其他分支检索复用，并区分“检查未通过”和“证据不足”。在 HumanEval 和 MBPP 上，ReMCTS 在 10 组模型—数据集组合中有 8 组优于直接生成，消融实验也厘清了收益的来源与边界。</p>
               <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/MUSE-AI-Lab/ReMCTS" target="_blank" rel="noopener">[Code]</a></div>
             </div>
           </div>
@@ -334,8 +331,8 @@
             <div class="pub-body">
               <strong class="pub-title">SurveyGraph: Generating Academic Surveys via Methods-Entity Knowledge Graphs</strong>
               <div class="pub-authors"><span class="me">Yifan Yuan</span>, Yancheng Zhu, Zuoyu Zhang, Xiaogang Peng†</div>
-              <p class="pub-desc en">SurveyGraph builds a Methods-Entity Knowledge Graph that records how methods extend, compete with, and share resources with one another, and uses it for core-paper discovery, graph-aware retrieval, outline generation, and evolution-aware survey writing.</p>
-              <p class="pub-desc zh">SurveyGraph 构建方法—实体知识图谱（MEKG），刻画方法之间的继承、竞争与资源共享关系，并据此完成核心论文发现、图感知检索、大纲生成与演化式综述写作。</p>
+              <p class="pub-desc en">Publications are growing so fast that writing a good survey is ever more costly, and current LLM survey generators mostly retrieve papers as a flat pile of independent documents. A good survey explains how a field evolved — which work extends which, which methods compete, which benchmarks mark turning points — structure that similarity-based retrieval cannot see, so generated surveys read like a collage of summaries. SurveyGraph builds a Methods-Entity Knowledge Graph that records follow-on, competition and shared-resource relations between methods, and uses it as the backbone for core-paper discovery, graph-aware retrieval, outline generation and evolution-aware writing. Graph-aware retrieval nearly doubles recall over flat lexical baselines (p = 0.004), and citation audits find that 80.6% of generated sentences are fully or partly supported by the papers they cite.</p>
+              <p class="pub-desc zh">论文越来越多，写一篇好的综述越来越费时费力，而现有的大模型自动综述系统大多把文献当作一堆彼此独立的文档来检索。好的综述要讲清楚一个领域如何演化——哪项工作延续了谁、哪些方法相互竞争、哪些基准标志着转折，只按相似度检索看不到这些结构，生成的综述容易变成零散摘要的拼贴。SurveyGraph 构建“方法—实体知识图谱”（MEKG），显式记录方法之间的延续、竞争和共享资源等关系，并以它为主干完成核心论文发现、图感知检索、大纲生成和按演化脉络组织的写作。图感知检索的召回率接近平面检索基线的两倍（p=0.004），引用核查显示 80.6% 的生成句子能在所引文献中找到完全或部分支撑。</p>
               <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span><a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/MUSE-AI-Lab/SurveyGraph" target="_blank" rel="noopener">[Code]</a></div>
             </div>
           </div>
@@ -345,8 +342,8 @@
             <div class="pub-body">
               <strong class="pub-title">Dissecting and Mitigating Semantic Discrepancy in Stable Diffusion for Image-to-Image Translation</strong>
               <div class="pub-authors"><span class="me">Yifan Yuan</span>, Guanqun Yang, James Z. Wang, Hui Zhang, Hongming Shan, Feiyue Wang†, Junping Zhang</div>
-              <p class="pub-desc en">Adding noise to the reference image, as SDEdit does, makes text-to-image models invent content and relations that are not in the original. We trace this “semantic discrepancy” to correlations disrupted during U-Net upsampling and fix it training-free with features from a single DDIM-inversion step, 11.2× faster than PnP.</p>
-              <p class="pub-desc zh">像 SDEdit 那样直接给参考图加噪，会让文生图模型凭空生成原图中没有的内容与关系。我们发现这种“语义偏差”源于 U-Net 上采样时被破坏的特征相关性，并用单步 DDIM 反演的特征进行免训练修正，速度比 PnP 快 11.2 倍。</p>
+              <p class="pub-desc en">When a text-to-image diffusion model is used for image-to-image translation — turning a photo into a painting, say — everything hinges on an initial noise that keeps the original image's information, and the common choice, SDEdit, simply adds random noise to the image. We find that this causes “semantic discrepancy”: the model misreads relations in the image and invents content that was never there, because the noise breaks the image's semantic integrity and makes U-Net upsampling link unrelated regions. We propose a training-free, plug-and-play fix for Stable Diffusion that exploits the determinism of DDIM inversion: a single inversion step of the reference image supplies accurate features and correlations, which replace the faulty ones in generation. Across translation tasks on COCO, ImageNet and ImageNet-R, it reduces semantic discrepancy and improves fidelity, outperforming PnP and similar methods with fewer priors while running 11.2× faster.</p>
+              <p class="pub-desc zh">用文生图扩散模型做图像转换（比如把照片变成油画）时，关键是找到既保留原图信息、又便于转换的初始噪声，常用的 SDEdit 做法是直接给原图加随机噪声。我们发现这会引起“语义偏差”：模型误解原图中物体之间的关系，凭空生成原图里没有的内容；剖析 Stable Diffusion 的网络后，我们定位到原因是加噪破坏了图像的语义完整性，使 U-Net 上采样时在不相关的区域之间建立了错误关联。我们提出一种免训练、即插即用的方法，利用 DDIM 反演的确定性，只需对参考图做一步反演，就能得到正确的特征和关联，用来替换生成过程中的错误部分。在 COCO、ImageNet 和 ImageNet-R 的多种图像转换任务上，该方法有效缓解了语义偏差、提升了保真度，用更少的先验超过 PnP 等方法，速度快 11.2 倍。</p>
               <div class="pub-meta"><span class="pub-venue">IEEE/CAA JAS 2025</span><span class="pub-badge">JCR Q1 · IF 19.3</span><a href="https://doi.org/10.1109/JAS.2024.124800" target="_blank" rel="noopener">[Paper]</a><a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">[Code]</a></div>
             </div>
           </div>
@@ -400,12 +397,6 @@
               <span class="pub-list-authors"><span class="me">Yifan Yuan*</span>, Siteng Ma*, Hongming Shan, Junping Zhang. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2023.</span>
               <span class="pub-list-links"><a href="https://doi.org/10.1109/ICASSP49357.2023.10095959" target="_blank" rel="noopener">[Paper]</a></span>
             </li>
-            <li id="full-icassp22">
-              <span class="pub-list-badge">ICASSP 2022</span>
-              <span class="pub-list-title">VR-FAM: Variance-Reduced Encoder with Nonlinear Transformation for Facial Attribute Manipulation</span><br>
-              <span class="pub-list-authors"><span class="me">Yifan Yuan</span>, Siteng Ma, Junping Zhang. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2022: 1755–1759.</span>
-              <span class="pub-list-links"><a href="https://doi.org/10.1109/ICASSP43922.2022.9746046" target="_blank" rel="noopener">[Paper]</a></span>
-            </li>
             <li id="full-ch7">
               <span class="pub-list-badge pub-list-badge--muted">Book Chapter 2023</span>
               <span class="pub-list-title">High-Speed Joint Learning of Action Units and Facial Expressions</span><br>
@@ -417,6 +408,12 @@
               <span class="pub-list-title">ExpressionFlow: A Microexpression Descriptor for Efficient Recognition</span><br>
               <span class="pub-list-authors">Feng Xu, <span class="me">Yifan Yuan</span>, Junping Zhang, James Z. Wang. Chapter 8 in <em>Modeling Visual Aesthetics, Emotion, and Artistic Style</em>, Springer, 2023.</span>
               <span class="pub-list-links"><a href="https://doi.org/10.1007/978-3-031-50269-9_8" target="_blank" rel="noopener">[Paper]</a></span>
+            </li>
+            <li id="full-icassp22">
+              <span class="pub-list-badge">ICASSP 2022</span>
+              <span class="pub-list-title">VR-FAM: Variance-Reduced Encoder with Nonlinear Transformation for Facial Attribute Manipulation</span><br>
+              <span class="pub-list-authors"><span class="me">Yifan Yuan</span>, Siteng Ma, Junping Zhang. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2022: 1755–1759.</span>
+              <span class="pub-list-links"><a href="https://doi.org/10.1109/ICASSP43922.2022.9746046" target="_blank" rel="noopener">[Paper]</a></span>
             </li>
             <li id="full-jig20">
               <span class="pub-list-badge">JIG 2020</span>
@@ -441,6 +438,24 @@
               <em><span class="en">2025.04 – Present</span><span class="zh">2025.04 – 至今</span></em><br>
               <span class="en">Assistant Professor, <a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">College of Artificial Intelligence</a>; leading <a href="lab/">MUSE Lab</a></span>
               <span class="zh"><a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">人工智能学院</a> 助理教授、硕士生导师；负责 <a href="lab/">MUSE Lab</a></span>
+            </div>
+          </div>
+          <div class="experience-card spotlight">
+            <img class="experience-logo" src="images/logos/tencent.png" alt="Tencent logo">
+            <div class="experience-info">
+              <strong><span class="en">Tencent</span><span class="zh">腾讯</span></strong><br>
+              <em>2024.01 – 2024.03</em><br>
+              <span class="en">AIGC Algorithm Researcher (intern), Hunyuan Text-to-Image Team, via the Tencent Top Talent Program</span>
+              <span class="zh">混元文生图组 AIGC 算法研究员（实习，腾讯大咖计划）</span>
+            </div>
+          </div>
+          <div class="experience-card spotlight">
+            <img class="experience-logo" src="images/logos/sensetime.png" alt="SenseTime logo">
+            <div class="experience-info">
+              <strong><span class="en">SenseTime</span><span class="zh">商汤科技</span></strong><br>
+              <em>2023.06 – 2023.09</em><br>
+              <span class="en">AIGC Algorithm Engineer (intern)</span>
+              <span class="zh">AIGC 算法工程师（实习）</span>
             </div>
           </div>
           <div class="experience-card spotlight">
@@ -476,11 +491,6 @@
             <span class="pub-list-authors"><span class="en">Shenzhen University Research Start-up Fund for Young Faculty</span><span class="zh">深圳大学青年教师科研启动经费</span> · 2025.08 – 2028.08</span>
           </li>
           <li>
-            <span class="pub-list-badge pub-list-badge--muted"><span class="en">Main Participant</span><span class="zh">主要参与人</span></span>
-            <span class="pub-list-title"><span class="en">Embodied-Intelligence Foundation Models for Industrial Humanoid Robots</span><span class="zh">人形机器人工业具身智能基座大模型与垂直领域示范应用</span></span><br>
-            <span class="pub-list-authors"><span class="en">Shenzhen Key Industry R&amp;D Program</span><span class="zh">深圳市重点产业研发计划</span> · 2025.10 – 2028.09</span>
-          </li>
-          <li>
             <span class="pub-list-badge"><span class="en">Lead Researcher</span><span class="zh">主要负责人</span></span>
             <span class="pub-list-title"><span class="en">Intelligent Models for Multimodal Information Retrieval, Review and Moderation</span><span class="zh">多模态信息检索、审查与管控智能模型研究</span></span><br>
             <span class="pub-list-authors"><span class="en">Industry project with China Mobile</span><span class="zh">横向项目，中国移动</span> · 2025.06 – 2026.12</span>
@@ -490,20 +500,27 @@
             <span class="pub-list-title"><span class="en">AI Virtual Patients for Clinical Teaching in Gastroenterology</span><span class="zh">面向消化科临床教学的AI虚拟病人技术研究与应用</span></span><br>
             <span class="pub-list-authors"><span class="en">Guangdong Natural Science Foundation, General Program</span><span class="zh">广东省自然科学基金面上项目</span> · 2026.01 – 2028.12</span>
           </li>
+          <li>
+            <span class="pub-list-badge pub-list-badge--muted"><span class="en">Participant</span><span class="zh">参与</span></span>
+            <span class="pub-list-title"><span class="en">Embodied-Intelligence Foundation Models for Industrial Humanoid Robots</span><span class="zh">人形机器人工业具身智能基座大模型与垂直领域示范应用</span></span><br>
+            <span class="pub-list-authors"><span class="en">Shenzhen Key Industry R&amp;D Program</span><span class="zh">深圳市重点产业研发计划</span> · 2025.10 – 2028.09</span>
+          </li>
+          <li>
+            <span class="pub-list-badge pub-list-badge--muted"><span class="en">Participant</span><span class="zh">参与</span></span>
+            <span class="pub-list-title"><span class="en">Deep Learning Based on Graph Convolutional Networks and Disentangled Learning</span><span class="zh">基于图卷积神经网络和解耦学习的深度学习研究</span></span><br>
+            <span class="pub-list-authors"><span class="en">National Natural Science Foundation of China, General Program</span><span class="zh">国家自然科学基金面上项目</span> · 2022.01 – 2025.12</span>
+          </li>
+          <li>
+            <span class="pub-list-badge pub-list-badge--muted"><span class="en">Participant</span><span class="zh">参与</span></span>
+            <span class="pub-list-title"><span class="en">Key Theories and Technologies of Human–Robot Collaboration Based on Imitation Learning from Demonstration</span><span class="zh">基于示教模仿学习的人机协同关键理论与技术</span></span><br>
+            <span class="pub-list-authors"><span class="en">National Key R&amp;D Program of China, No. 2018YFB1305104</span><span class="zh">国家重点研发计划（十三五），项目编号 2018YFB1305104</span> · 2019.06 – 2022.05</span>
+          </li>
           <!-- grants:end -->
         </ul>
         <details class="grant-more">
           <!-- grants-earlier:start -->
-          <summary><span class="en">Earlier projects (8, as participant): NSFC, National Key R&amp;D Program of China, Ministry of Education, Shanghai Municipality, and industry, 2017–2025</span><span class="zh">此前参与的项目（8 项）：国家自然科学基金、国家重点研发计划、教育部、上海市及企业合作项目，2017–2025</span></summary>
+          <summary><span class="en">Earlier projects (6, as participant): NSFC, Ministry of Education, Shanghai Municipality, and industry, 2017–2025</span><span class="zh">此前参与的项目（6 项）：国家自然科学基金、教育部、上海市及企业合作项目，2017–2025</span></summary>
           <ul class="grant-list">
-            <li>
-              <span class="pub-list-title"><span class="en">Deep Learning Based on Graph Convolutional Networks and Disentangled Learning</span><span class="zh">基于图卷积神经网络和解耦学习的深度学习研究</span></span><br>
-              <span class="pub-list-authors"><span class="en">National Natural Science Foundation of China, General Program</span><span class="zh">国家自然科学基金面上项目</span> · 2022.01 – 2025.12</span>
-            </li>
-            <li>
-              <span class="pub-list-title"><span class="en">Key Theories and Technologies of Human–Robot Collaboration Based on Imitation Learning from Demonstration</span><span class="zh">基于示教模仿学习的人机协同关键理论与技术</span></span><br>
-              <span class="pub-list-authors"><span class="en">National Key R&amp;D Program of China, No. 2018YFB1305104</span><span class="zh">国家重点研发计划（十三五），项目编号 2018YFB1305104</span> · 2019.06 – 2022.05</span>
-            </li>
             <li>
               <span class="pub-list-title"><span class="en">Machine-Learning-Based Multimodal, Multi-View Pedestrian Gait Recognition</span><span class="zh">基于机器学习的多模态多视角行人步态识别研究</span></span><br>
               <span class="pub-list-authors"><span class="en">National Natural Science Foundation of China, No. 61673118</span><span class="zh">国家自然科学基金，项目编号 61673118</span> · 2017.01 – 2020.12</span>
