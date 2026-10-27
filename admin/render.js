@@ -407,9 +407,8 @@
   /* ---------- the lab page (lab/index.html) ----------
      News, papers and the PI's name, title and photo come from the homepage's data; data/lab.json holds
      what only the lab page shows: introduction, the MUSE acronym, research directions and contact. */
-  var LAB_REGIONS = ["lab-latest", "lab-news", "lab-about", "lab-pi", "lab-acronym", "lab-research", "lab-featured",
+  var LAB_REGIONS = ["lab-latest", "lab-about", "lab-pi", "lab-acronym", "lab-research", "lab-featured",
     "lab-filters", "lab-publications", "lab-contact-intro", "lab-contact", "lab-credits"];
-  var LAB_NEWS_SHOWN = 6;   // later entries fold away behind "show all"
   var LINK_ICONS = { paper: "paper", code: "code", project: "globe" };
 
   function icon(id) {
@@ -420,32 +419,25 @@
     return news.filter(function (n) { return n.lab !== false; });
   }
 
-  /* the newest lab news as a one-line link in the hero */
-  function latest(news) {
-    var n = labNews(news)[0];
-    if (!n) return "";
-    return '<a class="latest" href="#news"><span class="latest__tag"><span class="en">New</span><span class="zh">最新</span></span>' +
-      '<span class="latest__text"><span class="en">' + text(plain(pick(n, "en"))) + '</span><span class="zh">' + text(plain(pick(n, "zh"))) +
-      '</span></span><span class="latest__arrow" aria-hidden="true">→</span></a>';
-  }
-
-  function labNewsList(news) {
-    var items = labNews(news), more = items.length > LAB_NEWS_SHOWN;
-    var lis = items.map(function (n, i) {
-      return '<li class="nitem' + (i >= LAB_NEWS_SHOWN ? " is-more" : "") + '"><span class="nitem__date">' + text(n.date) + "</span>" +
-        '<p class="nitem__text">' + (n.icon ? '<span class="nitem__icon" aria-hidden="true">' + text(n.icon) + "</span>" : "") +
-        '<span class="en">' + inline(pick(n, "en")) + '</span><span class="zh">' + inline(pick(n, "zh")) + "</span></p></li>";
-    });
-    return ['<ol class="nlist' + (more ? " is-folded" : "") + '">'].concat(indent(lis, "  "), ["</ol>"], more ? [
-      '<button type="button" class="more" aria-expanded="false"><span class="en">Show all ' + items.length + ' updates</span><span class="zh">查看全部 ' +
-        items.length + " 条动态</span></button>"
-    ] : []).join("\n");
+  /* all the lab's news in the hero, a few lines at a time; lab.js scrolls them up one by one */
+  function ticker(news) {
+    var items = labNews(news);
+    if (!items.length) return "";
+    return [
+      '<div class="ticker">',
+      '  <span class="ticker__tag"><span class="en">News</span><span class="zh">最新</span></span>',
+      '  <div class="ticker__view">',
+      '    <ul class="ticker__list">'
+    ].concat(items.map(function (n) {
+      return '      <li class="ticker__item"><span class="ticker__date">' + text(n.date) + '</span><span class="ticker__text"><span class="en">' +
+        inline(pick(n, "en")) + '</span><span class="zh">' + inline(pick(n, "zh")) + "</span></span></li>";
+    }), ["    </ul>", "  </div>", "</div>"]).join("\n");
   }
 
   function acronym(l) {
     return (l.acronym || []).map(function (a) {
       return [
-        '<li class="acro">',
+        '<li class="acro reveal">',
         '  <span class="acro__letter" aria-hidden="true">' + text(a.letter) + "</span>",
         '  <div class="acro__body">',
         '    <strong class="acro__word">' + text(a.word) + (a.zh ? '<span class="zh"> · ' + text(a.zh) + "</span>" : "") + "</strong>"
@@ -501,12 +493,11 @@
     return out;
   }
 
-  /* one research direction as a card: pictures, seal and title, one line, its topics, papers */
+  /* one research direction as a card: picture, seal and title, one line, its topics, papers */
   function direction(d, pubs) {
     var byId = {};
     pubs.forEach(function (p) { byId[p.id] = p; });
     var papers = (d.papers || []).map(function (id) { return byId[id]; }).filter(Boolean);
-    var figs = (d.figures || []).filter(function (f) { return f.src; });
     var body = [
       '  <div class="dir__body">',
       '    <div class="dir__head">',
@@ -518,13 +509,6 @@
       body.push('    <ul class="dir__topics">');
       d.topics.forEach(function (t) { body.push("      <li>" + bi(t) + "</li>"); });
       body.push("    </ul>");
-    }
-    if (figs.length) {
-      body.push('    <p class="dir__figs"><span class="dir__figs-label"><span class="en">Figures</span><span class="zh">配图</span></span>' + figs.map(function (f, i) {
-        var id = "zoom-" + d.id + "-f" + i;
-        return '<a class="dir__figlink" href="' + attr(rebase(f.src)) + '" target="_blank" rel="noopener" data-zoom="' + id + '" data-alt="' + attr(f.alt || "") + '">' +
-          bi(f.label || { en: "figure", zh: "配图" }) + "</a>" + zoomCaption(id, f, byId);
-      }).join('<span class="dir__dot" aria-hidden="true">·</span>') + "</p>");
     }
     if (papers.length) {
       body.push('    <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>', '    <ul class="dir__papers">');
@@ -592,7 +576,7 @@
     var names = String(p.authors || "").trim(), links = linkList(p);
     var extra = (p.note ? '<span class="pitem__note">' + text(p.note) + "</span>" : "") + (links ? '<span class="pitem__links">' + links + "</span>" : "");
     return [
-      '<li class="pitem" id="p-' + attr(p.id) + '" data-theme="' + attr(p.theme) + '">',
+      '<li class="pitem reveal" id="p-' + attr(p.id) + '" data-theme="' + attr(p.theme) + '">',
       '  <span class="pitem__venue' + (MUTED[p.type] ? " pitem__venue--muted" : "") + '">' + text(p.venue) + "</span>",
       '  <div class="pitem__body">',
       '    <span class="pitem__title">' + text(p.title) + "</span>",
@@ -613,14 +597,14 @@
     });
     years.sort(function (a, b) { return (+b || 0) - (+a || 0); });
     return years.map(function (y) {
-      return ['<section class="year reveal" data-year="' + attr(y) + '">', '  <h3 class="year__label">' + text(y) + "</h3>", '  <ol class="plist">']
+      return ['<section class="year" data-year="' + attr(y) + '">', '  <h3 class="year__label reveal">' + text(y) + "</h3>", '  <ol class="plist">']
         .concat(indent(groups[y].map(function (p) { return entry(p, seals); }), "    "), ["  </ol>", "</section>"]).join("\n");
     }).join("\n");
   }
 
   function labContact(l) {
     return ((l.contact || {}).items || []).map(function (x) {
-      return '<li class="crow">' + icon(x.icon || "link") + '<span class="crow__label">' + bi(x.label) + '</span><span class="crow__value">' +
+      return '<li class="crow reveal">' + icon(x.icon || "link") + '<span class="crow__label">' + bi(x.label) + '</span><span class="crow__value">' +
         (x.url ? link(x.url, bi(x.value)) : bi(x.value)) + "</span></li>";
     }).join("\n");
   }
@@ -640,8 +624,7 @@
   function labSections(data) {
     var h = data.home || {}, news = data.news || [], pubs = data.publications || [], l = data.lab || {};
     return {
-      "lab-latest": latest(news),
-      "lab-news": labNewsList(news),
+      "lab-latest": ticker(news),
       "lab-about": (l.about || []).map(function (p) { return biBlock("p", "", p).join("\n"); }).join("\n"),
       "lab-pi": piCard(h, l),
       "lab-acronym": acronym(l),
