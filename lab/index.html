@@ -22,8 +22,8 @@
       }
     })();
   </script>
-  <meta name="description" content="MUSE Lab (Multimodal Understanding and Synthesis for Explainability) at the College of Artificial Intelligence, Shenzhen University, led by Yifan Yuan. We make generative AI controllable, interpretable and trustworthy. 深圳大学人工智能学院 MUSE 实验室。">
-  <meta name="keywords" content="MUSE Lab, Shenzhen University, 深圳大学, Yifan Yuan, 袁一帆, AIGC, diffusion models, image editing, LLM, agents, emotional agents">
+  <meta name="description" content="MUSE Lab (Multimodal Understanding and Synthesis for Explainability) at the College of Artificial Intelligence, Shenzhen University, led by Yifan Yuan: trustworthy multimodal generation, multimodal understanding, emotion AI, AI safety and embodied AI. 深圳大学人工智能学院 MUSE 实验室。">
+  <meta name="keywords" content="MUSE Lab, Shenzhen University, 深圳大学, Yifan Yuan, 袁一帆, AIGC, diffusion models, multimodal LLM, hallucination, emotion AI, AI safety, embodied AI">
   <link rel="canonical" href="https://yifanyuan.com/lab/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="MUSE Lab">
@@ -48,25 +48,26 @@
     <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></symbol>
     <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
   </svg>
-  <!-- The news, research cards and papers on this page come from data/news.json, data/home.json and
-       data/publications.json (the same files as the homepage); the introduction, PI bio, members and
-       contact come from data/lab.json. They are generated between the "name:start" / "name:end"
-       comment markers below by `node tools/render_site.js`, and again whenever the page editor
-       publishes; hand edits between the markers are overwritten. -->
+  <!-- The news and papers on this page come from data/news.json and data/publications.json (the same
+       files as the homepage), the PI's name, title and photo from data/home.json, and everything else
+       (mission, research directions, contact) from data/lab.json. They are generated between the
+       "name:start" / "name:end" comment markers below by `node tools/render_site.js`, and again
+       whenever the page editor publishes; hand edits between the markers are overwritten. -->
 
-  <a class="skip-link" href="#about"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
+  <a class="skip-link" href="#news"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
 
   <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>
 
   <header class="bar">
     <a class="brand" href="#top"><img src="../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>
     <nav class="nav" id="nav" aria-label="Sections">
+      <span class="nav__pill" aria-hidden="true"></span>
+      <a href="#news"><span class="en">News</span><span class="zh">动态</span></a>
       <a href="#about"><span class="en">About</span><span class="zh">简介</span></a>
       <a href="#research"><span class="en">Research</span><span class="zh">研究方向</span></a>
       <a href="#publications"><span class="en">Publications</span><span class="zh">论文</span></a>
-      <a href="#news"><span class="en">News</span><span class="zh">动态</span></a>
-      <a href="#people"><span class="en">People</span><span class="zh">成员</span></a>
       <a href="#contact"><span class="en">Contact</span><span class="zh">联系</span></a>
       <a class="nav__pi" href="../"><span class="en">Yifan Yuan</span><span class="zh">袁一帆</span> <span aria-hidden="true">↗</span></a>
     </nav>
@@ -103,12 +104,13 @@
         <span class="zh">构建<mark class="hl">可信</mark>的生成式 AI</span>
       </p>
       <ul class="topics">
-        <li>AIGC</li>
-        <li><span class="en">Multimodal Understanding &amp; Generation</span><span class="zh">多模态理解与生成</span></li>
-        <li><span class="en">LLMs &amp; Agents</span><span class="zh">大模型与智能体</span></li>
-        <li><span class="en">Retrieval-Augmented Generation</span><span class="zh">检索增强生成</span></li>
-        <li><span class="en">Persona Modeling</span><span class="zh">人格化语言建模</span></li>
-        <li><span class="en">Emotional Agents</span><span class="zh">情感智能体</span></li>
+        <!-- lab-topics:start -->
+        <li><a href="#dir-trust"><span class="en">Trustworthy Multimodal Generation</span><span class="zh">多模态可信生成</span></a></li>
+        <li><a href="#dir-perceive"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></a></li>
+        <li><a href="#dir-emotion"><span class="en">Emotion AI</span><span class="zh">情感智能</span></a></li>
+        <li><a href="#dir-safety"><span class="en">AI Safety</span><span class="zh">大模型安全</span></a></li>
+        <li><a href="#dir-embodied"><span class="en">Embodied AI</span><span class="zh">具身智能</span></a></li>
+        <!-- lab-topics:end -->
       </ul>
       <!-- lab-latest:start -->
       <a class="latest" href="#news"><span class="latest__tag"><span class="en">New</span><span class="zh">最新</span></span><span class="latest__text"><span class="en">Two EMNLP 2026 papers are on arXiv with code: StateTrack and SurveyGraph.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：StateTrack 与 SurveyGraph。</span></span><span class="latest__arrow" aria-hidden="true">→</span></a>
@@ -125,20 +127,94 @@
   </section>
 
   <main id="content">
+    <!-- ===================== News ===================== -->
+    <section class="section" id="news">
+      <div class="sec-head reveal">
+        <span class="sec-num">01</span>
+        <h2 class="sec-title"><span class="en">Latest News</span><span class="zh">最新动态</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 55 9, 115 16, 175 11 S 255 13, 296 10"/></svg></h2>
+        <a class="sec-more" href="../#news"><span class="en">All news on the homepage</span><span class="zh">主页上的全部动态</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="news-grid">
+        <!-- lab-news:start -->
+        <article class="ncard reveal">
+          <div class="ncard__art ncard__art--0" aria-hidden="true"><span class="ncard__label">EMNLP 2026</span></div>
+          <div class="ncard__body">
+            <p class="ncard__meta"><span class="ncard__kind"><span class="en">Release</span><span class="zh">论文发布</span></span><span class="ncard__date">2026.10</span></p>
+            <p class="ncard__text"><span class="en">Two EMNLP 2026 papers are on arXiv with code: <a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> and <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：<a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> 与 <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>。</span></p>
+          </div>
+        </article>
+        <article class="ncard reveal">
+          <div class="ncard__art ncard__art--1" aria-hidden="true"><span class="ncard__label">EMNLP 2026</span></div>
+          <div class="ncard__body">
+            <p class="ncard__meta"><span class="ncard__kind"><span class="en">Release</span><span class="zh">论文发布</span></span><span class="ncard__date">2026.09</span></p>
+            <p class="ncard__text"><span class="en"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a> (EMNLP 2026) and our ACM MM 2026 paper on <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">object-dependent concept brittleness</a> are on arXiv with code.</span><span class="zh"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a>（EMNLP 2026）与 ACM MM 2026 论文 <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</a> 已公开于 arXiv 并开源代码。</span></p>
+          </div>
+        </article>
+        <article class="ncard reveal">
+          <div class="ncard__art ncard__art--2" aria-hidden="true"><span class="ncard__label">Preprint</span></div>
+          <div class="ncard__body">
+            <p class="ncard__meta"><span class="ncard__kind"><span class="en">Release</span><span class="zh">论文发布</span></span><span class="ncard__date">2026.08</span></p>
+            <p class="ncard__text"><span class="en">New preprint on how LLM agent handoffs erode workflow constraints: <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”</a>.</span><span class="zh">新 Preprint <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</a>，研究多智能体交接过程中工作流约束的流失。</span></p>
+          </div>
+        </article>
+        <article class="ncard reveal">
+          <div class="ncard__art ncard__art--3" aria-hidden="true"><span class="ncard__label">EMNLP 2026</span></div>
+          <div class="ncard__body">
+            <p class="ncard__meta"><span class="ncard__kind"><span class="en">Accepted</span><span class="zh">论文录用</span></span><span class="ncard__date">2026.08</span></p>
+            <p class="ncard__text"><span class="en">Three papers accepted to <strong>EMNLP 2026</strong>.</span><span class="zh">三篇论文被 <strong>EMNLP 2026</strong> 接收。</span></p>
+          </div>
+        </article>
+        <article class="ncard reveal">
+          <div class="ncard__art ncard__art--4" aria-hidden="true"><span class="ncard__label">ACM MM 2026</span></div>
+          <div class="ncard__body">
+            <p class="ncard__meta"><span class="ncard__kind"><span class="en">Accepted</span><span class="zh">论文录用</span></span><span class="ncard__date">2026.07</span></p>
+            <p class="ncard__text"><span class="en">One paper accepted to <strong>ACM MM 2026</strong>.</span><span class="zh">一篇论文被 <strong>ACM MM 2026</strong> 接收。</span></p>
+          </div>
+        </article>
+        <article class="ncard reveal">
+          <div class="ncard__art ncard__art--5" aria-hidden="true"><span class="ncard__label">IEEE/CAA JAS</span></div>
+          <div class="ncard__body">
+            <p class="ncard__meta"><span class="ncard__kind"><span class="en">Published</span><span class="zh">论文发表</span></span><span class="ncard__date">2025.04</span></p>
+            <p class="ncard__text"><span class="en">One paper published in <strong>IEEE/CAA Journal of Automatica Sinica</strong>, with <a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">code</a>.</span><span class="zh">一篇论文发表于 <strong>IEEE/CAA Journal of Automatica Sinica</strong>，<a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">代码</a>已开源。</span></p>
+          </div>
+        </article>
+        <!-- lab-news:end -->
+      </div>
+    </section>
+
     <!-- ===================== About ===================== -->
     <section class="section" id="about">
       <div class="sec-head reveal">
-        <span class="sec-num">01</span>
+        <span class="sec-num">02</span>
         <h2 class="sec-title"><span class="en">About the Lab</span><span class="zh">实验室简介</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 50 7, 100 17, 160 11 S 250 8, 296 13"/></svg></h2>
       </div>
+      <div class="mission">
+        <!-- lab-mission:start -->
+        <p class="mission__text en">MUSE Lab studies multimodal understanding and generation. <strong>We want generative AI that is controllable, interpretable and trustworthy</strong>, and genuinely useful in people's lives.</p>
+        <p class="mission__text zh">MUSE Lab 研究多模态理解与生成。<strong>我们希望生成式 AI 可控、可解释、值得信任</strong>，并真正走进人们的生活。</p>
+        <!-- lab-mission:end -->
+      </div>
       <div class="about__grid">
-        <div class="about__text reveal">
-          <!-- lab-about:start -->
-          <p class="en"><strong>MUSE Lab</strong> (Multimodal Understanding and Synthesis for Explainability) is a research group at the <a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">College of Artificial Intelligence</a>, Shenzhen University, led by <a href="../">Yifan Yuan</a>. Our goal is to make generative AI <strong>controllable, interpretable and trustworthy</strong>.</p>
-          <p class="zh"><strong>MUSE Lab</strong>（Multimodal Understanding and Synthesis for Explainability）隶属于<a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">深圳大学人工智能学院</a>，由<a href="../">袁一帆</a>助理教授负责。我们的目标是让生成式 AI 更加<strong>可控、可解释、可信</strong>。</p>
-          <p class="en">We study why text-to-image diffusion models succeed or fail on specific concepts, and how to edit images and videos precisely and consistently; how large language models and agents stay reliable over long-horizon interaction, free of hallucination, bias and state collapse; and how generative agents can perceive and express human emotion.</p>
-          <p class="zh">我们研究文生图扩散模型为何会在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。</p>
-          <!-- lab-about:end -->
+        <div class="about__col">
+          <div class="about__text reveal">
+            <!-- lab-about:start -->
+            <p class="en">We are a research group at the <a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">College of Artificial Intelligence</a>, Shenzhen University, led by <a href="../">Yifan Yuan</a>.</p>
+            <p class="zh">实验室隶属于<a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener">深圳大学人工智能学院</a>，由<a href="../">袁一帆</a>助理教授负责。</p>
+            <p class="en">Our work spans five directions: trustworthy multimodal generation, multimodal understanding and applications, emotion AI, AI safety and embodied AI. Starting from how diffusion models and multimodal LLMs work inside, why they succeed and why they fail, we carry that understanding into real settings such as video, virtual try-on, emotional companionship and robotics.</p>
+            <p class="zh">我们的研究围绕五个方向展开：多模态可信生成、多模态理解与应用、情感智能、大模型安全与具身智能。从扩散模型和多模态大模型的内部机理出发，研究它们为何成功、为何出错，再把这些理解带到视频、虚拟试衣、情感陪伴、机器人等真实场景中。</p>
+            <!-- lab-about:end -->
+          </div>
+          <div class="pi spotlight reveal">
+            <!-- lab-pi:start -->
+            <img class="pi__photo" src="../images/yifan-yuan.jpg" width="1122" height="1402" loading="lazy" alt="Yifan Yuan 袁一帆">
+            <div class="pi__body">
+              <p class="pi__role"><span class="en">Principal Investigator</span><span class="zh">实验室负责人</span></p>
+              <p class="pi__name"><span class="en">Yifan Yuan <span class="pi__alt" lang="zh-CN">袁一帆</span></span><span class="zh">袁一帆 <span class="pi__alt" lang="en">Yifan Yuan</span></span></p>
+              <p class="pi__title"><span class="en">Assistant Professor, College of AI, Shenzhen University</span><span class="zh">深圳大学人工智能学院 助理教授 · 硕士生导师</span></p>
+              <p class="pi__links"><a href="../" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span class="en">Homepage</span><span class="zh">个人主页</span></a><a href="mailto:yifanyuan@szu.edu.cn" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="en">Email</span><span class="zh">邮箱</span></a><a href="https://ai.szu.edu.cn/info/1075/1315.htm" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="en">Faculty Profile</span><span class="zh">学院主页</span></a></p>
+            </div>
+            <!-- lab-pi:end -->
+          </div>
         </div>
         <ol class="acronym reveal">
           <!-- lab-acronym:start -->
@@ -177,72 +253,246 @@
           <!-- lab-acronym:end -->
         </ol>
       </div>
+      <div class="stats reveal">
+        <!-- lab-stats:start -->
+        <div class="stat"><span class="stat__num" data-count="10" data-suffix="+">10+</span><span class="stat__label"><span class="en">papers published</span><span class="zh">篇已发表论文</span></span></div>
+        <div class="stat"><span class="stat__num" data-count="7" data-suffix="">7</span><span class="stat__label"><span class="en">in JCR Q1 journals and CCF-B or higher venues</span><span class="zh">篇 SCI 一区期刊与 CCF-B 及以上会议论文</span></span></div>
+        <div class="stat"><span class="stat__num" data-count="4" data-suffix="">4</span><span class="stat__label"><span class="en">papers at ACM MM and EMNLP 2026</span><span class="zh">篇 2026 年 ACM MM、EMNLP 论文</span></span></div>
+        <div class="stat"><span class="stat__num" data-count="5" data-suffix="">5</span><span class="stat__label"><span class="en">research directions</span><span class="zh">个研究方向</span></span></div>
+        <!-- lab-stats:end -->
+      </div>
     </section>
 
     <!-- ===================== Research ===================== -->
     <section class="section" id="research">
       <div class="sec-head reveal">
-        <span class="sec-num">02</span>
+        <span class="sec-num">03</span>
         <h2 class="sec-title"><span class="en">Research Directions</span><span class="zh">研究方向</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 17, 110 7, 170 12 S 255 15, 296 9"/></svg></h2>
       </div>
-      <div class="dirs">
-        <!-- lab-research:start -->
-        <article class="dir dir--visual spotlight reveal">
-          <span class="dir__mark" aria-hidden="true">绘</span>
-          <div class="dir__head">
-            <span class="dir__seal" aria-hidden="true">绘</span>
-            <h3 class="dir__title"><span class="en">Controllable &amp; Interpretable Visual Generation</span><span class="zh">可控、可解释的视觉生成与编辑</span></h3>
-          </div>
-          <p class="dir__text en">Why do diffusion models fail on specific concepts, and how can we edit images and videos precisely while keeping semantics consistent and identities intact?</p>
-          <p class="dir__text zh">扩散模型为何会在特定概念上失效？如何在保持语义一致与身份不变的前提下，实现精确的图像与视频编辑？</p>
-          <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
-          <ul class="dir__papers">
-            <li><a href="#p-mm26"><span class="dir__name">Concept Brittleness</span><span class="dir__venue">ACM MM 2026</span></a></li>
-            <li><a href="#p-jas25"><span class="dir__name">Semantic Discrepancy</span><span class="dir__venue">IEEE/CAA JAS 2025</span></a></li>
-            <li><a href="#p-icassp23"><span class="dir__name">DO-FAM</span><span class="dir__venue">ICASSP 2023</span></a></li>
-            <li><a href="#p-icassp22"><span class="dir__name">VR-FAM</span><span class="dir__venue">ICASSP 2022</span></a></li>
-          </ul>
-        </article>
-        <article class="dir dir--trust spotlight reveal">
-          <span class="dir__mark" aria-hidden="true">信</span>
-          <div class="dir__head">
-            <span class="dir__seal" aria-hidden="true">信</span>
-            <h3 class="dir__title"><span class="en">Trustworthy LLMs &amp; Agents</span><span class="zh">可信的大模型与智能体</span></h3>
-          </div>
-          <p class="dir__text en">Keeping LLMs and agents reliable: constraint and state integrity in long-horizon dialogue and agent handoffs, reflective search for code generation, and AI-for-AI systems that write academic surveys.</p>
-          <p class="dir__text zh">让大模型与智能体更可靠：长程对话与多智能体交接中的约束与状态保持、面向代码生成的反思式搜索，以及自动撰写学术综述的 AI for AI 系统。</p>
-          <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
-          <ul class="dir__papers">
-            <li><a href="#p-state"><span class="dir__name">StateTrack</span><span class="dir__venue">EMNLP 2026</span></a></li>
-            <li><a href="#p-remcts"><span class="dir__name">ReMCTS</span><span class="dir__venue">EMNLP 2026</span></a></li>
-            <li><a href="#p-surveygraph"><span class="dir__name">SurveyGraph</span><span class="dir__venue">EMNLP 2026</span></a></li>
-            <li><a href="#p-handoff"><span class="dir__name">Agent Handoffs</span><span class="dir__venue">Preprint 2026</span></a></li>
-          </ul>
-        </article>
-        <article class="dir dir--affect spotlight reveal">
-          <span class="dir__mark" aria-hidden="true">情</span>
-          <div class="dir__head">
-            <span class="dir__seal" aria-hidden="true">情</span>
-            <h3 class="dir__title"><span class="en">Affective &amp; Embodied Intelligence</span><span class="zh">情感智能与具身智能</span></h3>
-          </div>
-          <p class="dir__text en">From facial expression and micro-expression analysis to emotional agents that understand and respond to people, extending toward embodied AI and world models.</p>
-          <p class="dir__text zh">从人脸表情与微表情分析，到能够理解并回应人的情感智能体，并进一步拓展到具身智能与世界模型。</p>
-          <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
-          <ul class="dir__papers">
-            <li><a href="#p-ch7"><span class="dir__name">AU &amp; Expression</span><span class="dir__venue">Book Chapter 2023</span></a></li>
-            <li><a href="#p-ch8"><span class="dir__name">ExpressionFlow</span><span class="dir__venue">Book Chapter 2023</span></a></li>
-            <li><a href="#p-jig20"><span class="dir__name">Micro-expression</span><span class="dir__venue">JIG 2020</span></a></li>
-          </ul>
-        </article>
-        <!-- lab-research:end -->
+      <p class="sec-intro reveal"><!-- lab-research-intro:start --><span class="en">From the inner workings of diffusion models and multimodal LLMs to real settings: video, emotion, safety and robotics.</span><span class="zh">从扩散模型与多模态大模型的内部机理，到视频、情感、安全与机器人等真实场景。</span><!-- lab-research-intro:end --></p>
+      <div class="research">
+        <aside class="rindex" aria-label="Research directions">
+          <ol class="rindex__list">
+            <!-- lab-index:start -->
+            <li><a class="rindex__link" href="#dir-trust"><span class="rindex__num">01</span><span class="rindex__seal" aria-hidden="true">信</span><span class="rindex__title"><span class="en">Trustworthy Multimodal Generation</span><span class="zh">多模态可信生成</span></span></a></li>
+            <li><a class="rindex__link" href="#dir-perceive"><span class="rindex__num">02</span><span class="rindex__seal" aria-hidden="true">观</span><span class="rindex__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></span></a></li>
+            <li><a class="rindex__link" href="#dir-emotion"><span class="rindex__num">03</span><span class="rindex__seal" aria-hidden="true">情</span><span class="rindex__title"><span class="en">Emotion AI</span><span class="zh">情感智能</span></span></a></li>
+            <li><a class="rindex__link" href="#dir-safety"><span class="rindex__num">04</span><span class="rindex__seal" aria-hidden="true">安</span><span class="rindex__title"><span class="en">AI Safety</span><span class="zh">大模型安全</span></span></a></li>
+            <li><a class="rindex__link" href="#dir-embodied"><span class="rindex__num">05</span><span class="rindex__seal" aria-hidden="true">行</span><span class="rindex__title"><span class="en">Embodied AI</span><span class="zh">具身智能</span></span></a></li>
+            <!-- lab-index:end -->
+          </ol>
+        </aside>
+        <div class="dirs">
+          <!-- lab-directions:start -->
+          <article class="dir dir--trust" id="dir-trust">
+            <header class="dir__head reveal">
+              <span class="dir__num">01</span>
+              <span class="dir__seal" aria-hidden="true">信</span>
+              <h3 class="dir__title"><span class="en">Trustworthy Multimodal Generation</span><span class="zh">多模态可信生成</span></h3>
+            </header>
+            <p class="dir__summary reveal en">Taking multimodal LLMs and diffusion models from "able to generate" to "trustworthy": outputs grounded in evidence, errors noticed before they surface, and corrected while the model is still generating.</p>
+            <p class="dir__summary reveal zh">让多模态大模型与扩散模型从“能够生成”走向“可信生成”：内容有依据，出错之前能察觉，生成过程中能纠正。</p>
+            <div class="viz viz--scan reveal" aria-hidden="true"><div class="viz__grid"><i style="--c:0"></i><i style="--c:1"></i><i style="--c:2"></i><i style="--c:3"></i><i style="--c:4"></i><i style="--c:5"></i><i style="--c:6"></i><i style="--c:7"></i><i style="--c:8"></i><i style="--c:9"></i><i style="--c:0"></i><i style="--c:1"></i><i style="--c:2"></i><i class="is-risk" style="--c:3"></i><i style="--c:4"></i><i style="--c:5"></i><i style="--c:6"></i><i style="--c:7"></i><i style="--c:8"></i><i style="--c:9"></i><i style="--c:0"></i><i style="--c:1"></i><i style="--c:2"></i><i style="--c:3"></i><i style="--c:4"></i><i style="--c:5"></i><i class="is-risk" style="--c:6"></i><i style="--c:7"></i><i style="--c:8"></i><i style="--c:9"></i><i style="--c:0"></i><i style="--c:1"></i><i style="--c:2"></i><i style="--c:3"></i><i style="--c:4"></i><i style="--c:5"></i><i style="--c:6"></i><i class="is-risk" style="--c:7"></i><i style="--c:8"></i><i style="--c:9"></i></div><span class="viz__beam"></span></div>
+            <div class="dir__topics">
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Predicting and steering hallucinations</span><span class="zh">幻觉风险的预测与干预</span></h4>
+                <p class="topic__text en">Multimodal LLMs describe images fluently but sometimes state things the image does not support. We read the model's internal states as it generates to predict the hallucination risk of what comes next, carrying on when the risk is low and intervening at inference time, without retraining, when it is high.</p>
+                <p class="topic__text zh">多模态大模型能看图写出丰富的文字，却会输出“看似合理、实际没有视觉依据”的内容。我们读取模型生成时的内部状态，提前预测下一段内容的幻觉风险：风险低就继续生成，风险高就在推理阶段动态干预，无需重新训练。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Inside diffusion models</span><span class="zh">扩散模型的内部机理</span></h4>
+                <p class="topic__text en">Analysing SD-VAE, DINOv2 and DiT features along the denoising trajectory, we find that early steps fix the subject's structure and layout while middle steps refine text-related details. We also study why concepts keep failing on particular objects (ACM MM 2026) and where semantic discrepancy in image translation comes from (IEEE/CAA JAS 2025).</p>
+                <p class="topic__text zh">分析 SD-VAE、DINOv2 与 DiT 在去噪过程中的特征，发现早期决定主体结构与布局、中期细化与文本相关的局部细节；并研究概念为何在特定物体上反复失效（ACM MM 2026），以及图像转换中的语义偏差从何而来（IEEE/CAA JAS 2025）。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Attribute binding and control</span><span class="zh">属性解耦与可控生成</span></h4>
+                <p class="topic__text en">An LLM parses the prompt into a scene graph, so any object–attribute combination is supported. Dynamic text embeddings and counterfactual constraints reduce semantic entanglement, attention constraints with layout priors place attributes at pixel level, and constraint strength adapts across denoising steps. Earlier work (DO-FAM, VR-FAM) studied disentangled editing of facial attributes.</p>
+                <p class="topic__text zh">借助大模型把提示词解析成场景图，支持任意“对象—属性”组合；用动态文本嵌入和反事实约束减轻语义纠缠，结合注意力约束与布局先验实现像素级定位，并随去噪时间步自适应调整约束强度。早期工作 DO-FAM、VR-FAM 研究了人脸属性的解耦编辑。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Reliable language models and agents</span><span class="zh">大语言模型与智能体的可信生成</span></h4>
+                <p class="topic__text en">How models remember, understand and use information. StateTrack tests whether a model keeps following earlier instructions in long dialogues: restating a rule is not the same as obeying it. ReMCTS uses reflective tree search for more reliable code, and we study how workflow constraints erode when agents hand tasks to each other.</p>
+                <p class="topic__text zh">研究模型怎样记住、理解并使用信息：StateTrack 检查模型在长对话中是否一直遵守先前的要求，“会复述”不等于“会执行”；ReMCTS 用反思式树搜索生成更可靠的代码；我们还研究多智能体交接过程中工作流约束的流失。</p>
+              </section>
+            </div>
+            <div class="dir__refs reveal">
+              <p class="dir__refs-label"><span class="en">Papers</span><span class="zh">代表论文</span></p>
+              <div class="dir__papers">
+                <a href="#p-mm26"><span class="dir__name">Concept Brittleness</span><span class="dir__venue">ACM MM 2026</span></a>
+                <a href="#p-jas25"><span class="dir__name">Semantic Discrepancy</span><span class="dir__venue">IEEE/CAA JAS 2025</span></a>
+                <a href="#p-state"><span class="dir__name">StateTrack</span><span class="dir__venue">EMNLP 2026</span></a>
+                <a href="#p-remcts"><span class="dir__name">ReMCTS</span><span class="dir__venue">EMNLP 2026</span></a>
+                <a href="#p-handoff"><span class="dir__name">Agent Handoffs</span><span class="dir__venue">Preprint 2026</span></a>
+                <a href="#p-icassp23"><span class="dir__name">DO-FAM</span><span class="dir__venue">ICASSP 2023</span></a>
+                <a href="#p-icassp22"><span class="dir__name">VR-FAM</span><span class="dir__venue">ICASSP 2022</span></a>
+              </div>
+            </div>
+            <div class="dir__refs reveal">
+              <p class="dir__refs-label"><span class="en">Projects</span><span class="zh">相关项目</span></p>
+              <ul class="dir__grants">
+                <li><span class="en">Reliability Evaluation and Controllable Editing Mechanisms for Generative Image Editing</span><span class="zh">生成式图像编辑的可靠性评估与可控编辑机制研究</span><span class="dir__funder"><span class="en">Shenzhen University Research Start-up Fund for Young Faculty</span><span class="zh">深圳大学青年教师科研启动经费</span></span></li>
+              </ul>
+            </div>
+          </article>
+          <article class="dir dir--perceive" id="dir-perceive">
+            <header class="dir__head reveal">
+              <span class="dir__num">02</span>
+              <span class="dir__seal" aria-hidden="true">观</span>
+              <h3 class="dir__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></h3>
+            </header>
+            <p class="dir__summary reveal en">Teaching models to understand video, images and text, and putting that understanding to work: video retrieval and editing, quality checks for virtual try-on, and help with writing academic surveys.</p>
+            <p class="dir__summary reveal zh">让模型读懂视频、图像与文字，并把这种理解落到具体场景：视频检索与剪辑、虚拟试衣的质量诊断、学术综述写作。</p>
+            <div class="viz viz--timeline reveal" aria-hidden="true"><div class="viz__frames"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></div><div class="viz__bars"><b style="--h:28%;--i:0"></b><b style="--h:46%;--i:1"></b><b style="--h:38%;--i:2"></b><b style="--h:72%;--i:3"></b><b style="--h:94%;--i:4"></b><b style="--h:66%;--i:5"></b><b style="--h:40%;--i:6"></b><b style="--h:30%;--i:7"></b><b style="--h:52%;--i:8"></b><b style="--h:86%;--i:9"></b><b style="--h:58%;--i:10"></b><b style="--h:34%;--i:11"></b><b style="--h:26%;--i:12"></b><b style="--h:44%;--i:13"></b><b style="--h:62%;--i:14"></b><b style="--h:36%;--i:15"></b></div><span class="viz__window"></span><span class="viz__head"></span></div>
+            <div class="dir__topics">
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Moment retrieval and highlight detection</span><span class="zh">视频时刻检索与高光检测</span></h4>
+                <p class="topic__text en">Given a video and a natural-language query, the model finds the most relevant moment on the timeline and scores every clip for how much of a highlight it is: semantic retrieval and highlight extraction in one model.</p>
+                <p class="topic__text zh">给定一段视频和一句自然语言查询，模型在时间轴上定位最相关的片段，同时为每个片段的精彩程度打分，把“按语义检索关键片段”和“自动提取精彩时刻”合为一体。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Story-aware video editing</span><span class="zh">懂剧情的智能剪辑</span></h4>
+                <p class="topic__text en">An editing system that follows the plot and the audience's feelings: it understands complex requests, pulls the key shots out of large amounts of footage, and produces cuts that fit the brief while keeping the original story and mood.</p>
+                <p class="topic__text zh">构建能“读懂”剧情、“共情”观众的剪辑系统：准确理解复杂的用户意图，从海量素材中提取核心镜头，生成既符合需求、又保留原片叙事与情绪氛围的视频。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Distortion detection for virtual try-on</span><span class="zh">虚拟试衣失真检测</span></h4>
+                <p class="topic__text en">A fine-grained distortion framework that combines a taxonomy of artefacts, a VQA-annotated dataset and fine-tuned multimodal LLMs, so try-on systems can tell whether a result is distorted, what kind of distortion it is, where it is, and why.</p>
+                <p class="topic__text zh">建立细粒度的失真检测框架：把失真分类体系、视觉问答标注数据集与多模态大模型微调结合起来，让虚拟换装系统能判断有无失真、区分失真类型、定位失真位置并解释原因。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Grounded survey writing</span><span class="zh">有依据的综述写作</span></h4>
+                <p class="topic__text en">SurveyGraph first maps how papers extend, compete with and share resources with each other in a methods–entity knowledge graph, then retrieves, outlines and writes along the field's evolution, so that key claims in a survey trace back to the literature.</p>
+                <p class="topic__text zh">SurveyGraph 先把论文之间的延续、竞争与共享资源关系整理成“方法—实体知识图谱”，再据此检索、列提纲、按领域演化脉络写作，让综述中的重要判断都能回到文献。</p>
+              </section>
+            </div>
+            <div class="dir__refs reveal">
+              <p class="dir__refs-label"><span class="en">Papers</span><span class="zh">代表论文</span></p>
+              <div class="dir__papers">
+                <a href="#p-surveygraph"><span class="dir__name">SurveyGraph</span><span class="dir__venue">EMNLP 2026</span></a>
+              </div>
+            </div>
+            <div class="dir__refs reveal">
+              <p class="dir__refs-label"><span class="en">Projects</span><span class="zh">相关项目</span></p>
+              <ul class="dir__grants">
+                <li><span class="en">Intelligent Models for Multimodal Information Retrieval, Review and Moderation</span><span class="zh">多模态信息检索、审查与管控智能模型研究</span><span class="dir__funder"><span class="en">Industry project with China Mobile</span><span class="zh">横向项目，中国移动</span></span></li>
+              </ul>
+            </div>
+          </article>
+          <article class="dir dir--emotion" id="dir-emotion">
+            <header class="dir__head reveal">
+              <span class="dir__num">03</span>
+              <span class="dir__seal" aria-hidden="true">情</span>
+              <h3 class="dir__title"><span class="en">Emotion AI</span><span class="zh">情感智能</span></h3>
+            </header>
+            <p class="dir__summary reveal en">Helping AI understand human emotion accurately and faithfully, respond with the right kind of support, and grow into companions with long-term memory and a steady personality.</p>
+            <p class="dir__summary reveal zh">一方面让 AI 更准确、可信地理解人的情绪，另一方面让它在理解之后给出恰当的支持，并探索有长期记忆、有稳定人格的 AI 伙伴。</p>
+            <div class="viz viz--waves reveal" aria-hidden="true"><svg class="viz__waves" viewBox="0 0 600 200" preserveAspectRatio="none"><path class="w1" d="M0 100 Q75 54 150 100 Q225 146 300 100 Q375 54 450 100 Q525 146 600 100 Q675 54 750 100 Q825 146 900 100 Q975 54 1050 100 Q1125 146 1200 100"/><path class="w2" d="M0 104 Q75 74 150 104 Q225 134 300 104 Q375 74 450 104 Q525 134 600 104 Q675 74 750 104 Q825 134 900 104 Q975 74 1050 104 Q1125 134 1200 104"/><path class="w3" d="M0 96 Q75 78 150 96 Q225 114 300 96 Q375 78 450 96 Q525 114 600 96 Q675 78 750 96 Q825 114 900 96 Q975 78 1050 96 Q1125 114 1200 96"/></svg><span class="viz__pulse"></span></div>
+            <div class="dir__topics">
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Multimodal emotion recognition</span><span class="zh">多模态情绪识别</span></h4>
+                <p class="topic__text en">Combining speech, facial expression and language, we move from fixed emotion categories to open-vocabulary, fine-grained recognition, and on to descriptive recognition that explains in words what the emotion is and why it arises.</p>
+                <p class="topic__text zh">融合语音、表情与语言的互补信息，从固定的情绪类别走向开放词汇的细粒度情绪识别，再到用自然语言解释“是什么情绪、为什么产生”的描述型情绪识别。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Hallucinations in emotion descriptions</span><span class="zh">情绪描述中的幻觉</span></h4>
+                <p class="topic__text en">Generated emotion descriptions can cite evidence that is not in the input. We define four kinds of hallucination (invented perceptual evidence, cross-modal misattribution, emotional over-inference and made-up causes) and build diagnostics, moving from descriptions that sound right to descriptions the input actually supports.</p>
+                <p class="topic__text zh">模型生成的情绪描述可能包含输入中不存在的证据。我们系统定义了感知证据幻觉、跨模态错归因、情绪过度推断与叙事/因果幻觉四类问题，并构建诊断与评估方法，从“能生成情绪描述”走向“能生成可信的情绪描述”。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Emotional support conversation</span><span class="zh">情感支持对话</span></h4>
+                <p class="topic__text en">Recognising a user's emotional state, situation and needs; choosing among comforting, empathising, asking, advising and encouraging; adjusting as the user's state changes over many turns; and evaluating whether the support truly fits.</p>
+                <p class="topic__text zh">识别用户的情绪状态、处境与潜在需求，选择安慰、共情、询问、建议、鼓励等合适的策略，在多轮交互中跟随用户状态调整，并评估支持是否真正贴合情境。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Companions with memory and personality</span><span class="zh">有记忆、有人格的 AI 伙伴</span></h4>
+                <p class="topic__text en">From chatbots to companions with long-term memory and cognitive schemas: Big-Five personality realised through a mixture of LoRA adapters, so that personality can be tuned, with replies that adapt to intimacy and emotional state. The same techniques help build simulated conversational agents for mental-health assessment research.</p>
+                <p class="topic__text zh">从 Chatbot 走向具有长期记忆与认知图式的 AI 伙伴：以大五人格为基础，用混合专家式的 LoRA 适配器实现可调节的人格，并结合亲密度与情绪状态动态调整回复风格；相关技术也用于构建心理健康评估研究中的模拟对话智能体。</p>
+              </section>
+            </div>
+            <div class="dir__refs reveal">
+              <p class="dir__refs-label"><span class="en">Papers</span><span class="zh">代表论文</span></p>
+              <div class="dir__papers">
+                <a href="#p-ch7"><span class="dir__name">AU &amp; Expression</span><span class="dir__venue">Book Chapter 2023</span></a>
+                <a href="#p-ch8"><span class="dir__name">ExpressionFlow</span><span class="dir__venue">Book Chapter 2023</span></a>
+                <a href="#p-jig20"><span class="dir__name">Micro-expression</span><span class="dir__venue">JIG 2020</span></a>
+              </div>
+            </div>
+            <div class="dir__refs reveal">
+              <p class="dir__refs-label"><span class="en">Projects</span><span class="zh">相关项目</span></p>
+              <ul class="dir__grants">
+                <li><span class="en">AI Virtual Patients for Clinical Teaching in Gastroenterology</span><span class="zh">面向消化科临床教学的AI虚拟病人技术研究与应用</span><span class="dir__funder"><span class="en">Guangdong Natural Science Foundation, General Program</span><span class="zh">广东省自然科学基金面上项目</span></span></li>
+              </ul>
+            </div>
+          </article>
+          <article class="dir dir--safety" id="dir-safety">
+            <header class="dir__head reveal">
+              <span class="dir__num">04</span>
+              <span class="dir__seal" aria-hidden="true">安</span>
+              <h3 class="dir__title"><span class="en">AI Safety</span><span class="zh">大模型安全</span></h3>
+            </header>
+            <p class="dir__summary reveal en">Explaining why safety alignment works and why it can be bypassed, and building a defence loop for multimodal models: interpretable monitoring, controllable intervention and continual strengthening.</p>
+            <p class="dir__summary reveal zh">解释安全对齐为什么有效、为什么会被绕过，并为多模态大模型构建可解释监测、可控干预与持续强化的防护闭环。</p>
+            <div class="viz viz--shield reveal" aria-hidden="true"><span class="viz__ring"></span><span class="viz__ring"></span><span class="viz__ring"></span><svg class="viz__shield" viewBox="0 0 64 72"><path d="M32 4 7 14v19c0 17 10.6 29 25 35 14.4-6 25-18 25-35V14z"/><path class="viz__tick" d="m21 36 8 8 15-16"/></svg><i class="viz__dot"></i><i class="viz__dot"></i><i class="viz__dot"></i><i class="viz__dot"></i></div>
+            <div class="dir__topics">
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Jailbreaks and defences</span><span class="zh">越狱攻击与防御</span></h4>
+                <p class="topic__text en">A jailbreak gets the model to treat an attack as a higher-priority task, by disguising harmful intent as translation, research or role-play, or by using long contexts, indirect prompt injection and multi-turn manipulation to make it "ignore previous rules". We detect and block attacks in layers on the input, model and output side, backed by continual red-teaming.</p>
+                <p class="topic__text zh">越狱的本质，是让模型把攻击指令误当成更高优先级的任务：或把恶意意图伪装成翻译、研究、虚构角色等无害请求，或借助长上下文、间接提示注入与多轮对话诱导模型“忽略此前规则”。我们在输入、模型、输出三侧分层识别与拦截，并坚持持续的红队测试。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Multimodal safety</span><span class="zh">多模态安全</span></h4>
+                <p class="topic__text en">Images widen the attack surface: instructions hidden in posters or screenshots, subtle adversarial perturbations and conflicts between image and text can all pull a model off its safety alignment. We study cross-modal consistency checks so that models read images correctly while spotting and refusing malicious instructions in them.</p>
+                <p class="topic__text zh">视觉输入让攻击面从文本延伸到图像：海报或截图里藏着的指令、细微的对抗扰动、图文之间的冲突，都可能让模型偏离安全对齐。我们研究跨模态一致性校验，让模型正确理解图像，同时识别并拒绝其中的恶意指令。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Adaptive safety alignment</span><span class="zh">自适应安全对齐</span></h4>
+                <p class="topic__text en">Built around one representation of the model's safety boundary: an interpretable risk score with clear geometric and statistical meaning, lightweight defences that need no retraining, and continual adversarial updates against unseen jailbreaks and out-of-distribution risks.</p>
+                <p class="topic__text zh">以统一的“安全边界”表征为核心，构建具有明确几何与统计意义的可解释风险度量，设计无需重新训练的轻量防护机制，并面向未知越狱与分布外风险持续对抗更新。</p>
+              </section>
+            </div>
+          </article>
+          <article class="dir dir--embodied" id="dir-embodied">
+            <header class="dir__head reveal">
+              <span class="dir__num">05</span>
+              <span class="dir__seal" aria-hidden="true">行</span>
+              <h3 class="dir__title"><span class="en">Embodied AI</span><span class="zh">具身智能</span></h3>
+            </header>
+            <p class="dir__summary reveal en">Robots that perceive, plan and act reliably through long tasks: generating long action sequences straight from multimodal perception, and improving through interaction after deployment.</p>
+            <p class="dir__summary reveal zh">让机器人在长周期任务中看得懂、想得清、做得稳：从多模态感知直接生成长序列动作，并在部署后通过与环境交互持续改进。</p>
+            <div class="viz viz--path reveal" aria-hidden="true"><svg class="viz__path" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet"><path class="viz__track" d="M40 170 C 130 40, 230 210, 320 115 S 500 30, 560 80"/><circle class="viz__node" cx="40" cy="170" r="7"/><circle class="viz__node" cx="320" cy="115" r="7"/><circle class="viz__node" cx="560" cy="80" r="7"/><circle class="viz__bot" r="11"><animateMotion dur="6s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.45 0 0.55 1" path="M40 170 C 130 40, 230 210, 320 115 S 500 30, 560 80"/></circle></svg></div>
+            <div class="dir__topics">
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">End-to-end long-horizon decisions</span><span class="zh">端到端长程决策</span></h4>
+                <p class="topic__text en">Cascading a VLM planner with a small executor splits planning from acting. We build end-to-end long-horizon decision models that map streaming multimodal perception directly to long action sequences, for more robust and coherent long tasks.</p>
+                <p class="topic__text zh">“VLM 高层规划 + 小模型底层执行”的级联范式使规划与执行割裂。我们研发端到端的长程时序决策大模型，实现从多模态流式感知到长序列动作输出的直接映射，提升长周期任务中的鲁棒性与连贯性。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Test-time adaptation for VLA models</span><span class="zh">VLA 模型的测试时自适应</span></h4>
+                <p class="topic__text en">Vision–language–action models depend on large demonstration sets and generalise poorly once deployed. Our test-time training framework, driven by the robot's own feedback, lets it refine its policy through interaction, with no human reward signal.</p>
+                <p class="topic__text zh">现有视觉—语言—动作（VLA）模型严重依赖海量示教数据，部署后泛化能力差。我们构建由自主反馈驱动的测试时训练框架，让机器人在没有人工奖励信号的情况下，通过与环境交互自我迭代、优化策略。</p>
+              </section>
+              <section class="topic reveal">
+                <h4 class="topic__title"><span class="en">Fine manipulation for industry</span><span class="zh">工业场景中的精细操作</span></h4>
+                <p class="topic__text en">Fine manipulation with dexterous hands, and generalisation across settings, for industrial tasks such as moving and opening boxes.</p>
+                <p class="topic__text zh">面向搬运、开箱等工业任务，研究灵巧手的精细操作与跨场景泛化。</p>
+              </section>
+            </div>
+            <div class="dir__refs reveal">
+              <p class="dir__refs-label"><span class="en">Projects</span><span class="zh">相关项目</span></p>
+              <ul class="dir__grants">
+                <li><span class="en">Embodied-Intelligence Foundation Models for Industrial Humanoid Robots</span><span class="zh">人形机器人工业具身智能基座大模型与垂直领域示范应用</span><span class="dir__funder"><span class="en">Shenzhen Key Industry R&amp;D Program</span><span class="zh">深圳市重点产业研发计划</span></span></li>
+              </ul>
+            </div>
+          </article>
+          <!-- lab-directions:end -->
+        </div>
       </div>
-      <p class="applications reveal"><!-- lab-applications:start --><span class="en"><strong>Applications:</strong> emotional companionship, virtual try-on, end-to-end apparel automation, and digital humans.</span><span class="zh"><strong>应用场景：</strong>情感陪伴、虚拟试衣、服装全流程自动化、数字人建模。</span><!-- lab-applications:end --></p>
     </section>
 
     <!-- ===================== Publications ===================== -->
     <section class="section" id="publications">
       <div class="sec-head reveal">
-        <span class="sec-num">03</span>
+        <span class="sec-num">04</span>
         <h2 class="sec-title"><span class="en">Publications</span><span class="zh">论文成果</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 C 45 16, 105 8, 165 13 S 245 9, 296 14"/></svg></h2>
       </div>
       <h3 class="sub reveal" id="featured-title"><span class="en">Featured</span><span class="zh">代表性论文</span></h3>
@@ -453,67 +703,64 @@
       </div>
     </section>
 
-    <!-- ===================== News ===================== -->
-    <section class="section" id="news">
-      <div class="sec-head reveal">
-        <span class="sec-num">04</span>
-        <h2 class="sec-title"><span class="en">News</span><span class="zh">最新动态</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 55 9, 115 16, 175 11 S 255 13, 296 10"/></svg></h2>
-      </div>
-      <div class="news__box reveal">
-        <!-- lab-news:start -->
-        <ol class="nlist">
-          <li class="nitem"><span class="nitem__date">2026.10</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en">Two EMNLP 2026 papers are on arXiv with code: <a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> and <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：<a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> 与 <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.09</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a> (EMNLP 2026) and our ACM MM 2026 paper on <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">object-dependent concept brittleness</a> are on arXiv with code.</span><span class="zh"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a>（EMNLP 2026）与 ACM MM 2026 论文 <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</a> 已公开于 arXiv 并开源代码。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.08</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">📄</span><span class="en">New preprint on how LLM agent handoffs erode workflow constraints: <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”</a>.</span><span class="zh">新 Preprint <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</a>，研究多智能体交接过程中工作流约束的流失。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.08</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">Three papers accepted to <strong>EMNLP 2026</strong>.</span><span class="zh">三篇论文被 <strong>EMNLP 2026</strong> 接收。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2026.07</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper accepted to <strong>ACM MM 2026</strong>.</span><span class="zh">一篇论文被 <strong>ACM MM 2026</strong> 接收。</span></p></li>
-          <li class="nitem"><span class="nitem__date">2025.04</span><p class="nitem__text"><span class="nitem__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper published in <strong>IEEE/CAA Journal of Automatica Sinica</strong>, with <a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">code</a>.</span><span class="zh">一篇论文发表于 <strong>IEEE/CAA Journal of Automatica Sinica</strong>，<a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">代码</a>已开源。</span></p></li>
-        </ol>
-        <!-- lab-news:end -->
-      </div>
-    </section>
-
-    <!-- ===================== People ===================== -->
-    <section class="section" id="people">
-      <div class="sec-head reveal">
-        <span class="sec-num">05</span>
-        <h2 class="sec-title"><span class="en">People</span><span class="zh">团队成员</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 11 C 50 16, 110 9, 170 13 S 250 10, 296 13"/></svg></h2>
-      </div>
-      <!-- lab-people:start -->
-      <article class="pi spotlight reveal">
-        <img class="pi__photo" src="../images/yifan-yuan.jpg" width="1122" height="1402" loading="lazy" alt="Yifan Yuan 袁一帆">
-        <div class="pi__body">
-          <p class="pi__role"><span class="en">Principal Investigator</span><span class="zh">实验室负责人</span></p>
-          <h3 class="pi__name"><span class="en">Yifan Yuan <span class="pi__alt" lang="zh-CN">袁一帆</span></span><span class="zh">袁一帆 <span class="pi__alt" lang="en">Yifan Yuan</span></span></h3>
-          <p class="pi__title"><span class="en">Assistant Professor, College of AI, Shenzhen University</span><span class="zh">深圳大学人工智能学院 助理教授 · 硕士生导师</span></p>
-          <p class="pi__bio en">Ph.D. in Computer Science, Fudan University (2025), advised by Prof. Junping Zhang; B.S. in Physics, Fudan University (2019). AIGC research intern on text-to-image generation at Tencent Hunyuan and SenseTime during the Ph.D. Member of the Technical Committee on Hybrid Intelligence and the Science Popularization Committee, Chinese Association of Automation (CAA).</p>
-          <p class="pi__bio zh">2025 年博士毕业于复旦大学计算机科学技术专业，师从张军平教授；2019 年本科毕业于复旦大学物理学专业。读博期间曾在腾讯混元文生图组、商汤科技从事 AIGC 算法研究实习。现为中国自动化学会混合智能专委会、普及工作专委会会员。</p>
-          <p class="pi__links"><a href="../" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span class="en">Homepage</span><span class="zh">个人主页</span></a><a href="mailto:yifanyuan@szu.edu.cn" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="en">Email</span><span class="zh">邮箱</span></a><a href="https://ai.szu.edu.cn/info/1075/1315.htm" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="en">Faculty Profile</span><span class="zh">学院主页</span></a></p>
-        </div>
-      </article>
-      <!-- lab-people:end -->
-    </section>
-
     <!-- ===================== Contact ===================== -->
-    <section class="section" id="contact">
-      <div class="sec-head reveal">
-        <span class="sec-num">06</span>
-        <h2 class="sec-title"><span class="en">Contact</span><span class="zh">联系我们</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 8, 120 16, 180 11 S 255 12, 296 12"/></svg></h2>
+    <section class="section section--cta" id="contact">
+      <div class="cta reveal">
+        <div class="cta__glow" aria-hidden="true"></div>
+        <div class="cta__main">
+          <!-- lab-cta:start -->
+          <h2 class="cta__title"><span class="en">Research and business collaborations welcome</span><span class="zh">欢迎科研与商业合作</span></h2>
+          <p class="cta__text en">Interested in working with us? Write to us by email.</p>
+          <p class="cta__text zh">如有合作意向，欢迎通过邮件与我们联系。</p>
+          <!-- lab-cta:end -->
+          <p class="cta__actions">
+            <a class="btn btn--light" href="mailto:yifanyuan@szu.edu.cn"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="en">Email us</span><span class="zh">发邮件给我们</span></a>
+            <a class="btn btn--ghost" href="https://github.com/MUSE-AI-Lab" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg>GitHub</a>
+          </p>
+        </div>
+        <ul class="contact__list">
+          <!-- lab-contact:start -->
+          <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="crow__label"><span class="en">Email</span><span class="zh">邮箱</span></span><span class="crow__value"><a href="mailto:yifanyuan@szu.edu.cn">yifanyuan@szu.edu.cn</a></span></li>
+          <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span class="crow__label"><span class="en">Address</span><span class="zh">地址</span></span><span class="crow__value"><span class="en">College of Artificial Intelligence, Shenzhen University, Shenzhen, China</span><span class="zh">中国 · 深圳 · 深圳大学人工智能学院</span></span></li>
+          <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span class="crow__label"><span class="en">Code</span><span class="zh">代码</span></span><span class="crow__value"><a href="https://github.com/MUSE-AI-Lab" target="_blank" rel="noopener">github.com/MUSE-AI-Lab</a></span></li>
+          <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="crow__label"><span class="en">PI</span><span class="zh">负责人</span></span><span class="crow__value"><a href="../"><span class="en">Yifan Yuan · yifanyuan.com</span><span class="zh">袁一帆 · yifanyuan.com</span></a></span></li>
+          <!-- lab-contact:end -->
+        </ul>
       </div>
-      <ul class="contact__list reveal">
-        <!-- lab-contact:start -->
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span class="crow__label"><span class="en">Email</span><span class="zh">邮箱</span></span><span class="crow__value"><a href="mailto:yifanyuan@szu.edu.cn">yifanyuan@szu.edu.cn</a></span></li>
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span class="crow__label"><span class="en">Address</span><span class="zh">地址</span></span><span class="crow__value"><span class="en">College of Artificial Intelligence, Shenzhen University, Shenzhen, China</span><span class="zh">中国 · 深圳 · 深圳大学人工智能学院</span></span></li>
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span class="crow__label"><span class="en">Code</span><span class="zh">代码</span></span><span class="crow__value"><a href="https://github.com/MUSE-AI-Lab" target="_blank" rel="noopener">github.com/MUSE-AI-Lab</a></span></li>
-        <li class="crow"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="crow__label"><span class="en">PI</span><span class="zh">负责人</span></span><span class="crow__value"><a href="../"><span class="en">Yifan Yuan · yifanyuan.com</span><span class="zh">袁一帆 · yifanyuan.com</span></a></span></li>
-        <!-- lab-contact:end -->
-      </ul>
     </section>
   </main>
 
   <footer class="foot">
-    <p>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>
-    <a class="to-top" href="#top"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg><span class="en">Back to top</span><span class="zh">回到顶部</span></a>
+    <div class="foot__inner">
+      <div class="foot__brand">
+        <a class="brand brand--foot" href="#top"><img src="../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>
+        <p class="foot__tag">Multimodal Understanding and Synthesis for Explainability</p>
+      </div>
+      <nav class="foot__cols" aria-label="Footer">
+        <div>
+          <p class="foot__head"><span class="en">Lab</span><span class="zh">实验室</span></p>
+          <a href="#news"><span class="en">News</span><span class="zh">最新动态</span></a>
+          <a href="#about"><span class="en">About</span><span class="zh">实验室简介</span></a>
+          <a href="#research"><span class="en">Research</span><span class="zh">研究方向</span></a>
+          <a href="#publications"><span class="en">Publications</span><span class="zh">论文成果</span></a>
+        </div>
+        <div>
+          <p class="foot__head"><span class="en">Links</span><span class="zh">链接</span></p>
+          <a href="../"><span class="en">Yifan Yuan's homepage</span><span class="zh">袁一帆个人主页</span></a>
+          <a href="https://ai.szu.edu.cn/" target="_blank" rel="noopener"><span class="en">College of AI, SZU</span><span class="zh">深圳大学人工智能学院</span></a>
+          <a href="https://github.com/MUSE-AI-Lab" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div>
+          <p class="foot__head"><span class="en">Contact</span><span class="zh">联系</span></p>
+          <a href="mailto:yifanyuan@szu.edu.cn">yifanyuan@szu.edu.cn</a>
+          <span><span class="en">Shenzhen, China</span><span class="zh">中国 · 深圳</span></span>
+        </div>
+      </nav>
+    </div>
+    <div class="foot__bottom">
+      <p>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>
+      <a class="to-top" href="#top"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg><span class="en">Back to top</span><span class="zh">回到顶部</span></a>
+    </div>
   </footer>
 
   <script src="lab.js"></script>
