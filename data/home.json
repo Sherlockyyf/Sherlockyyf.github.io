@@ -224,6 +224,22 @@
     },
     {
       "role": {
+        "en": "Main Participant",
+        "zh": "主要参与人"
+      },
+      "level": "muted",
+      "title": {
+        "en": "Embodied-Intelligence Foundation Models for Industrial Humanoid Robots",
+        "zh": "人形机器人工业具身智能基座大模型与垂直领域示范应用"
+      },
+      "funder": {
+        "en": "Shenzhen Key Industry R&D Program",
+        "zh": "深圳市重点产业研发计划"
+      },
+      "period": "2025.10 – 2028.09"
+    },
+    {
+      "role": {
         "en": "Lead Researcher",
         "zh": "主要负责人"
       },
@@ -253,22 +269,6 @@
         "zh": "广东省自然科学基金面上项目"
       },
       "period": "2026.01 – 2028.12"
-    },
-    {
-      "role": {
-        "en": "Participant",
-        "zh": "参与"
-      },
-      "level": "muted",
-      "title": {
-        "en": "Embodied-Intelligence Foundation Models for Industrial Humanoid Robots",
-        "zh": "人形机器人工业具身智能基座大模型与垂直领域示范应用"
-      },
-      "funder": {
-        "en": "Shenzhen Key Industry R&D Program",
-        "zh": "深圳市重点产业研发计划"
-      },
-      "period": "2025.10 – 2028.09"
     }
   ],
   "grantsEarlierSummary": {
