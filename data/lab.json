@@ -3,10 +3,6 @@
     {
       "en": "MUSE Lab stands for **Multimodal Understanding and Synthesis for Explainability**. The Muses were the Greek goddesses of art and inspiration: we want generative AI to be just as creative, and at the same time **controllable, interpretable and trustworthy**.",
       "zh": "MUSE Lab 的全称是 **Multimodal Understanding and Synthesis for Explainability**，即“面向可解释性的多模态理解与生成”。MUSE 也是希腊神话中司掌艺术与灵感的缪斯女神：我们希望生成式 AI 像缪斯一样富有创造力，同时**可控、可解释、值得信任**。"
-    },
-    {
-      "en": "The lab is led by [Yifan Yuan](./).",
-      "zh": "实验室负责人是[袁一帆](./)。"
     }
   ],
   "acronym": [
@@ -71,106 +67,49 @@
   },
   "directions": [
     {
+      "id": "visual",
+      "seal": "绘",
+      "title": {
+        "en": "Image & Video Generation and Editing",
+        "zh": "图像视频生成与编辑"
+      },
+      "summary": {
+        "en": "Why diffusion models fail on certain concepts, and how to generate and edit images and videos precisely while keeping meaning and identity intact.",
+        "zh": "探究扩散模型为何在特定概念上失效，在保持语义与身份不变的前提下，精确地生成与编辑图像和视频。"
+      },
+      "topics": [
+        { "en": "Inside diffusion models", "zh": "扩散模型的内部机理" },
+        { "en": "Disentangled, controllable editing", "zh": "属性解耦与可控编辑" },
+        { "en": "Identity-preserving image and video editing", "zh": "保持身份的图像与视频编辑" },
+        { "en": "Reliability of generative editing", "zh": "生成式编辑的可靠性评估" }
+      ],
+      "cover": [
+        { "src": "images/dir-visual.webp", "alt": "Illustration: a canvas of noise turning into a mountain landscape, with a film strip and a paintbrush" }
+      ],
+      "papers": ["mm26", "jas25", "icassp23", "icassp22"]
+    },
+    {
       "id": "trust",
       "seal": "信",
       "title": {
-        "en": "Trustworthy Multimodal Generation",
-        "zh": "多模态可信生成"
+        "en": "Trustworthy LLMs & Agents",
+        "zh": "可信大模型与智能体"
       },
       "summary": {
-        "en": "From models that can generate to models you can trust: grounded, self-aware and correctable.",
-        "zh": "让多模态大模型与扩散模型从“能够生成”走向“可信生成”。"
+        "en": "LLMs and agents that stay reliable through long dialogues and multi-agent workflows: they keep to their constraints, catch their own mistakes and can show their sources.",
+        "zh": "让大模型与智能体在长程对话与多智能体协作中保持可靠：守得住约束、查得出错误、说得出依据。"
       },
       "topics": [
         { "en": "Predicting and steering hallucinations", "zh": "幻觉风险的预测与干预" },
-        { "en": "Inside diffusion models", "zh": "扩散模型的内部机理" },
-        { "en": "Attribute binding and control", "zh": "属性解耦与可控生成" },
-        { "en": "Reliable LLMs and agents", "zh": "可信的大模型与智能体" }
-      ],
-      "cover": [
-        {
-          "src": "images/papers/concept-brittleness-fig1.jpg",
-          "alt": "Flux images for fixed concepts: correct ink sketches of grapes, vintage photos of trains and pink bananas, but repeated failures for cakes, LEGO and carrots",
-          "position": "50% 0%",
-          "figure": {
-            "width": 1791,
-            "height": 901,
-            "paper": "mm26",
-            "caption": {
-              "en": "Object-dependent concept brittleness: for a fixed concept, Flux succeeds on most objects but keeps failing on a few semantically related ones, whatever the random seed.",
-              "zh": "物体依赖的概念脆弱性：同一个概念，Flux 对大多数物体都能画对，却在少数语义相关的物体上反复失败，换随机种子也一样。"
-            }
-          }
-        }
-      ],
-      "papers": ["mm26", "jas25", "state", "remcts"]
-    },
-    {
-      "id": "perceive",
-      "seal": "观",
-      "title": {
-        "en": "Multimodal Understanding & Applications",
-        "zh": "多模态理解与应用"
-      },
-      "summary": {
-        "en": "Models that understand video, images and text, put to work on real tasks.",
-        "zh": "让模型读懂视频、图像与文字，并落到真实场景中。"
-      },
-      "topics": [
-        { "en": "Moment retrieval and highlights", "zh": "视频时刻检索与高光检测" },
-        { "en": "Story-aware video editing", "zh": "懂剧情的智能剪辑" },
-        { "en": "Virtual try-on quality checks", "zh": "虚拟试衣失真检测" },
+        { "en": "State integrity in long dialogues", "zh": "长程对话的状态保持" },
+        { "en": "Constraints across agent handoffs", "zh": "多智能体交接中的约束保持" },
+        { "en": "Reflective search for code generation", "zh": "代码生成的反思式搜索" },
         { "en": "Grounded survey writing", "zh": "有依据的综述写作" }
       ],
       "cover": [
-        {
-          "src": "images/dir-perceive-clapper.jpg",
-          "alt": "A film clapperboard held up on set",
-          "position": "50% 45%",
-          "credit": {
-            "en": "Clapperboard © Mattbr (CC BY 2.0)",
-            "zh": "场记板 © Mattbr（CC BY 2.0）",
-            "url": "https://commons.wikimedia.org/wiki/File:Clapperboard,_O2_film,_September_2008.jpg"
-          }
-        },
-        {
-          "src": "images/dir-perceive-clothes.jpg",
-          "alt": "A rack of clothes at a fashion show",
-          "position": "50% 30%",
-          "credit": {
-            "en": "Clothes racks © Rico Shen (CC BY-SA 4.0)",
-            "zh": "衣架 © Rico Shen（CC BY-SA 4.0）",
-            "url": "https://commons.wikimedia.org/wiki/File:2008_Taipei_In_Style_Outdoor_Fashion_Show_Clothes_Racks.jpg"
-          }
-        }
+        { "src": "images/dir-trust.webp", "alt": "Illustration: AI agents linked in a network above a chat bubble, a shield with a check mark and a checklist" }
       ],
-      "figures": [
-        {
-          "src": "images/papers/surveygraph-pipeline.jpg",
-          "width": 2000,
-          "height": 1125,
-          "paper": "surveygraph",
-          "label": { "en": "SurveyGraph pipeline", "zh": "SurveyGraph 流程" },
-          "alt": "SurveyGraph pipeline: knowledge-graph construction, graph-driven survey generation, and integrated evaluation",
-          "caption": {
-            "en": "SurveyGraph in three phases: building the methods–entity knowledge graph, writing the survey along it, and evaluating the result with several models.",
-            "zh": "SurveyGraph 的三个阶段：构建方法—实体知识图谱，沿图谱生成综述，再由多个模型综合评估。"
-          }
-        },
-        {
-          "src": "images/papers/surveygraph-mekg.jpg",
-          "width": 1000,
-          "height": 1000,
-          "paper": "surveygraph",
-          "label": { "en": "knowledge-graph schema", "zh": "知识图谱结构" },
-          "alt": "Schema of the methods–entity knowledge graph: a focal paper linked to prior work, baselines, cited work, methods, tasks, datasets and metrics",
-          "caption": {
-            "en": "The knowledge-graph schema: how a paper relates to prior work, baselines and citations, and to methods, tasks, datasets and metrics.",
-            "zh": "知识图谱的结构：一篇论文与前序工作、基线、被引文献的关系，以及与方法、任务、数据集、指标的关系。"
-          }
-        }
-      ],
-      "papers": ["surveygraph"]
+      "papers": ["state", "remcts", "surveygraph", "handoff"]
     },
     {
       "id": "emotion",
@@ -190,28 +129,31 @@
         { "en": "Companions with memory and personality", "zh": "有记忆、有人格的 AI 伙伴" }
       ],
       "cover": [
-        {
-          "src": "images/dir-emotion-paro.jpg",
-          "alt": "PARO, a soft white seal-shaped companion robot",
-          "position": "86% 30%",
-          "credit": {
-            "en": "PARO © Tekniska museet / Peter Häll (CC BY-SA 4.0)",
-            "zh": "PARO 陪伴机器人 © Tekniska museet / Peter Häll（CC BY-SA 4.0）",
-            "url": "https://commons.wikimedia.org/wiki/File:Robots%C3%A4len_Paro_TEKS0057912.jpg"
-          }
-        },
-        {
-          "src": "images/dir-emotion-companions.jpg",
-          "alt": "Companion robots LOVOT, Buddy, Moxie and Aibo on display",
-          "position": "6% 60%",
-          "credit": {
-            "en": "LOVOT, Buddy, Moxie and Aibo © Enric (CC BY-SA 4.0)",
-            "zh": "LOVOT、Buddy、Moxie、Aibo © Enric（CC BY-SA 4.0）",
-            "url": "https://commons.wikimedia.org/wiki/File:223_MNACTEC,_exposici%C3%B3_Robots,_rob%C3%B2tica_per_a_la_llar,_LOVOT,_Buddy,_Moxie_i_Aibo.jpg"
-          }
-        }
+        { "src": "images/dir-emotion.webp", "alt": "Illustration: a friendly companion robot between speech bubbles and small hearts" }
       ],
       "papers": ["ch7", "ch8", "jig20"]
+    },
+    {
+      "id": "understand",
+      "seal": "懂",
+      "title": {
+        "en": "Multimodal Understanding & Applications",
+        "zh": "多模态理解与应用"
+      },
+      "summary": {
+        "en": "Models that understand video, images and text, put to work on real tasks.",
+        "zh": "让模型读懂视频、图像与文字，并落到真实场景中。"
+      },
+      "topics": [
+        { "en": "Moment retrieval and highlights", "zh": "视频时刻检索与高光检测" },
+        { "en": "Story-aware video editing", "zh": "懂剧情的智能剪辑" },
+        { "en": "Virtual try-on quality checks", "zh": "虚拟试衣失真检测" },
+        { "en": "Multimodal retrieval and moderation", "zh": "多模态信息检索与审核" }
+      ],
+      "cover": [
+        { "src": "images/dir-understand.webp", "alt": "Illustration: an image, a video and a text bubble flowing into an eye that reads them" }
+      ],
+      "papers": []
     },
     {
       "id": "safety",
@@ -230,16 +172,7 @@
         { "en": "Adaptive safety alignment", "zh": "自适应安全对齐" }
       ],
       "cover": [
-        {
-          "src": "images/dir-safety-locks.jpg",
-          "alt": "Hundreds of padlocks locked onto a fence",
-          "position": "50% 40%",
-          "credit": {
-            "en": "Padlocks by Jebulon (CC0)",
-            "zh": "挂锁 Jebulon（CC0）",
-            "url": "https://commons.wikimedia.org/wiki/File:Love_padlocks_Paris_pont_archev%C3%AAch%C3%A9.jpg"
-          }
-        }
+        { "src": "images/dir-safety.webp", "alt": "Illustration: arrows bouncing off protective rings around a shield with a padlock" }
       ],
       "papers": []
     },
@@ -260,16 +193,7 @@
         { "en": "Fine manipulation for industry", "zh": "工业场景中的精细操作" }
       ],
       "cover": [
-        {
-          "src": "images/dir-embodied-humanoid.jpg",
-          "alt": "A humanoid robot carrying a cardboard box in a lab",
-          "position": "50% 35%"
-        },
-        {
-          "src": "images/dir-embodied-wheeled.jpg",
-          "alt": "A wheeled humanoid robot with two arms in a lab",
-          "position": "50% 30%"
-        }
+        { "src": "images/dir-embodied.webp", "alt": "Illustration: a robot arm lifting a block to stack it on others" }
       ],
       "papers": []
     }
@@ -295,16 +219,16 @@
   "contact": {
     "items": [
       {
-        "icon": "mail",
+        "icon": "user",
         "label": {
-          "en": "Email",
-          "zh": "邮箱"
+          "en": "PI",
+          "zh": "负责人"
         },
         "value": {
-          "en": "yifanyuan@szu.edu.cn",
-          "zh": "yifanyuan@szu.edu.cn"
+          "en": "Yifan Yuan · yifanyuan.com",
+          "zh": "袁一帆 · yifanyuan.com"
         },
-        "url": "mailto:yifanyuan@szu.edu.cn"
+        "url": "./"
       },
       {
         "icon": "pin",
@@ -319,6 +243,18 @@
         "url": ""
       },
       {
+        "icon": "mail",
+        "label": {
+          "en": "Email",
+          "zh": "邮箱"
+        },
+        "value": {
+          "en": "yifanyuan@szu.edu.cn",
+          "zh": "yifanyuan@szu.edu.cn"
+        },
+        "url": "mailto:yifanyuan@szu.edu.cn"
+      },
+      {
         "icon": "code",
         "label": {
           "en": "Code",
@@ -329,18 +265,6 @@
           "zh": "github.com/MUSE-AI-Lab"
         },
         "url": "https://github.com/MUSE-AI-Lab"
-      },
-      {
-        "icon": "user",
-        "label": {
-          "en": "PI",
-          "zh": "负责人"
-        },
-        "value": {
-          "en": "Yifan Yuan · yifanyuan.com",
-          "zh": "袁一帆 · yifanyuan.com"
-        },
-        "url": "./"
       }
     ]
   }
