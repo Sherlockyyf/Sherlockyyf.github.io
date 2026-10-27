@@ -61,7 +61,7 @@ lab/                  MUSE Lab 实验室网站：index.html（页面框架，内
 - 负责人的姓名、职位和照片用的是主页 `data/home.json` 里的个人信息。
 - 其余内容都在 `data/lab.json`，改完运行 `node tools/render_site.js`：
   - `mission` 一句话使命（`**加粗**` 的部分用强调色）；`about` 简介段落；`acronym` MUSE 释义；`stats` 首页数据（`value` 写数字，可带 `+`，滚动到时会从 0 数上去）。
-  - `directions` 五个研究方向：`seal` 印章字、`title` 标题、`summary` 一句话简介、`topics` 具体课题（每条有标题和说明）、`papers` 代表论文（填 `data/publications.json` 里的论文编号）、`grants` 相关项目（填主页科研项目的中文标题开头）、`visual` 示意图样式（`scan`、`timeline`、`waves`、`shield`、`path` 五种）。
+  - `directions` 五个研究方向：`seal` 印章字、`title` 标题、`summary` 一句话简介、`topics` 具体课题（每条有标题和说明）、`papers` 代表论文（填 `data/publications.json` 里的论文编号）、`grants` 相关项目（填主页科研项目的中文标题开头）、`visual` 示意图样式（`scan`、`timeline`、`waves`、`shield`、`path` 五种）、`figures` 已发表工作的图（`src` 图片路径、`width`/`height` 像素尺寸、`paper` 论文编号、`alt` 英文图片说明、`caption` 中英文图注；同一方向的几张图排成一行、高度一致，点击可放大）。
   - `cta` 合作邀请的标题和说明；`contact` 联系方式。
 - 研究方向的中文标题、印章字用毛笔字体显示，新增的字要重新生成字体子集：`python tools/build_fonts.py <Inter/Fraunces 源文件夹> <马善政字体文件夹> site --brush-only`。
 - 声音：音符跳起、拨动五线谱、点击时会发出柔和的音符声（五声音阶，越靠上音越高）。浏览器要求先点一下页面才允许出声；右上角的喇叭按钮可以静音，选择会被记住。
