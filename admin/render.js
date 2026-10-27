@@ -557,6 +557,19 @@
     }
   };
 
+  /* figures from the lab's published papers, in one row at equal height; a click opens them large (lab.js) */
+  function figures(d, byId) {
+    var figs = (d.figures || []).filter(function (f) { return f.src; });
+    if (!figs.length) return [];
+    return ['  <div class="dir__figs">'].concat(figs.map(function (f) {
+      var p = byId[f.paper], src = attr(rebase(f.src)), size = f.width && f.height;
+      return '    <figure class="dfig reveal" style="--ar:' + (size ? (f.width / f.height).toFixed(3) : "1.6") + '"><a class="dfig__img" href="' + src +
+        '" target="_blank" rel="noopener"><img src="' + src + '"' + (size ? ' width="' + f.width + '" height="' + f.height + '"' : "") + ' loading="lazy" alt="' +
+        attr(f.alt || "") + '"></a><figcaption>' + bi(f.caption) + (p ? ' <a class="dfig__paper" href="#p-' + attr(p.id) + '">' + text(shortName(p)) + " · " +
+        text(p.venue) + "</a>" : "") + "</figcaption></figure>";
+    }), ["  </div>"]);
+  }
+
   function grantsFor(h, d) {
     var all = (h.grants || []).concat(h.grantsEarlier || []);
     return (d.grants || []).map(function (title) {
@@ -596,7 +609,7 @@
     ], (d.topics || []).map(function (t) {
       return ['    <section class="topic reveal">', '      <h4 class="topic__title">' + bi(t.title) + "</h4>"]
         .concat(indent(biBlock("p", "topic__text", t.text), "      "), ["    </section>"]).join("\n");
-    }), ["  </div>"], refs, ["</article>"]).join("\n");
+    }), ["  </div>"], figures(d, byId), refs, ["</article>"]).join("\n");
   }
 
   function buttons(p) {
