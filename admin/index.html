@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>网站后台 · Yifan Yuan</title>
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="login">
+    <div class="login__card">
+      <img class="login__photo" src="../images/yifan-yuan.jpg" width="1122" height="1402" alt="">
+      <h1 class="login__title">网站后台</h1>
+      <p class="login__lead">登录后直接在主页上修改内容</p>
+
+      <p class="login__checking" id="checking">正在确认登录状态…</p>
+
+      <!-- already signed in on this device -->
+      <div class="signed-in" id="signed-in" hidden>
+        <p class="signed-in__who">已登录 <b id="who"></b></p>
+        <a class="btn btn--primary btn--block" id="go-edit" href="../?edit">进入编辑模式</a>
+        <p class="signed-in__note">以后在这台设备上打开主页，左下角会出现“✎ 编辑页面”按钮，访客看不到它。</p>
+        <button type="button" class="link-btn" id="logout">退出登录</button>
+      </div>
+
+      <form id="login-form" novalidate hidden>
+        <label class="field">
+          <span class="field__label">网站仓库</span>
+          <input id="login-repo" placeholder="GitHub 用户名/仓库名" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </label>
+        <label class="field">
+          <span class="field__label">GitHub 令牌</span>
+          <input id="login-token" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="check"><input type="checkbox" id="login-remember" checked> 在这台设备上保持登录</label>
+        <p class="form-error" id="login-error" role="alert" hidden></p>
+        <button class="btn btn--primary btn--block" type="submit" id="login-submit">登录</button>
+        <details class="help">
+          <summary>第一次使用？三步拿到令牌</summary>
+          <ol>
+            <li>打开 <a id="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub 令牌生成页</a>，名称、有效期和权限都已填好。</li>
+            <li>在 <b>Repository access</b> 里选 <b>Only select repositories</b>，勾选网站仓库。</li>
+            <li>点页面底部的 <b>Generate token</b>，把令牌复制到上面。</li>
+          </ol>
+          <p>令牌只保存在这台设备的浏览器里，只用来连接 GitHub。有效期一年，过期后照这三步重新生成。</p>
+        </details>
+      </form>
+    </div>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

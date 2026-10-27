@@ -1,0 +1,398 @@
+{
+  "profile": {
+    "photo": {
+      "src": "images/yifan-yuan.jpg",
+      "width": 1122,
+      "height": 1402
+    },
+    "name": {
+      "en": "Yifan Yuan",
+      "zh": "袁一帆"
+    },
+    "title": {
+      "en": [
+        "Assistant Professor",
+        "College of AI, Shenzhen University"
+      ],
+      "zh": [
+        "深圳大学人工智能学院",
+        "助理教授 · 硕士生导师"
+      ]
+    },
+    "motto": {
+      "zh": "人也可以往四处走",
+      "en": "One can walk in every direction."
+    }
+  },
+  "contacts": [
+    {
+      "icon": "pin",
+      "url": "",
+      "en": "Shenzhen, China",
+      "zh": "中国 · 深圳"
+    },
+    {
+      "icon": "mail",
+      "url": "mailto:yifanyuan@szu.edu.cn",
+      "en": "yifanyuan@szu.edu.cn",
+      "zh": "yifanyuan@szu.edu.cn"
+    },
+    {
+      "icon": "uni",
+      "url": "https://ai.szu.edu.cn/",
+      "en": "College of AI, SZU",
+      "zh": "深圳大学人工智能学院"
+    },
+    {
+      "icon": "lab",
+      "url": "lab/",
+      "en": "MUSE Lab",
+      "zh": "MUSE Lab"
+    },
+    {
+      "icon": "user",
+      "url": "https://ai.szu.edu.cn/info/1075/1315.htm",
+      "en": "Faculty Profile",
+      "zh": "学院个人主页"
+    }
+  ],
+  "greeting": {
+    "en": [
+      "Hi there",
+      "Welcome to my Homepage!"
+    ],
+    "zh": [
+      "你好呀",
+      "欢迎来到我的主页！"
+    ]
+  },
+  "tagline": {
+    "en": "Building ==trustworthy== generative AI",
+    "zh": "构建==可信==的生成式 AI"
+  },
+  "intro": [
+    {
+      "en": "I am an Assistant Professor at the [College of Artificial Intelligence](https://ai.szu.edu.cn/), Shenzhen University, where I lead [MUSE Lab](lab/) (Multimodal Understanding and Synthesis for Explainability). I received my Ph.D. in Computer Science from [Fudan University](https://www.fudan.edu.cn/) in 2025, advised by Prof. Junping Zhang, and my B.S. in Physics from Fudan University in 2019. I am a member of the Technical Committee on Hybrid Intelligence and the Science Popularization Committee of the Chinese Association of Automation (CAA).",
+      "zh": "我是[深圳大学人工智能学院](https://ai.szu.edu.cn/)助理教授、硕士生导师，负责 [MUSE Lab](lab/)（Multimodal Understanding and Synthesis for Explainability Lab）。2025 年博士毕业于[复旦大学](https://www.fudan.edu.cn/)计算机科学技术专业，师从张军平教授；2019 年本科毕业于复旦大学物理学专业。现为中国自动化学会混合智能专委会、普及工作专委会会员。"
+    },
+    {
+      "en": "My research aims to make generative AI **controllable, interpretable, and trustworthy**. I study why text-to-image diffusion models succeed or fail on specific concepts and how to edit images and videos precisely and consistently; how large language models and agents stay reliable — free of hallucination, bias, and state collapse — over long-horizon interaction; and how generative agents can perceive and express human emotion. I am also interested in bringing these models to real-world applications such as emotional companionship, virtual try-on, and digital humans.",
+      "zh": "我的研究目标是让生成式 AI 更加**可控、可解释、可信**：研究文生图扩散模型为何在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。同时探索这些技术在情感陪伴、虚拟试衣、数字人等真实场景中的落地应用。"
+    }
+  ],
+  "headings": {
+    "news": {
+      "en": "News",
+      "zh": "最新动态"
+    },
+    "research": {
+      "en": "Research",
+      "zh": "研究方向"
+    },
+    "publications": {
+      "en": "Publications",
+      "zh": "论文"
+    },
+    "experience": {
+      "en": "Experience & Education",
+      "zh": "工作与教育经历"
+    },
+    "grants": {
+      "en": "Research Grants",
+      "zh": "科研项目"
+    },
+    "service": {
+      "en": "Academic Service",
+      "zh": "学术服务"
+    }
+  },
+  "lab": {
+    "name": "MUSE Lab",
+    "full": "Multimodal Understanding and Synthesis for Explainability",
+    "en": "My group works on AIGC, multimodal understanding and generation, large language models, retrieval-augmented generation, persona-based language modeling, and emotional agents.",
+    "zh": "实验室聚焦 AIGC、多模态理解与生成、大语言模型、检索增强生成（RAG）、人格化语言建模与情感智能体等方向。"
+  },
+  "themes": [
+    {
+      "id": "visual",
+      "seal": "绘",
+      "title": {
+        "en": "Controllable & Interpretable Visual Generation",
+        "zh": "可控、可解释的视觉生成与编辑"
+      },
+      "text": {
+        "en": "Why do diffusion models fail on specific concepts, and how can we edit images and videos precisely while keeping semantics consistent and identities intact?",
+        "zh": "扩散模型为何会在特定概念上失效？如何在保持语义一致与身份不变的前提下，实现精确的图像与视频编辑？"
+      }
+    },
+    {
+      "id": "trust",
+      "seal": "信",
+      "title": {
+        "en": "Trustworthy LLMs & Agents",
+        "zh": "可信的大模型与智能体"
+      },
+      "text": {
+        "en": "Keeping LLMs and agents reliable: constraint and state integrity in long-horizon dialogue and agent handoffs, reflective search for code generation, and AI-for-AI systems that write academic surveys.",
+        "zh": "让大模型与智能体更可靠：长程对话与多智能体交接中的约束与状态保持、面向代码生成的反思式搜索，以及自动撰写学术综述的 AI for AI 系统。"
+      }
+    },
+    {
+      "id": "affect",
+      "seal": "情",
+      "title": {
+        "en": "Affective & Embodied Intelligence",
+        "zh": "情感智能与具身智能"
+      },
+      "text": {
+        "en": "From facial expression and micro-expression analysis to emotional agents that understand and respond to people, extending toward embodied AI and world models.",
+        "zh": "从人脸表情与微表情分析，到能够理解并回应人的情感智能体，并进一步拓展到具身智能与世界模型。"
+      }
+    }
+  ],
+  "applications": {
+    "en": "**Applications:** emotional companionship, virtual try-on, end-to-end apparel automation, and digital humans.",
+    "zh": "**应用场景：**情感陪伴、虚拟试衣、服装全流程自动化、数字人建模。"
+  },
+  "experience": [
+    {
+      "logo": "images/logos/szu.png",
+      "org": {
+        "en": "Shenzhen University",
+        "zh": "深圳大学"
+      },
+      "dates": {
+        "en": "2025.04 – Present",
+        "zh": "2025.04 – 至今"
+      },
+      "role": {
+        "en": "Assistant Professor, [*College of Artificial Intelligence*](https://ai.szu.edu.cn/); leading [*MUSE Lab*](lab/)",
+        "zh": "[*人工智能学院*](https://ai.szu.edu.cn/) 助理教授、硕士生导师；负责 [*MUSE Lab*](lab/)"
+      }
+    },
+    {
+      "logo": "images/logos/fudan.png",
+      "org": {
+        "en": "Fudan University",
+        "zh": "复旦大学"
+      },
+      "dates": {
+        "en": "2019.09 – 2025.03",
+        "zh": "2019.09 – 2025.03"
+      },
+      "role": {
+        "en": "Ph.D. in Computer Science and Technology, advised by Prof. Junping Zhang",
+        "zh": "计算机科学技术 理学博士，导师：张军平教授"
+      }
+    },
+    {
+      "logo": "images/logos/fudan.png",
+      "org": {
+        "en": "Fudan University",
+        "zh": "复旦大学"
+      },
+      "dates": {
+        "en": "2015.09 – 2019.06",
+        "zh": "2015.09 – 2019.06"
+      },
+      "role": {
+        "en": "B.S. in Physics",
+        "zh": "物理学 理学学士"
+      }
+    }
+  ],
+  "grants": [
+    {
+      "role": {
+        "en": "PI",
+        "zh": "主持"
+      },
+      "level": "solid",
+      "title": {
+        "en": "Reliability Evaluation and Controllable Editing Mechanisms for Generative Image Editing",
+        "zh": "生成式图像编辑的可靠性评估与可控编辑机制研究"
+      },
+      "funder": {
+        "en": "Shenzhen University Research Start-up Fund for Young Faculty",
+        "zh": "深圳大学青年教师科研启动经费"
+      },
+      "period": "2025.08 – 2028.08"
+    },
+    {
+      "role": {
+        "en": "Lead Researcher",
+        "zh": "主要负责人"
+      },
+      "level": "",
+      "title": {
+        "en": "Intelligent Models for Multimodal Information Retrieval, Review and Moderation",
+        "zh": "多模态信息检索、审查与管控智能模型研究"
+      },
+      "funder": {
+        "en": "Industry project with China Mobile",
+        "zh": "横向项目，中国移动"
+      },
+      "period": "2025.06 – 2026.12"
+    },
+    {
+      "role": {
+        "en": "Participant",
+        "zh": "参与"
+      },
+      "level": "muted",
+      "title": {
+        "en": "AI Virtual Patients for Clinical Teaching in Gastroenterology",
+        "zh": "面向消化科临床教学的AI虚拟病人技术研究与应用"
+      },
+      "funder": {
+        "en": "Guangdong Natural Science Foundation, General Program",
+        "zh": "广东省自然科学基金面上项目"
+      },
+      "period": "2026.01 – 2028.12"
+    },
+    {
+      "role": {
+        "en": "Participant",
+        "zh": "参与"
+      },
+      "level": "muted",
+      "title": {
+        "en": "Embodied-Intelligence Foundation Models for Industrial Humanoid Robots",
+        "zh": "人形机器人工业具身智能基座大模型与垂直领域示范应用"
+      },
+      "funder": {
+        "en": "Shenzhen Key Industry R&D Program",
+        "zh": "深圳市重点产业研发计划"
+      },
+      "period": "2025.10 – 2028.09"
+    }
+  ],
+  "grantsEarlierSummary": {
+    "en": "Earlier projects (8, as participant): NSFC, National Key R&D Program of China, Ministry of Education, Shanghai Municipality, and industry, 2017–2025",
+    "zh": "此前参与的项目（8 项）：国家自然科学基金、国家重点研发计划、教育部、上海市及企业合作项目，2017–2025"
+  },
+  "grantsEarlier": [
+    {
+      "title": {
+        "en": "Deep Learning Based on Graph Convolutional Networks and Disentangled Learning",
+        "zh": "基于图卷积神经网络和解耦学习的深度学习研究"
+      },
+      "funder": {
+        "en": "National Natural Science Foundation of China, General Program",
+        "zh": "国家自然科学基金面上项目"
+      },
+      "period": "2022.01 – 2025.12"
+    },
+    {
+      "title": {
+        "en": "Key Theories and Technologies of Human–Robot Collaboration Based on Imitation Learning from Demonstration",
+        "zh": "基于示教模仿学习的人机协同关键理论与技术"
+      },
+      "funder": {
+        "en": "National Key R&D Program of China, No. 2018YFB1305104",
+        "zh": "国家重点研发计划（十三五），项目编号 2018YFB1305104"
+      },
+      "period": "2019.06 – 2022.05"
+    },
+    {
+      "title": {
+        "en": "Machine-Learning-Based Multimodal, Multi-View Pedestrian Gait Recognition",
+        "zh": "基于机器学习的多模态多视角行人步态识别研究"
+      },
+      "funder": {
+        "en": "National Natural Science Foundation of China, No. 61673118",
+        "zh": "国家自然科学基金，项目编号 61673118"
+      },
+      "period": "2017.01 – 2020.12"
+    },
+    {
+      "title": {
+        "en": "Planning Research on Human–Machine Collaborative Hybrid-Augmented Intelligence Algorithms",
+        "zh": "人机协同混合增强智能算法规划研究"
+      },
+      "funder": {
+        "en": "Ministry of Education project",
+        "zh": "教育部项目"
+      },
+      "period": "2020.01 – 2021.12"
+    },
+    {
+      "title": {
+        "en": "Automatic Correction of Numerical Simulation Errors Based on Big-Data Deep Learning",
+        "zh": "基于大数据深度学习的数值模拟误差自动订正技术"
+      },
+      "funder": {
+        "en": "Shanghai Science and Technology Innovation Action Plan, No. 18DZ1200404",
+        "zh": "上海市科技创新行动计划，项目编号 18DZ1200404"
+      },
+      "period": "2018.04 – 2021.03"
+    },
+    {
+      "title": {
+        "en": "Machine-Learning-Based Heavy Precipitation Forecasting",
+        "zh": "基于机器学习的强降水预报技术开发项目"
+      },
+      "funder": {
+        "en": "Industry project with Shanghai Central Meteorological Observatory",
+        "zh": "横向项目，上海市中心气象台"
+      },
+      "period": "2020.03 – 2021.04"
+    },
+    {
+      "title": {
+        "en": "Mid- and Long-Form AI Popular-Science Videos for Teenagers",
+        "zh": "面向青少年的人工智能科普中长视频的制作与推广"
+      },
+      "funder": {
+        "en": "Shanghai Science and Technology Innovation Action Plan, Popular Science Program",
+        "zh": "上海市2024年度“科技创新行动计划”科普专项项目"
+      },
+      "period": "2024.09 – 2025.08"
+    },
+    {
+      "title": {
+        "en": "Short-Video Science Communication on Frontier Advances and Applications of AI",
+        "zh": "人工智能前沿进展与应用的短视频科普"
+      },
+      "funder": {
+        "en": "Shanghai Science and Technology Innovation Action Plan, Popular Science Program",
+        "zh": "上海市2021年度“科技创新行动计划”科普专项项目"
+      },
+      "period": "2021.06 – 2023.06"
+    }
+  ],
+  "service": [
+    {
+      "en": "**Conference reviewer:** ICLR, NeurIPS, ICML, CVPR, AAAI, ACL, EMNLP, ACM MM",
+      "zh": "**会议审稿人：**ICLR、NeurIPS、ICML、CVPR、AAAI、ACL、EMNLP、ACM MM"
+    },
+    {
+      "en": "**Journal reviewer:** IEEE Transactions on Multimedia (TMM)",
+      "zh": "**期刊审稿人：**IEEE Transactions on Multimedia（TMM）"
+    },
+    {
+      "en": "**Membership:** Technical Committee on Hybrid Intelligence and Science Popularization Committee, Chinese Association of Automation (CAA)",
+      "zh": "**学会会员：**中国自动化学会混合智能专委会、普及工作专委会"
+    }
+  ],
+  "footer": {
+    "links": [
+      {
+        "en": "Email",
+        "zh": "Email",
+        "url": "mailto:yifanyuan@szu.edu.cn"
+      },
+      {
+        "en": "SZU Profile",
+        "zh": "学院主页",
+        "url": "https://ai.szu.edu.cn/info/1075/1315.htm"
+      },
+      {
+        "en": "MUSE Lab",
+        "zh": "MUSE Lab",
+        "url": "lab/"
+      }
+    ],
+    "updated": "2026-10"
+  }
+}

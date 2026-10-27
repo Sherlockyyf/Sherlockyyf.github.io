@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en" class="lang-en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MUSE Lab · Shenzhen University</title>
+  <script>
+    (function () {
+      var d = document.documentElement, l = null;
+      try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+      if (l !== "zh" && l !== "en") { try { l = localStorage.getItem("lang"); } catch (e) {} }
+      if (l !== "zh" && l !== "en") { l = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }
+      d.className = "lang-" + l;
+      d.lang = l === "zh" ? "zh-CN" : "en";
+    })();
+  </script>
+  <meta name="description" content="MUSE Lab (Multimodal Understanding and Synthesis for Explainability) at the College of Artificial Intelligence, Shenzhen University, led by Yifan Yuan. Lab website coming soon.">
+  <!-- Placeholder page: remove noindex when the full lab website goes live. -->
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#fbf8f2">
+  <link rel="icon" type="image/png" href="../images/muse-favicon.png">
+  <link rel="preload" href="../assets/fonts/fraunces-semibold.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    @font-face { font-family: "Inter"; src: url("../assets/fonts/inter-latin.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+    @font-face { font-family: "Fraunces"; src: url("../assets/fonts/fraunces-semibold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+    @font-face { font-family: "Fraunces"; src: url("../assets/fonts/fraunces-semibold-italic.woff2") format("woff2"); font-weight: 600; font-style: italic; font-display: swap; }
+    @font-face { font-family: "Ma Shan Zheng Subset"; src: url("../assets/fonts/mashanzheng-subset.woff2") format("woff2"); font-display: swap; }
+
+    :root {
+      --navy: #14294a;
+      --slate: #3b4c72;
+      --accent: #506695;
+      --text: #3f4654;
+      --muted: #6f7787;
+      --sky: #aee8f8;
+      --orange: #f7923f;
+      --paper: #fbf8f2;
+      --font: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+      --font-display: "Fraunces", "Ma Shan Zheng Subset", "Kaiti SC", "STKaiti", "KaiTi", Georgia, serif;
+      --ease-out: cubic-bezier(0.2, 0.65, 0.3, 1);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--paper);
+      -webkit-font-smoothing: antialiased;
+      font-synthesis-weight: none;
+    }
+
+    /* paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .08 0 0 0 0 .12 0 0 0 0 .2 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .lang-en .zh, .lang-zh .en { display: none !important; }
+
+    /* watercolour washes drifting behind everything */
+    .washes {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .wash {
+      position: absolute;
+      width: 56vmax;
+      height: 56vmax;
+      border-radius: 50%;
+      opacity: 0.8;
+      will-change: transform;
+      animation: drift 22s ease-in-out infinite alternate;
+    }
+
+    .w1 { left: -20vmax; top: -24vmax; background: radial-gradient(circle, rgba(174, 232, 248, 0.75), rgba(174, 232, 248, 0) 66%); }
+    .w2 { right: -22vmax; top: -6vmax; background: radial-gradient(circle, rgba(255, 210, 173, 0.7), rgba(255, 210, 173, 0) 64%); animation-delay: -7s; }
+    .w3 { left: 6vw; bottom: -34vmax; background: radial-gradient(circle, rgba(212, 202, 247, 0.7), rgba(212, 202, 247, 0) 64%); animation-delay: -12s; }
+    .w4 { right: -8vw; bottom: -30vmax; background: radial-gradient(circle, rgba(196, 236, 216, 0.6), rgba(196, 236, 216, 0) 64%); animation-delay: -16s; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(4vmax, 3vmax) scale(1.12); }
+    }
+
+    /* music & painting canvas (multiplied onto the paper like watercolour) */
+    #art {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    #art.is-ready { opacity: 1; }
+
+    .bar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.62);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      font-size: 14px;
+      color: var(--navy);
+      text-decoration: none;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .back:hover { background: var(--accent); color: #fff; }
+
+    .lang-switch {
+      display: inline-flex;
+      padding: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.62);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
+
+    .lang-switch button {
+      border: 0;
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: transparent;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .lang-en [data-set-lang="en"], .lang-zh [data-set-lang="zh"] { background: var(--accent); color: #fff; }
+
+    .hero {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px 28px;
+      text-align: center;
+    }
+
+    .logo {
+      width: clamp(92px, 12vw, 132px);
+      height: auto;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 10px 18px rgba(20, 41, 74, 0.14));
+      transition: transform 0.5s var(--ease-out);
+    }
+
+    .logo:hover { transform: rotate(-6deg) scale(1.06); }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .title {
+      margin: 10px 0 4px;
+      font-family: var(--font-display);
+      font-size: clamp(58px, 11vw, 128px);
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.015em;
+      color: var(--slate);
+    }
+
+    /* blue-gray title with a slow light sweeping across */
+    .title .muse {
+      background: linear-gradient(110deg, #3b4c72 0%, #6278a7 35%, #9ea8be 50%, #6278a7 65%, #3b4c72 100%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 7s linear infinite;
+    }
+
+    @keyframes shimmer {
+      from { background-position: 100% 0; }
+      to { background-position: -120% 0; }
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      font-size: clamp(15px, 2.1vw, 20px);
+      color: var(--muted);
+    }
+
+    .tagline {
+      margin: 18px 0 0;
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2.4vw, 24px);
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .tagline .zh { font-style: normal; letter-spacing: 0.04em; }
+
+    .hl {
+      padding: 0 4px;
+      background: linear-gradient(transparent 56%, rgba(247, 146, 63, 0.32) 56%) no-repeat 0 0 / 100% 100%;
+      color: var(--navy);
+      animation: hl-draw 1s var(--ease-out) 1.1s both;
+    }
+
+    @keyframes hl-draw {
+      from { background-size: 0% 100%; }
+      to { background-size: 100% 100%; }
+    }
+
+    .topics {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 760px;
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .topics li {
+      padding: 7px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 14px rgba(36, 52, 88, 0.06);
+      font-size: 13.5px;
+      color: var(--navy);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .topics li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 22px rgba(36, 52, 88, 0.12);
+    }
+
+    .status {
+      margin: 30px 0 0;
+      padding: 12px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.6);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid rgba(20, 41, 74, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.75);
+      font-size: 14px;
+      color: var(--navy);
+      text-decoration: none;
+      transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(80, 102, 149, 0.28);
+    }
+
+    .btn.primary:hover { background: var(--orange); border-color: var(--orange); color: var(--navy); }
+
+    .btn .arrow { transition: transform 0.25s ease; }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    .hint {
+      position: relative;
+      z-index: 2;
+      align-self: center;
+      margin: 0 16px 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      font-size: 12.5px;
+      color: var(--muted);
+      transition: opacity 0.8s ease;
+    }
+
+    .hint.is-hidden { opacity: 0; }
+    .hint-touch { display: none; }
+
+    @media (hover: none), (pointer: coarse) {
+      .hint-mouse { display: none; }
+      .hint-touch { display: inline; }
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 10px 16px 22px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* entrance: hero lines float up one after another */
+    .hero > * { animation: rise 0.9s var(--ease-out) both; }
+    .hero > :nth-child(2) { animation-delay: 0.08s; }
+    .hero > :nth-child(3) { animation-delay: 0.18s; }
+    .hero > :nth-child(4) { animation-delay: 0.28s; }
+    .hero > :nth-child(5) { animation-delay: 0.38s; }
+    .hero > :nth-child(6) { animation-delay: 0.48s; }
+    .hero > :nth-child(7) { animation-delay: 0.58s; }
+    .hero > :nth-child(8) { animation-delay: 0.68s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(26px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    @media (max-width: 560px) {
+      .bar { padding: 14px 16px; }
+      .topics li { font-size: 12.5px; padding: 6px 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero > *, .title .muse, .wash, .hl { animation: none; }
+      .hint { display: none; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>
+  <canvas id="art" aria-hidden="true"></canvas>
+
+  <header class="bar">
+    <a class="back" href="../"><span aria-hidden="true">←</span><span class="en">Yifan Yuan</span><span class="zh">袁一帆主页</span></a>
+    <div class="lang-switch" role="group" aria-label="Language / 语言">
+      <button type="button" data-set-lang="en" lang="en">EN</button>
+      <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
+    </div>
+  </header>
+
+  <main class="hero">
+    <img class="logo" src="../images/muse-logo.png" width="480" height="435" alt="MUSE Lab logo">
+    <p class="eyebrow"><span class="en">Shenzhen University · College of Artificial Intelligence</span><span class="zh">深圳大学 · 人工智能学院</span></p>
+    <h1 class="title"><span class="muse">MUSE</span> Lab</h1>
+    <p class="subtitle">Multimodal Understanding and Synthesis for Explainability</p>
+    <p class="tagline">
+      <span class="en">We build <mark class="hl">trustworthy</mark> generative AI</span>
+      <span class="zh">构建<mark class="hl">可信</mark>的生成式 AI</span>
+    </p>
+    <ul class="topics">
+      <li>AIGC</li>
+      <li><span class="en">Multimodal Understanding &amp; Generation</span><span class="zh">多模态理解与生成</span></li>
+      <li><span class="en">LLMs &amp; Agents</span><span class="zh">大模型与智能体</span></li>
+      <li><span class="en">Retrieval-Augmented Generation</span><span class="zh">检索增强生成</span></li>
+      <li><span class="en">Persona Modeling</span><span class="zh">人格化语言建模</span></li>
+      <li><span class="en">Emotional Agents</span><span class="zh">情感智能体</span></li>
+    </ul>
+    <p class="status"><span class="en">🚧 Our lab website is under construction — coming soon.</span><span class="zh">🚧 实验室网站正在建设中，敬请期待。</span></p>
+    <div class="actions">
+      <a class="btn primary" href="../"><span class="en">PI: Yifan Yuan</span><span class="zh">负责人：袁一帆</span><span class="arrow" aria-hidden="true">→</span></a>
+      <a class="btn" href="mailto:yifanyuan@szu.edu.cn"><span class="en">Email</span><span class="zh">邮件联系</span></a>
+    </div>
+  </main>
+
+  <p class="hint" aria-hidden="true">
+    <span class="hint-mouse"><span class="en">✎ Move to paint · click to play notes</span><span class="zh">✎ 移动鼠标作画 · 点击奏响音符</span></span>
+    <span class="hint-touch"><span class="en">♪ Tap anywhere to play notes</span><span class="zh">♪ 轻点屏幕奏响音符</span></span>
+  </p>
+
+  <footer>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></footer>
+
+  <script>
+    (function () {
+      "use strict";
+      var root = document.documentElement;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ---------- language ---------- */
+      function setLang(l, persist) {
+        root.classList.remove("lang-en", "lang-zh");
+        root.classList.add("lang-" + l);
+        root.lang = l === "zh" ? "zh-CN" : "en";
+        document.title = l === "zh" ? "MUSE Lab · 深圳大学" : "MUSE Lab · Shenzhen University";
+        if (persist) { try { localStorage.setItem("lang", l); } catch (e) {} }
+      }
+      document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+        b.addEventListener("click", function () { setLang(b.getAttribute("data-set-lang"), true); });
+      });
+      setLang(root.classList.contains("lang-zh") ? "zh" : "en", false);
+
+      /* ---------- music & painting canvas ----------
+         A soft brush "M" painted behind the title, a five-line staff that can be
+         plucked, notes that float along it and leap when touched, and a
+         watercolour brush that follows the pointer. */
+      var canvas = document.getElementById("art");
+      var ctx = canvas.getContext("2d");
+      var hint = document.querySelector(".hint");
+      var heroEl = document.querySelector(".hero");
+      var titleEl = document.querySelector(".title");
+      var actions = document.querySelector(".actions");
+      var footerEl = document.querySelector("footer");
+
+      var NAVY = [20, 41, 74], ORANGE = [247, 146, 63], SKY = [72, 170, 210];
+      var LAV = [146, 126, 214], ROSE = [222, 128, 152], MINT = [92, 184, 146];
+      var PAINT = [SKY, LAV, ROSE, ORANGE, MINT];
+      var NOTE_COLORS = [NAVY, ORANGE, SKY, LAV, ROSE];
+      var M_COLOR = [150, 198, 232];
+      var TIP_STEPS = 40, STEP = 14;
+
+      var W = 0, H = 0, NP = 0, GAP = 12, mobile = false, mid = 0.88, dpr = 1;
+      var baseY = new Float32Array(0), spread = new Float32Array(0);
+      var disp = [], vel = [], tips = [], stamps = [], notes = [];
+      var pointer = { x: -1e4, y: -1e4, px: -1e4, py: -1e4, vx: 0, active: false, lastMove: -1e9 };
+      var lastPluck = [0, 0, 0, 0, 0];
+      var brush = null, ghost = null, ghostEnd = 0, hue = 0, lastRider = 0;
+      var start = performance.now(), last = start;
+
+      function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
+      function pick(list) { return list[(Math.random() * list.length) | 0]; }
+      function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+      function smoothstep(a, b, x) { var q = clamp((x - a) / (b - a), 0, 1); return q * q * (3 - 2 * q); }
+
+      function makeTip(c, core, midA) {
+        var tip = document.createElement("canvas");
+        tip.width = tip.height = 64;
+        var g = tip.getContext("2d");
+        var grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grad.addColorStop(0, rgba(c, core));
+        grad.addColorStop(0.5, rgba(c, midA));
+        grad.addColorStop(1, rgba(c, 0));
+        g.fillStyle = grad;
+        g.fillRect(0, 0, 64, 64);
+        return tip;
+      }
+
+      /* soft round brush tips, one per colour step along the palette */
+      function buildTips() {
+        for (var i = 0; i < TIP_STEPS; i++) {
+          var p = (i / TIP_STEPS) * PAINT.length, a = PAINT[Math.floor(p) % PAINT.length];
+          var b = PAINT[(Math.floor(p) + 1) % PAINT.length], f = p - Math.floor(p);
+          tips.push(makeTip([0, 1, 2].map(function (j) { return Math.round(a[j] + (b[j] - a[j]) * f); }), 1, 0.55));
+        }
+      }
+
+      /* ---- the soft brush "M": one continuous stroke with a tapering, arcing tail ---- */
+      var M_PATH = [                    // in units of the M box (x right, y down); the tail runs past it
+        [0.02, 0.96], [0.06, 0.60], [0.11, 0.22], [0.16, 0.05],
+        [0.23, 0.30], [0.32, 0.60], [0.40, 0.70],
+        [0.48, 0.50], [0.56, 0.22], [0.62, 0.06],
+        [0.68, 0.32], [0.74, 0.68], [0.80, 0.92],
+        [0.92, 1.10], [1.20, 1.24], [1.70, 1.27], [2.30, 1.22], [2.85, 1.02], [3.25, 0.75], [3.55, 0.48], [3.70, 0.32]
+      ];
+      var M_TAIL_FROM = 12, M_DELAY = 900, M_DUR = 3600;
+      var mLayer = document.createElement("canvas"), mctx = mLayer.getContext("2d");
+      var mTip = makeTip(M_COLOR, 0.8, 0.36), mStamps = [], mDrawn = 0;
+
+      function buildM() {
+        var left = heroEl.offsetLeft + titleEl.offsetLeft, top = heroEl.offsetTop + titleEl.offsetTop;
+        var w = clamp(titleEl.offsetWidth * 0.42, 110, 300), h = w * 1.1;
+        var x0 = left - w * 0.18, y0 = top - h * 0.08;
+        var pts = M_PATH.map(function (p) { return [x0 + p[0] * w, y0 + p[1] * h]; });
+        /* Catmull-Rom through the control points: rounded peaks, a curved tail */
+        var dense = [], seg = 24;
+        for (var i = 0; i < pts.length - 1; i++) {
+          var p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+          for (var s = 0; s < seg; s++) {
+            var t = s / seg, t2 = t * t, t3 = t2 * t, xy = [0, 1].map(function (k) {
+              return 0.5 * (2 * p1[k] + (p2[k] - p0[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (3 * p1[k] - p0[k] - 3 * p2[k] + p3[k]) * t3);
+            });
+            dense.push(xy);
+          }
+        }
+        dense.push(pts[pts.length - 1]);
+        var lens = [0];
+        for (i = 1; i < dense.length; i++) lens.push(lens[i - 1] + Math.hypot(dense[i][0] - dense[i - 1][0], dense[i][1] - dense[i - 1][1]));
+        var total = lens[lens.length - 1], tail0 = lens[M_TAIL_FROM * seg], base = w * 0.075, j = 1;
+        mStamps = [];
+        for (var d = 0; d <= total; d += 2.2) {
+          while (j < lens.length - 1 && lens[j] < d) j++;
+          var sl = Math.max(1e-6, lens[j] - lens[j - 1]), f = (d - lens[j - 1]) / sl;
+          var dy = (dense[j][1] - dense[j - 1][1]) / sl;               // > 0 on downstrokes
+          var r = base * (0.6 + 0.4 * clamp(dy, 0, 1)), a = 0.065;     // heavier downstrokes, light upstrokes
+          if (d < total * 0.04) r *= 0.5 + 0.5 * d / (total * 0.04);   // brush touches down softly
+          if (d > tail0) {                                             // full through the arc, trailing off at the end
+            var q = Math.pow((d - tail0) / (total - tail0), 1.6);
+            r = Math.max(r, base * 0.78) * (1 - 0.75 * q);
+            a *= 1 - 0.55 * q;
+          }
+          mStamps.push({ x: dense[j - 1][0] + (dense[j][0] - dense[j - 1][0]) * f, y: dense[j - 1][1] + (dense[j][1] - dense[j - 1][1]) * f, r: r, a: a });
+        }
+        mctx.setTransform(1, 0, 0, 1, 0, 0);
+        mctx.clearRect(0, 0, mLayer.width, mLayer.height);
+        mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        mDrawn = 0;
+      }
+
+      /* paints the M progressively (ease-in-out, so the tail trails off slowly) */
+      function paintM(now, instant) {
+        var p = instant ? 1 : clamp((now - start - M_DELAY) / M_DUR, 0, 1);
+        var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        var upto = Math.floor(e * mStamps.length);
+        if (upto <= mDrawn) return;
+        mctx.globalCompositeOperation = "multiply";
+        for (; mDrawn < upto; mDrawn++) {
+          var s = mStamps[mDrawn];
+          mctx.globalAlpha = s.a;
+          mctx.drawImage(mTip, s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
+        }
+        mctx.globalAlpha = 1;
+        mctx.globalCompositeOperation = "source-over";
+      }
+
+      /* the staff runs through the free band between the buttons and the footer
+         and, on wide screens, sweeps up the empty right margin, gently waving */
+      function staffY(x, t) {
+        var u = x / W;
+        var base = mobile
+          ? mid + 0.015 * Math.sin(u * Math.PI)
+          : mid - 0.02 + 0.02 * Math.sin(u * Math.PI) - (mid - 0.52) * smoothstep(0.72, 1, u);
+        return H * (base + 0.014 * Math.sin(u * 5.6 + t * 0.35) + 0.005 * Math.sin(u * 16 - t * 0.7));
+      }
+
+      function computeStaff(t) {
+        for (var k = 0; k < NP; k++) baseY[k] = staffY(k * STEP, t);
+        for (k = 0; k < NP; k++) {
+          var k0 = Math.max(0, k - 1), k1 = Math.min(NP - 1, k + 1);
+          var slope = (baseY[k1] - baseY[k0]) / ((k1 - k0) * STEP);
+          spread[k] = Math.sqrt(1 + slope * slope);   // keeps the five lines evenly spaced on slopes
+        }
+      }
+
+      function lineAt(i, k) { return baseY[k] + (i - 2) * GAP * spread[k] + disp[i][k]; }
+
+      /* y of a staff position (-2..2 = bottom..top line, halves are spaces) at any x */
+      function staffPos(pos, x) {
+        var fx = clamp(x / STEP, 0, NP - 1.001), k = Math.floor(fx), f = fx - k;
+        var li = clamp(Math.round(pos + 2), 0, 4);
+        var y0 = baseY[k] + pos * GAP * spread[k] + disp[li][k];
+        var y1 = baseY[k + 1] + pos * GAP * spread[k + 1] + disp[li][k + 1];
+        return y0 + (y1 - y0) * f;
+      }
+
+      /* find the free band from the layout (offsets ignore the entrance transforms) */
+      function measure() {
+        var bottom = heroEl.offsetTop + actions.offsetTop + actions.offsetHeight;
+        var below = hint && hint.offsetParent ? hint.offsetTop : footerEl.offsetTop;
+        mid = clamp((bottom + below) / 2 / H, 0.55, 0.95);
+        GAP = clamp(Math.round((below - bottom - 24) / 4.5), 7, mobile ? 9 : 12);   // fit the staff into the band
+      }
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = window.innerWidth;
+        H = window.innerHeight;
+        mobile = W < 700;
+        canvas.width = mLayer.width = Math.round(W * dpr);
+        canvas.height = mLayer.height = Math.round(H * dpr);
+        canvas.style.width = W + "px";
+        canvas.style.height = H + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        NP = Math.ceil(W / STEP) + 2;
+        baseY = new Float32Array(NP);
+        spread = new Float32Array(NP);
+        disp = [];
+        vel = [];
+        for (var i = 0; i < 5; i++) {
+          disp.push(new Float32Array(NP));
+          vel.push(new Float32Array(NP));
+        }
+        measure();
+        buildM();
+      }
+
+      /* ---- strings: spring + neighbour coupling, pushed aside by the pointer ---- */
+      function stepStaff(f) {
+        var R = 70;
+        for (var i = 0; i < 5; i++) {
+          var d = disp[i], v = vel[i];
+          for (var k = 1; k < NP - 1; k++) {
+            var acc = -0.02 * d[k] + 0.24 * (d[k - 1] + d[k + 1] - 2 * d[k]);
+            if (pointer.active) {
+              var dx = k * STEP - pointer.x;
+              if (dx > -R && dx < R) {
+                var dy = lineAt(i, k) - pointer.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < R) {
+                  var s = 1 - dist / R;
+                  acc += (dy >= 0 ? 1 : -1) * s * s * 0.8;
+                }
+              }
+            }
+            v[k] = (v[k] + acc * f) * Math.pow(0.93, f);
+          }
+          for (k = 1; k < NP - 1; k++) d[k] = clamp(d[k] + v[k] * f, -34, 34);
+        }
+      }
+
+      /* crossing a string plucks it and releases a note */
+      function checkPluck(now) {
+        if (!pointer.active || pointer.px < -1e3 || pointer.x < 0 || pointer.x > W) return;
+        for (var i = 0; i < 5; i++) {
+          var before = staffPos(i - 2, pointer.px) - pointer.py;
+          var after = staffPos(i - 2, pointer.x) - pointer.y;
+          if (before * after >= 0) continue;
+          var k = Math.round(pointer.x / STEP), dir = pointer.y > pointer.py ? 1 : -1;
+          for (var j = -2; j <= 2; j++) {
+            if (k + j > 0 && k + j < NP - 1) vel[i][k + j] += dir * (3.4 - Math.abs(j) * 0.9);
+          }
+          if (now - lastPluck[i] > 140) {
+            lastPluck[i] = now;
+            fly({ x: pointer.x, y: staffPos(i - 2, pointer.x) }, NOTE_COLORS[i], (Math.random() - 0.5) * 1.4, -2.4 - Math.random() * 1.2);
+          }
+        }
+      }
+
+      /* ---- watercolour brush: overlapping soft stamps that fade and bleed.
+         The path is smoothed (quadratic curves through the midpoints), so fast
+         strokes bend into arcs; a big jump starts a new stroke instead of a line. ---- */
+      function paintTo(x, y, ghostly) {
+        var now = performance.now();
+        if (!brush) { brush = { x: x, y: y, mx: x, my: y, t: now, w: 8 }; return; }
+        var dx = x - brush.x, dy = y - brush.y, dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 2) return;
+        if (dist > 160) { brush = { x: x, y: y, mx: x, my: y, t: now, w: 8 }; return; }
+        var speed = dist / Math.max(8, now - brush.t);
+        var target = clamp((mobile ? 15 : 22) - speed * 7, 5, mobile ? 15 : 22);
+        var w = brush.w + (target - brush.w) * 0.25;
+        var mx = (brush.x + x) / 2, my = (brush.y + y) / 2;
+        var len = Math.hypot(brush.x - brush.mx, brush.y - brush.my) + Math.hypot(mx - brush.x, my - brush.y);
+        var n = Math.max(1, Math.ceil(len / 2.6)), tip = tips[(hue | 0) % TIP_STEPS];
+        for (var j = 1; j <= n; j++) {
+          var t = j / n, u = 1 - t;
+          stamps.push({
+            x: u * u * brush.mx + 2 * u * t * brush.x + t * t * mx + (Math.random() - 0.5) * 1.2,
+            y: u * u * brush.my + 2 * u * t * brush.y + t * t * my + (Math.random() - 0.5) * 1.2,
+            r: brush.w + (w - brush.w) * t,
+            tip: tip,
+            born: now,
+            life: ghostly ? 2400 : 1800,
+            a: ghostly ? 0.07 : 0.1
+          });
+        }
+        if (stamps.length > 1600) stamps.splice(0, stamps.length - 1600);
+        hue = (hue + dist / 90) % TIP_STEPS;
+        brush = { x: x, y: y, mx: mx, my: my, t: now, w: w };
+      }
+
+      function splash(x, y) {
+        var now = performance.now(), tip = tips[(hue | 0) % TIP_STEPS];
+        for (var i = 0; i < 12; i++) {
+          var ang = Math.random() * Math.PI * 2, rad = Math.random() * 26;
+          stamps.push({ x: x + Math.cos(ang) * rad, y: y + Math.sin(ang) * rad, r: 14 + Math.random() * 18, tip: tip, born: now, life: 2200, a: 0.085 });
+        }
+        hue = (hue + 6) % TIP_STEPS;
+      }
+
+      function drawStamps(now) {
+        ctx.globalCompositeOperation = "multiply";
+        var alive = 0;
+        for (var i = 0; i < stamps.length; i++) {
+          var s = stamps[i], age = now - s.born;
+          if (age > s.life) continue;
+          stamps[alive++] = s;
+          var k = 1 - age / s.life, r = s.r * (1 + 0.3 * (1 - k));
+          ctx.globalAlpha = s.a * Math.pow(k, 1.6);
+          ctx.drawImage(s.tip, s.x - r, s.y - r, r * 2, r * 2);
+        }
+        stamps.length = alive;
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = "source-over";
+      }
+
+      /* an invisible painter keeps the canvas alive when nobody is moving the mouse:
+         it sweeps soft arcs in the empty margins */
+      function startGhost(now) {
+        var cx, cy, r;
+        if (mobile) {
+          cx = W * (0.2 + Math.random() * 0.6);
+          cy = Math.random() < 0.5 ? H * 0.06 : H * 0.94;
+          r = W * (0.25 + Math.random() * 0.15);
+        } else {
+          var left = Math.random() < 0.5;
+          cx = W * (left ? 0.1 + Math.random() * 0.06 : 0.84 + Math.random() * 0.06);
+          cy = H * (0.35 + Math.random() * 0.3);
+          r = Math.min(W * 0.09, H * 0.22) * (0.8 + Math.random() * 0.4);
+        }
+        var sweep = Math.PI * (0.8 + Math.random() * 0.6) * (Math.random() < 0.5 ? 1 : -1);
+        ghost = { start: now, dur: 2400 + Math.random() * 900, cx: cx, cy: cy, r: r, a0: Math.random() * Math.PI * 2, sweep: sweep };
+        brush = null;
+      }
+
+      function stepGhost(now) {
+        if (ghost) {
+          var q = (now - ghost.start) / ghost.dur;
+          if (q >= 1) { ghost = null; brush = null; ghostEnd = now; return; }
+          var e = q < 0.5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2;
+          var a = ghost.a0 + ghost.sweep * e, rr = ghost.r * (1 + 0.12 * Math.sin(e * Math.PI));
+          paintTo(ghost.cx + Math.cos(a) * rr, ghost.cy + Math.sin(a) * rr * 0.85, true);
+        } else if (now - pointer.lastMove > 3800 && now - ghostEnd > 2600) {
+          startGhost(now);
+        }
+      }
+
+      /* ---- notes ---- */
+      function spawnRider(x) {
+        notes.push({
+          mode: "ride", x: x, y: 0, pos: (((Math.random() * 9) | 0) - 4) * 0.5,
+          speed: mobile ? 26 + Math.random() * 4 : 38 + Math.random() * 6, size: GAP * 0.92,
+          type: (Math.random() * 3) | 0, col: pick(NOTE_COLORS), rot: 0, phase: Math.random() * 6.3, age: 0
+        });
+      }
+
+      function launch(n, vx, vy) {
+        n.mode = "fly";
+        n.vx = vx;
+        n.vy = vy;
+        n.vr = (Math.random() - 0.5) * 0.12;
+        n.age = 0;
+        n.life = 1500 + Math.random() * 600;
+      }
+
+      function fly(at, col, vx, vy) {
+        var n = { x: at.x, y: at.y, size: GAP * (0.95 + Math.random() * 0.35), type: (Math.random() * 3) | 0, col: col || pick(NOTE_COLORS), rot: (Math.random() - 0.5) * 0.4 };
+        launch(n, vx, vy);
+        notes.push(n);
+      }
+
+      function burst(x, y) {
+        for (var i = 0; i < 5; i++) {
+          var ang = -Math.PI / 2 + (i - 2) * 0.42 + (Math.random() - 0.5) * 0.2, sp = 2.4 + Math.random() * 1.6;
+          fly({ x: x, y: y }, null, Math.cos(ang) * sp, Math.sin(ang) * sp);
+        }
+      }
+
+      function stepNotes(t, dt) {
+        var f = dt / 16.67, alive = 0;
+        for (var i = 0; i < notes.length; i++) {
+          var n = notes[i];
+          n.age += dt;
+          if (n.mode === "ride") {
+            n.x += (n.speed * dt) / 1000;
+            if (n.x > W + 40) continue;
+            n.y = staffPos(n.pos, n.x) + Math.sin(t * 2 + n.phase) * 1.2;
+            var dx = n.x - pointer.x, dy = n.y - pointer.y;
+            if (pointer.active && dx * dx + dy * dy < 46 * 46) launch(n, (Math.random() - 0.5) * 1.6 + pointer.vx * 0.12, -2.6 - Math.random() * 1.4);
+          } else {
+            n.x += n.vx * f;
+            n.y += n.vy * f;
+            n.vy += 0.03 * f;
+            n.vx *= Math.pow(0.985, f);
+            n.rot += n.vr * f;
+            if (n.age > n.life) continue;
+          }
+          notes[alive++] = n;
+        }
+        notes.length = alive;
+      }
+
+      function head(x, y, s) {
+        ctx.beginPath();
+        ctx.ellipse(x, y, s * 0.6, s * 0.44, -0.35, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function stem(x, y, s, top) {
+        ctx.beginPath();
+        ctx.moveTo(x + s * 0.53, y - s * 0.12);
+        ctx.lineTo(x + s * 0.53, y - top);
+        ctx.stroke();
+      }
+
+      function drawNote(n, alpha, scale) {
+        var s = n.size * scale;
+        ctx.save();
+        ctx.translate(n.x, n.y);
+        ctx.rotate(n.rot);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = ctx.strokeStyle = rgba(n.col, 1);
+        ctx.lineWidth = Math.max(1.2, s * 0.14);
+        ctx.lineCap = "round";
+        if (n.type === 2) {
+          head(0, 0, s);
+          head(s * 2.1, -s * 0.45, s);
+          stem(0, 0, s, s * 2.95);
+          stem(s * 2.1, -s * 0.45, s, s * 2.95);
+          ctx.lineWidth = s * 0.42;
+          ctx.beginPath();
+          ctx.moveTo(s * 0.53, -s * 2.95);
+          ctx.lineTo(s * 2.63, -s * 3.4);
+          ctx.stroke();
+        } else {
+          head(0, 0, s);
+          stem(0, 0, s, s * 2.9);
+          if (n.type === 1) {
+            ctx.beginPath();
+            ctx.moveTo(s * 0.53, -s * 2.9);
+            ctx.bezierCurveTo(s * 1.35, -s * 2.3, s * 1.45, -s * 1.6, s * 1.05, -s * 1.15);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+
+      function drawNotes() {
+        for (var i = 0; i < notes.length; i++) {
+          var n = notes[i];
+          if (n.mode === "ride") {
+            var a = clamp((n.x + 24) / 80, 0, 1) * clamp((W + 40 - n.x) / 100, 0, 1);
+            drawNote(n, a * (n.col === NAVY ? 0.55 : 0.85), 1);
+          } else {
+            var q = n.age / n.life, pop = n.age < 200 ? n.age / 200 : Math.max(0, 1 - (n.age - 200) / 600);
+            drawNote(n, Math.pow(1 - q, 1.3) * 0.9, 1 + 0.35 * pop);
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      function drawStaff() {
+        ctx.lineWidth = 1.15;
+        for (var i = 0; i < 5; i++) {
+          ctx.strokeStyle = rgba(NAVY, i === 2 ? 0.18 : 0.14);
+          ctx.beginPath();
+          var px = 0, py = lineAt(i, 0);
+          ctx.moveTo(px, py);
+          for (var k = 1; k < NP; k++) {
+            var x = k * STEP, y = lineAt(i, k);
+            ctx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2);
+            px = x;
+            py = y;
+          }
+          ctx.lineTo(px, py);
+          ctx.stroke();
+        }
+      }
+
+      function frame(now) {
+        var dt = Math.min(48, now - last), t = (now - start) / 1000;
+        last = now;
+        ctx.clearRect(0, 0, W, H);
+        paintM(now, false);
+        ctx.drawImage(mLayer, 0, 0, W, H);
+        computeStaff(t);
+        stepGhost(now);
+        stepStaff(dt / 16.67);
+        checkPluck(now);
+        drawStamps(now);
+        drawStaff();
+        if (now - lastRider > (mobile ? 3400 : 3000)) {
+          spawnRider(-24);
+          lastRider = now;
+        }
+        stepNotes(t, dt);
+        drawNotes();
+        pointer.px = pointer.x;
+        pointer.py = pointer.y;
+        requestAnimationFrame(frame);
+      }
+
+      /* start with a melody already spread along the staff */
+      function seedRiders() {
+        notes = [];
+        var spacing = mobile ? 95 : 123;
+        for (var x = W + 20; x > -24; x -= spacing) spawnRider(x - Math.random() * spacing * 0.3);
+      }
+
+      function staticScene() {
+        ctx.clearRect(0, 0, W, H);
+        paintM(0, true);
+        ctx.drawImage(mLayer, 0, 0, W, H);
+        computeStaff(0);
+        drawStaff();
+        seedRiders();
+        stepNotes(0, 0);
+        drawNotes();
+      }
+
+      var hideTimer = null;
+      function hideHintSoon() {
+        if (hideTimer || !hint) return;
+        hideTimer = setTimeout(function () { hint.classList.add("is-hidden"); }, 2600);
+      }
+
+      buildTips();
+      resize();
+      if (reduce) {
+        staticScene();
+        window.addEventListener("resize", function () { resize(); staticScene(); });
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); buildM(); staticScene(); });
+      } else {
+        /* re-measure once the web fonts have set the final title width */
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); buildM(); });
+        seedRiders();
+        window.addEventListener("resize", resize);
+        window.addEventListener("pointermove", function (e) {
+          var now = performance.now();
+          if (ghost) { ghost = null; brush = null; }
+          if (now - pointer.lastMove > 250) brush = null;
+          pointer.vx = pointer.x > -1e3 ? e.clientX - pointer.x : 0;
+          pointer.x = e.clientX;
+          pointer.y = e.clientY;
+          pointer.active = true;
+          pointer.lastMove = now;
+          paintTo(e.clientX, e.clientY, false);
+          hideHintSoon();
+        }, { passive: true });
+        window.addEventListener("pointerdown", function (e) {
+          splash(e.clientX, e.clientY);
+          burst(e.clientX, e.clientY);
+          for (var i = 0; i < 5; i++) {
+            if (Math.abs(staffPos(i - 2, e.clientX) - e.clientY) > 70) continue;
+            var k = Math.round(e.clientX / STEP);
+            for (var j = -3; j <= 3; j++) if (k + j > 0 && k + j < NP - 1) vel[i][k + j] += (3 - Math.abs(j) * 0.8) * (i % 2 ? 1 : -1);
+          }
+          pointer.lastMove = performance.now();
+          hideHintSoon();
+        }, { passive: true });
+        document.addEventListener("pointerleave", function () { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; });
+        window.addEventListener("blur", function () { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; });
+        requestAnimationFrame(frame);
+      }
+      canvas.classList.add("is-ready");
+    })();
+  </script>
+</body>
+</html>

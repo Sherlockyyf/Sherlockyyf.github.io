@@ -1,0 +1,50 @@
+[
+  {
+    "date": "2026.10",
+    "icon": "📄",
+    "en": "Two EMNLP 2026 papers are on arXiv with code: [StateTrack](https://arxiv.org/abs/2610.31314) and [SurveyGraph](https://arxiv.org/abs/2610.31317).",
+    "zh": "两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：[StateTrack](https://arxiv.org/abs/2610.31314) 与 [SurveyGraph](https://arxiv.org/abs/2610.31317)。"
+  },
+  {
+    "date": "2026.09",
+    "icon": "📄",
+    "en": "[ReMCTS](https://arxiv.org/abs/2609.34717) (EMNLP 2026) and our ACM MM 2026 paper on [object-dependent concept brittleness](https://arxiv.org/abs/2609.09909) are on arXiv with code.",
+    "zh": "[ReMCTS](https://arxiv.org/abs/2609.34717)（EMNLP 2026）与 ACM MM 2026 论文 [Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models](https://arxiv.org/abs/2609.09909) 已公开于 arXiv 并开源代码。"
+  },
+  {
+    "date": "2026.08",
+    "icon": "📄",
+    "en": "New preprint on how LLM agent handoffs erode workflow constraints: [When “Must” Becomes “Maybe”](https://arxiv.org/abs/2608.24569).",
+    "zh": "新 Preprint [When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs](https://arxiv.org/abs/2608.24569)，研究多智能体交接过程中工作流约束的流失。"
+  },
+  {
+    "date": "2026.08",
+    "icon": "🎉🎉",
+    "en": "Three papers accepted to **EMNLP 2026**.",
+    "zh": "三篇论文被 **EMNLP 2026** 接收。"
+  },
+  {
+    "date": "2026.07",
+    "icon": "🎉🎉",
+    "en": "One paper accepted to **ACM MM 2026**.",
+    "zh": "一篇论文被 **ACM MM 2026** 接收。"
+  },
+  {
+    "date": "2025.04",
+    "icon": "🏫",
+    "en": "Joined the College of Artificial Intelligence, Shenzhen University as an Assistant Professor.",
+    "zh": "加入深圳大学人工智能学院，任助理教授、硕士生导师。"
+  },
+  {
+    "date": "2025.04",
+    "icon": "🎉🎉",
+    "en": "One paper published in **IEEE/CAA Journal of Automatica Sinica**, with [code](https://github.com/Sherlockyyf/Semantic_Discrepancy).",
+    "zh": "一篇论文发表于 **IEEE/CAA Journal of Automatica Sinica**，[代码](https://github.com/Sherlockyyf/Semantic_Discrepancy)已开源。"
+  },
+  {
+    "date": "2025.03",
+    "icon": "🎓",
+    "en": "Received my Ph.D. from the School of Computer Science and Technology, Fudan University, advised by Prof. Junping Zhang.",
+    "zh": "于复旦大学计算机科学技术学院博士毕业，导师张军平教授。"
+  }
+]
