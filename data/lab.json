@@ -1,12 +1,16 @@
 {
+  "mission": {
+    "en": "MUSE Lab studies multimodal understanding and generation. **We want generative AI that is controllable, interpretable and trustworthy**, and genuinely useful in people's lives.",
+    "zh": "MUSE Lab 研究多模态理解与生成。**我们希望生成式 AI 可控、可解释、值得信任**，并真正走进人们的生活。"
+  },
   "about": [
     {
-      "en": "**MUSE Lab** (Multimodal Understanding and Synthesis for Explainability) is a research group at the [College of Artificial Intelligence](https://ai.szu.edu.cn/), Shenzhen University, led by [Yifan Yuan](./). Our goal is to make generative AI **controllable, interpretable and trustworthy**.",
-      "zh": "**MUSE Lab**（Multimodal Understanding and Synthesis for Explainability）隶属于[深圳大学人工智能学院](https://ai.szu.edu.cn/)，由[袁一帆](./)助理教授负责。我们的目标是让生成式 AI 更加**可控、可解释、可信**。"
+      "en": "We are a research group at the [College of Artificial Intelligence](https://ai.szu.edu.cn/), Shenzhen University, led by [Yifan Yuan](./).",
+      "zh": "实验室隶属于[深圳大学人工智能学院](https://ai.szu.edu.cn/)，由[袁一帆](./)助理教授负责。"
     },
     {
-      "en": "We study why text-to-image diffusion models succeed or fail on specific concepts, and how to edit images and videos precisely and consistently; how large language models and agents stay reliable over long-horizon interaction, free of hallucination, bias and state collapse; and how generative agents can perceive and express human emotion.",
-      "zh": "我们研究文生图扩散模型为何会在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。"
+      "en": "Our work spans five directions: trustworthy multimodal generation, multimodal understanding and applications, emotion AI, AI safety and embodied AI. Starting from how diffusion models and multimodal LLMs work inside, why they succeed and why they fail, we carry that understanding into real settings such as video, virtual try-on, emotional companionship and robotics.",
+      "zh": "我们的研究围绕五个方向展开：多模态可信生成、多模态理解与应用、情感智能、大模型安全与具身智能。从扩散模型和多模态大模型的内部机理出发，研究它们为何成功、为何出错，再把这些理解带到视频、虚拟试衣、情感陪伴、机器人等真实场景中。"
     }
   ],
   "acronym": [
@@ -47,25 +51,37 @@
       }
     }
   ],
-  "themeShort": {
-    "visual": {
-      "en": "Visual Generation",
-      "zh": "视觉生成"
+  "stats": [
+    {
+      "value": "10+",
+      "label": {
+        "en": "papers published",
+        "zh": "篇已发表论文"
+      }
     },
-    "trust": {
-      "en": "Trustworthy LLMs & Agents",
-      "zh": "可信大模型"
+    {
+      "value": "7",
+      "label": {
+        "en": "in JCR Q1 journals and CCF-B or higher venues",
+        "zh": "篇 SCI 一区期刊与 CCF-B 及以上会议论文"
+      }
     },
-    "affect": {
-      "en": "Affective & Embodied AI",
-      "zh": "情感与具身智能"
+    {
+      "value": "4",
+      "label": {
+        "en": "papers at ACM MM and EMNLP 2026",
+        "zh": "篇 2026 年 ACM MM、EMNLP 论文"
+      }
+    },
+    {
+      "value": "5",
+      "label": {
+        "en": "research directions",
+        "zh": "个研究方向"
+      }
     }
-  },
+  ],
   "pi": {
-    "bio": {
-      "en": "Ph.D. in Computer Science, Fudan University (2025), advised by Prof. Junping Zhang; B.S. in Physics, Fudan University (2019). AIGC research intern on text-to-image generation at Tencent Hunyuan and SenseTime during the Ph.D. Member of the Technical Committee on Hybrid Intelligence and the Science Popularization Committee, Chinese Association of Automation (CAA).",
-      "zh": "2025 年博士毕业于复旦大学计算机科学技术专业，师从张军平教授；2019 年本科毕业于复旦大学物理学专业。读博期间曾在腾讯混元文生图组、商汤科技从事 AIGC 算法研究实习。现为中国自动化学会混合智能专委会、普及工作专委会会员。"
-    },
     "links": [
       {
         "icon": "home",
@@ -87,29 +103,301 @@
       }
     ]
   },
-  "memberGroups": [
+  "researchIntro": {
+    "en": "From the inner workings of diffusion models and multimodal LLMs to real settings: video, emotion, safety and robotics.",
+    "zh": "从扩散模型与多模态大模型的内部机理，到视频、情感、安全与机器人等真实场景。"
+  },
+  "directions": [
     {
-      "id": "phd",
-      "en": "Ph.D. Students",
-      "zh": "博士研究生"
+      "id": "trust",
+      "seal": "信",
+      "visual": "scan",
+      "title": {
+        "en": "Trustworthy Multimodal Generation",
+        "zh": "多模态可信生成"
+      },
+      "summary": {
+        "en": "Taking multimodal LLMs and diffusion models from \"able to generate\" to \"trustworthy\": outputs grounded in evidence, errors noticed before they surface, and corrected while the model is still generating.",
+        "zh": "让多模态大模型与扩散模型从“能够生成”走向“可信生成”：内容有依据，出错之前能察觉，生成过程中能纠正。"
+      },
+      "topics": [
+        {
+          "title": {
+            "en": "Predicting and steering hallucinations",
+            "zh": "幻觉风险的预测与干预"
+          },
+          "text": {
+            "en": "Multimodal LLMs describe images fluently but sometimes state things the image does not support. We read the model's internal states as it generates to predict the hallucination risk of what comes next, carrying on when the risk is low and intervening at inference time, without retraining, when it is high.",
+            "zh": "多模态大模型能看图写出丰富的文字，却会输出“看似合理、实际没有视觉依据”的内容。我们读取模型生成时的内部状态，提前预测下一段内容的幻觉风险：风险低就继续生成，风险高就在推理阶段动态干预，无需重新训练。"
+          }
+        },
+        {
+          "title": {
+            "en": "Inside diffusion models",
+            "zh": "扩散模型的内部机理"
+          },
+          "text": {
+            "en": "Analysing SD-VAE, DINOv2 and DiT features along the denoising trajectory, we find that early steps fix the subject's structure and layout while middle steps refine text-related details. We also study why concepts keep failing on particular objects (ACM MM 2026) and where semantic discrepancy in image translation comes from (IEEE/CAA JAS 2025).",
+            "zh": "分析 SD-VAE、DINOv2 与 DiT 在去噪过程中的特征，发现早期决定主体结构与布局、中期细化与文本相关的局部细节；并研究概念为何在特定物体上反复失效（ACM MM 2026），以及图像转换中的语义偏差从何而来（IEEE/CAA JAS 2025）。"
+          }
+        },
+        {
+          "title": {
+            "en": "Attribute binding and control",
+            "zh": "属性解耦与可控生成"
+          },
+          "text": {
+            "en": "An LLM parses the prompt into a scene graph, so any object–attribute combination is supported. Dynamic text embeddings and counterfactual constraints reduce semantic entanglement, attention constraints with layout priors place attributes at pixel level, and constraint strength adapts across denoising steps. Earlier work (DO-FAM, VR-FAM) studied disentangled editing of facial attributes.",
+            "zh": "借助大模型把提示词解析成场景图，支持任意“对象—属性”组合；用动态文本嵌入和反事实约束减轻语义纠缠，结合注意力约束与布局先验实现像素级定位，并随去噪时间步自适应调整约束强度。早期工作 DO-FAM、VR-FAM 研究了人脸属性的解耦编辑。"
+          }
+        },
+        {
+          "title": {
+            "en": "Reliable language models and agents",
+            "zh": "大语言模型与智能体的可信生成"
+          },
+          "text": {
+            "en": "How models remember, understand and use information. StateTrack tests whether a model keeps following earlier instructions in long dialogues: restating a rule is not the same as obeying it. ReMCTS uses reflective tree search for more reliable code, and we study how workflow constraints erode when agents hand tasks to each other.",
+            "zh": "研究模型怎样记住、理解并使用信息：StateTrack 检查模型在长对话中是否一直遵守先前的要求，“会复述”不等于“会执行”；ReMCTS 用反思式树搜索生成更可靠的代码；我们还研究多智能体交接过程中工作流约束的流失。"
+          }
+        }
+      ],
+      "papers": ["mm26", "jas25", "state", "remcts", "handoff", "icassp23", "icassp22"],
+      "grants": ["生成式图像编辑的可靠性评估与可控编辑机制研究"]
     },
     {
-      "id": "master",
-      "en": "Master's Students",
-      "zh": "硕士研究生"
+      "id": "perceive",
+      "seal": "观",
+      "visual": "timeline",
+      "title": {
+        "en": "Multimodal Understanding & Applications",
+        "zh": "多模态理解与应用"
+      },
+      "summary": {
+        "en": "Teaching models to understand video, images and text, and putting that understanding to work: video retrieval and editing, quality checks for virtual try-on, and help with writing academic surveys.",
+        "zh": "让模型读懂视频、图像与文字，并把这种理解落到具体场景：视频检索与剪辑、虚拟试衣的质量诊断、学术综述写作。"
+      },
+      "topics": [
+        {
+          "title": {
+            "en": "Moment retrieval and highlight detection",
+            "zh": "视频时刻检索与高光检测"
+          },
+          "text": {
+            "en": "Given a video and a natural-language query, the model finds the most relevant moment on the timeline and scores every clip for how much of a highlight it is: semantic retrieval and highlight extraction in one model.",
+            "zh": "给定一段视频和一句自然语言查询，模型在时间轴上定位最相关的片段，同时为每个片段的精彩程度打分，把“按语义检索关键片段”和“自动提取精彩时刻”合为一体。"
+          }
+        },
+        {
+          "title": {
+            "en": "Story-aware video editing",
+            "zh": "懂剧情的智能剪辑"
+          },
+          "text": {
+            "en": "An editing system that follows the plot and the audience's feelings: it understands complex requests, pulls the key shots out of large amounts of footage, and produces cuts that fit the brief while keeping the original story and mood.",
+            "zh": "构建能“读懂”剧情、“共情”观众的剪辑系统：准确理解复杂的用户意图，从海量素材中提取核心镜头，生成既符合需求、又保留原片叙事与情绪氛围的视频。"
+          }
+        },
+        {
+          "title": {
+            "en": "Distortion detection for virtual try-on",
+            "zh": "虚拟试衣失真检测"
+          },
+          "text": {
+            "en": "A fine-grained distortion framework that combines a taxonomy of artefacts, a VQA-annotated dataset and fine-tuned multimodal LLMs, so try-on systems can tell whether a result is distorted, what kind of distortion it is, where it is, and why.",
+            "zh": "建立细粒度的失真检测框架：把失真分类体系、视觉问答标注数据集与多模态大模型微调结合起来，让虚拟换装系统能判断有无失真、区分失真类型、定位失真位置并解释原因。"
+          }
+        },
+        {
+          "title": {
+            "en": "Grounded survey writing",
+            "zh": "有依据的综述写作"
+          },
+          "text": {
+            "en": "SurveyGraph first maps how papers extend, compete with and share resources with each other in a methods–entity knowledge graph, then retrieves, outlines and writes along the field's evolution, so that key claims in a survey trace back to the literature.",
+            "zh": "SurveyGraph 先把论文之间的延续、竞争与共享资源关系整理成“方法—实体知识图谱”，再据此检索、列提纲、按领域演化脉络写作，让综述中的重要判断都能回到文献。"
+          }
+        }
+      ],
+      "papers": ["surveygraph"],
+      "grants": ["多模态信息检索、审查与管控智能模型研究"]
     },
     {
-      "id": "undergrad",
-      "en": "Undergraduate Researchers",
-      "zh": "本科生"
+      "id": "emotion",
+      "seal": "情",
+      "visual": "waves",
+      "title": {
+        "en": "Emotion AI",
+        "zh": "情感智能"
+      },
+      "summary": {
+        "en": "Helping AI understand human emotion accurately and faithfully, respond with the right kind of support, and grow into companions with long-term memory and a steady personality.",
+        "zh": "一方面让 AI 更准确、可信地理解人的情绪，另一方面让它在理解之后给出恰当的支持，并探索有长期记忆、有稳定人格的 AI 伙伴。"
+      },
+      "topics": [
+        {
+          "title": {
+            "en": "Multimodal emotion recognition",
+            "zh": "多模态情绪识别"
+          },
+          "text": {
+            "en": "Combining speech, facial expression and language, we move from fixed emotion categories to open-vocabulary, fine-grained recognition, and on to descriptive recognition that explains in words what the emotion is and why it arises.",
+            "zh": "融合语音、表情与语言的互补信息，从固定的情绪类别走向开放词汇的细粒度情绪识别，再到用自然语言解释“是什么情绪、为什么产生”的描述型情绪识别。"
+          }
+        },
+        {
+          "title": {
+            "en": "Hallucinations in emotion descriptions",
+            "zh": "情绪描述中的幻觉"
+          },
+          "text": {
+            "en": "Generated emotion descriptions can cite evidence that is not in the input. We define four kinds of hallucination (invented perceptual evidence, cross-modal misattribution, emotional over-inference and made-up causes) and build diagnostics, moving from descriptions that sound right to descriptions the input actually supports.",
+            "zh": "模型生成的情绪描述可能包含输入中不存在的证据。我们系统定义了感知证据幻觉、跨模态错归因、情绪过度推断与叙事/因果幻觉四类问题，并构建诊断与评估方法，从“能生成情绪描述”走向“能生成可信的情绪描述”。"
+          }
+        },
+        {
+          "title": {
+            "en": "Emotional support conversation",
+            "zh": "情感支持对话"
+          },
+          "text": {
+            "en": "Recognising a user's emotional state, situation and needs; choosing among comforting, empathising, asking, advising and encouraging; adjusting as the user's state changes over many turns; and evaluating whether the support truly fits.",
+            "zh": "识别用户的情绪状态、处境与潜在需求，选择安慰、共情、询问、建议、鼓励等合适的策略，在多轮交互中跟随用户状态调整，并评估支持是否真正贴合情境。"
+          }
+        },
+        {
+          "title": {
+            "en": "Companions with memory and personality",
+            "zh": "有记忆、有人格的 AI 伙伴"
+          },
+          "text": {
+            "en": "From chatbots to companions with long-term memory and cognitive schemas: Big-Five personality realised through a mixture of LoRA adapters, so that personality can be tuned, with replies that adapt to intimacy and emotional state. The same techniques help build simulated conversational agents for mental-health assessment research.",
+            "zh": "从 Chatbot 走向具有长期记忆与认知图式的 AI 伙伴：以大五人格为基础，用混合专家式的 LoRA 适配器实现可调节的人格，并结合亲密度与情绪状态动态调整回复风格；相关技术也用于构建心理健康评估研究中的模拟对话智能体。"
+          }
+        }
+      ],
+      "papers": ["ch7", "ch8", "jig20"],
+      "grants": ["面向消化科临床教学的AI虚拟病人技术研究与应用"]
     },
     {
-      "id": "alumni",
-      "en": "Alumni",
-      "zh": "毕业生"
+      "id": "safety",
+      "seal": "安",
+      "visual": "shield",
+      "title": {
+        "en": "AI Safety",
+        "zh": "大模型安全"
+      },
+      "summary": {
+        "en": "Explaining why safety alignment works and why it can be bypassed, and building a defence loop for multimodal models: interpretable monitoring, controllable intervention and continual strengthening.",
+        "zh": "解释安全对齐为什么有效、为什么会被绕过，并为多模态大模型构建可解释监测、可控干预与持续强化的防护闭环。"
+      },
+      "topics": [
+        {
+          "title": {
+            "en": "Jailbreaks and defences",
+            "zh": "越狱攻击与防御"
+          },
+          "text": {
+            "en": "A jailbreak gets the model to treat an attack as a higher-priority task, by disguising harmful intent as translation, research or role-play, or by using long contexts, indirect prompt injection and multi-turn manipulation to make it \"ignore previous rules\". We detect and block attacks in layers on the input, model and output side, backed by continual red-teaming.",
+            "zh": "越狱的本质，是让模型把攻击指令误当成更高优先级的任务：或把恶意意图伪装成翻译、研究、虚构角色等无害请求，或借助长上下文、间接提示注入与多轮对话诱导模型“忽略此前规则”。我们在输入、模型、输出三侧分层识别与拦截，并坚持持续的红队测试。"
+          }
+        },
+        {
+          "title": {
+            "en": "Multimodal safety",
+            "zh": "多模态安全"
+          },
+          "text": {
+            "en": "Images widen the attack surface: instructions hidden in posters or screenshots, subtle adversarial perturbations and conflicts between image and text can all pull a model off its safety alignment. We study cross-modal consistency checks so that models read images correctly while spotting and refusing malicious instructions in them.",
+            "zh": "视觉输入让攻击面从文本延伸到图像：海报或截图里藏着的指令、细微的对抗扰动、图文之间的冲突，都可能让模型偏离安全对齐。我们研究跨模态一致性校验，让模型正确理解图像，同时识别并拒绝其中的恶意指令。"
+          }
+        },
+        {
+          "title": {
+            "en": "Adaptive safety alignment",
+            "zh": "自适应安全对齐"
+          },
+          "text": {
+            "en": "Built around one representation of the model's safety boundary: an interpretable risk score with clear geometric and statistical meaning, lightweight defences that need no retraining, and continual adversarial updates against unseen jailbreaks and out-of-distribution risks.",
+            "zh": "以统一的“安全边界”表征为核心，构建具有明确几何与统计意义的可解释风险度量，设计无需重新训练的轻量防护机制，并面向未知越狱与分布外风险持续对抗更新。"
+          }
+        }
+      ],
+      "papers": [],
+      "grants": []
+    },
+    {
+      "id": "embodied",
+      "seal": "行",
+      "visual": "path",
+      "title": {
+        "en": "Embodied AI",
+        "zh": "具身智能"
+      },
+      "summary": {
+        "en": "Robots that perceive, plan and act reliably through long tasks: generating long action sequences straight from multimodal perception, and improving through interaction after deployment.",
+        "zh": "让机器人在长周期任务中看得懂、想得清、做得稳：从多模态感知直接生成长序列动作，并在部署后通过与环境交互持续改进。"
+      },
+      "topics": [
+        {
+          "title": {
+            "en": "End-to-end long-horizon decisions",
+            "zh": "端到端长程决策"
+          },
+          "text": {
+            "en": "Cascading a VLM planner with a small executor splits planning from acting. We build end-to-end long-horizon decision models that map streaming multimodal perception directly to long action sequences, for more robust and coherent long tasks.",
+            "zh": "“VLM 高层规划 + 小模型底层执行”的级联范式使规划与执行割裂。我们研发端到端的长程时序决策大模型，实现从多模态流式感知到长序列动作输出的直接映射，提升长周期任务中的鲁棒性与连贯性。"
+          }
+        },
+        {
+          "title": {
+            "en": "Test-time adaptation for VLA models",
+            "zh": "VLA 模型的测试时自适应"
+          },
+          "text": {
+            "en": "Vision–language–action models depend on large demonstration sets and generalise poorly once deployed. Our test-time training framework, driven by the robot's own feedback, lets it refine its policy through interaction, with no human reward signal.",
+            "zh": "现有视觉—语言—动作（VLA）模型严重依赖海量示教数据，部署后泛化能力差。我们构建由自主反馈驱动的测试时训练框架，让机器人在没有人工奖励信号的情况下，通过与环境交互自我迭代、优化策略。"
+          }
+        },
+        {
+          "title": {
+            "en": "Fine manipulation for industry",
+            "zh": "工业场景中的精细操作"
+          },
+          "text": {
+            "en": "Fine manipulation with dexterous hands, and generalisation across settings, for industrial tasks such as moving and opening boxes.",
+            "zh": "面向搬运、开箱等工业任务，研究灵巧手的精细操作与跨场景泛化。"
+          }
+        }
+      ],
+      "papers": [],
+      "grants": ["人形机器人工业具身智能基座大模型与垂直领域示范应用"]
     }
   ],
-  "members": [],
+  "themeShort": {
+    "visual": {
+      "en": "Visual Generation",
+      "zh": "视觉生成"
+    },
+    "trust": {
+      "en": "Trustworthy LLMs & Agents",
+      "zh": "可信大模型"
+    },
+    "affect": {
+      "en": "Affective & Embodied AI",
+      "zh": "情感与具身智能"
+    }
+  },
+  "cta": {
+    "title": {
+      "en": "Research and business collaborations welcome",
+      "zh": "欢迎科研与商业合作"
+    },
+    "text": {
+      "en": "Interested in working with us? Write to us by email.",
+      "zh": "如有合作意向，欢迎通过邮件与我们联系。"
+    }
+  },
   "contact": {
     "items": [
       {
