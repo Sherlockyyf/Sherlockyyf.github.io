@@ -1,6 +1,6 @@
 /* MUSE Lab page (lab/index.html): language switch, note sounds, the music-and-painting hero,
-   navigation, scroll effects (reveal, mission words, counting figures, research index,
-   looping illustrations), featured-paper tabs and publication filters. */
+   navigation, scroll reveal, featured-paper tabs, publication filters, the folded news and the
+   viewer for research figures. */
 (function () {
   "use strict";
   var root = document.documentElement;
@@ -17,8 +17,6 @@
     document.title = l === "zh" ? "MUSE Lab · 深圳大学" : "MUSE Lab · Shenzhen University";
     if (persist) { try { localStorage.setItem("lang", l); } catch (e) {} }
     showSound();
-    movePill();
-    onScroll();
   }
   all("[data-set-lang]").forEach(function (b) {
     b.addEventListener("click", function () { setLang(b.getAttribute("data-set-lang"), true); });
@@ -29,50 +27,10 @@
   var bar = document.querySelector(".bar");
   var menuBtn = document.querySelector(".menu-btn");
   var navLinks = all('.nav a[href^="#"]');
-  var pill = document.querySelector(".nav__pill");
-  var heroInner = document.querySelector(".hero__inner");
-  var missionWords = [];
-  var scrollQueued = false, current = "";
 
-  /* everything that follows the scroll position, at most once per frame */
-  function onScroll() {
-    if (!bar || scrollQueued) return;
-    scrollQueued = true;
-    requestAnimationFrame(function () {
-      scrollQueued = false;
-      var y = window.scrollY, vh = window.innerHeight;
-      bar.classList.toggle("is-scrolled", y > 24);
-      if (!reduce && heroInner) heroInner.style.setProperty("--hero-p", Math.min(1, y / (vh * 0.9)).toFixed(3));
-      missionWords.forEach(function (group) {
-        var r = group.el.getBoundingClientRect();
-        if (!r.height) return;
-        var p = Math.min(1, Math.max(0, (vh * 0.86 - r.top) / (r.height + vh * 0.3)));
-        var upto = Math.round(p * group.words.length);
-        group.words.forEach(function (w, i) { w.classList.toggle("is-lit", i < upto); });
-      });
-    });
-  }
+  function onScroll() { bar.classList.toggle("is-scrolled", window.scrollY > 24); }
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", function () { movePill(); onScroll(); });
   onScroll();
-
-  /* the accent pill glides to the link of the section in view */
-  function movePill() {
-    if (!navLinks || !pill) return;
-    var on = null;
-    navLinks.forEach(function (a) {
-      var hit = a.getAttribute("href") === "#" + current;
-      a.classList.toggle("is-active", hit);
-      if (hit) on = a;
-    });
-    if (on && on.offsetWidth) {
-      pill.style.width = on.offsetWidth + "px";
-      pill.style.transform = "translateX(" + on.offsetLeft + "px)";
-      pill.style.opacity = "1";
-    } else {
-      pill.style.opacity = "0";
-    }
-  }
 
   function setMenu(open) {
     bar.classList.toggle("is-open", open);
@@ -89,76 +47,11 @@
   if ("IntersectionObserver" in window) {
     var spy = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { current = en.target.id; movePill(); }
+        if (!en.isIntersecting) return;
+        navLinks.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
     all(".hero, main > section").forEach(function (s) { spy.observe(s); });
-
-    /* the research index marks the direction being read */
-    var indexLinks = all(".rindex__link");
-    var reading = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        indexLinks.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
-      });
-    }, { rootMargin: "-35% 0px -55% 0px" });
-    all(".dir").forEach(function (d) { reading.observe(d); });
-
-    /* illustrations only move while they are on screen */
-    var playing = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        var on = en.isIntersecting && !reduce;
-        en.target.classList.toggle("is-playing", on);
-        all("svg", en.target).forEach(function (s) {
-          if (s.pauseAnimations) { if (on) s.unpauseAnimations(); else s.pauseAnimations(); }
-        });
-      });
-    });
-    all(".viz").forEach(function (v) { playing.observe(v); });
-  }
-
-  /* the mission statement: each word (each character in Chinese) lights up as it scrolls by */
-  function wrapWords(el) {
-    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [], words = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(function (node) {
-      var frag = document.createDocumentFragment();
-      node.nodeValue.split(/(\s+)/).forEach(function (part) {
-        if (!part) return;
-        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
-        part.match(/[　-鿿＀-￯]|[^　-鿿＀-￯]+/g).forEach(function (w) {
-          var s = document.createElement("span");
-          s.className = "w";
-          s.textContent = w;
-          frag.appendChild(s);
-          words.push(s);
-        });
-      });
-      node.parentNode.replaceChild(frag, node);
-    });
-    return words;
-  }
-  if (!reduce) {
-    missionWords = all(".mission__text").map(function (el) { return { el: el, words: wrapWords(el) }; });
-    onScroll();
-  }
-
-  /* big figures count up the first time they are seen */
-  var nums = all(".stat__num[data-count]");
-  if (!reduce && nums.length && "IntersectionObserver" in window) {
-    var counting = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        counting.unobserve(en.target);
-        var el = en.target, to = +el.getAttribute("data-count"), suffix = el.getAttribute("data-suffix") || "", t0 = performance.now();
-        (function tick(now) {
-          var p = Math.min(1, (now - t0) / 1400), e = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.round(to * e) + (p === 1 ? suffix : "");
-          if (p < 1) requestAnimationFrame(tick);
-        })(t0);
-      });
-    }, { threshold: 0.6 });
-    nums.forEach(function (n) { n.textContent = "0"; counting.observe(n); });
   }
 
   /* ---------- scroll reveal (cards in a row come in one after another) ---------- */
@@ -167,16 +60,12 @@
       var i = all(":scope > .reveal", el.parentNode).indexOf(el);
       if (i > 0) el.style.setProperty("--d", Math.min(i, 4) * 0.09 + "s");
     });
-    /* the news cards come in together: on phones most of them sit off to the side of a swipe row */
     var shown = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        (en.target.classList.contains("reveal") ? [en.target] : all(".reveal", en.target)).forEach(function (el) { el.classList.add("is-in"); });
-        shown.unobserve(en.target);
+        if (en.isIntersecting) { en.target.classList.add("is-in"); shown.unobserve(en.target); }
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
-    all(".reveal").forEach(function (el) { if (!closest(el, ".news-grid")) shown.observe(el); });
-    all(".news-grid").forEach(function (g) { shown.observe(g); });
+    all(".reveal").forEach(function (el) { shown.observe(el); });
     window.__labReady = true;
   }
 
@@ -266,7 +155,8 @@
     }, reduce ? 0 : 600);
   });
 
-  /* ---------- research figures open large (without scripts the link opens the image itself) ---------- */
+  /* ---------- research figures open large; a link carries the image, its caption waits in a
+     <template> (without scripts the link simply opens the image) ---------- */
   var box = null, boxFrom = null;
   function closeBox() {
     if (!box) return;
@@ -280,10 +170,10 @@
   }
   function boxKey(e) { if (e.key === "Escape") closeBox(); }
   document.addEventListener("click", function (e) {
-    var a = closest(e.target, ".dfig__img");
+    var a = closest(e.target, "a[data-zoom]");
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
     e.preventDefault();
-    var img = a.querySelector("img"), cap = closest(a, ".dfig").querySelector("figcaption");
+    var img = a.querySelector("img"), cap = document.getElementById(a.getAttribute("data-zoom"));
     boxFrom = a;
     box = document.createElement("div");
     box.className = "lightbox";
@@ -293,7 +183,7 @@
       '<figure class="lightbox__fig"><img class="lightbox__img" alt=""><figcaption class="lightbox__cap"></figcaption></figure>';
     var big = box.querySelector(".lightbox__img");
     big.src = a.getAttribute("href");
-    big.alt = img ? img.alt : "";
+    big.alt = img ? img.alt : a.getAttribute("data-alt") || "";
     if (cap) box.querySelector(".lightbox__cap").innerHTML = cap.innerHTML;
     box.addEventListener("click", closeBox);   // a click anywhere closes it; the paper link then goes on to the list
     document.body.appendChild(box);
