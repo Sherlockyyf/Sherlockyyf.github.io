@@ -1,6 +1,7 @@
 /* Builds every content section of index.html from data/home.json, data/news.json and
-   data/publications.json. Shared by the page editor (admin/editor.js) and
-   `node tools/render_site.js`; loads as a browser global (SiteRender) or a CommonJS module.
+   data/publications.json, and those of lab/index.html from the same files plus data/lab.json.
+   Shared by the page editor (admin/editor.js) and `node tools/render_site.js`; loads as a
+   browser global (SiteRender) or a CommonJS module.
    With ed = true the HTML also carries data-yy* attributes, which the editor turns into
    in-place editing; the published page never contains them. */
 (function (root, factory) {
@@ -21,8 +22,9 @@
     "h-publications", "selected", "publications", "h-experience", "experience", "h-grants", "grants",
     "grants-earlier", "h-service", "service", "footer"];
 
-  /* every news entry and paper is written with these keys, in this order */
-  var NEWS_FIELDS = { date: "", icon: "", en: "", zh: "" };
+  /* every news entry and paper is written with these keys, in this order
+     (lab: false keeps a news entry off the lab page) */
+  var NEWS_FIELDS = { date: "", icon: "", en: "", zh: "", lab: true };
   var PUB_FIELDS = {
     id: "", title: "", authors: "", venue: "", type: "conference", details: "", note: "",
     paper: "", code: "", project: "", theme: "", tag: "",
@@ -56,8 +58,17 @@
     return scheme && !/^(https?|mailto)$/i.test(scheme[1]) ? "#" : u;
   }
 
+  /* links in the data are relative to the site root; a page in a subfolder (lab/) sets base = "../" */
+  var base = "";
+
+  function rebase(url) {
+    var u = String(url || "").trim();
+    if (!base || !u || /^([a-z][a-z0-9+.-]*:|\/|#)/i.test(u)) return u;
+    return base + u.replace(/^\.\//, "");
+  }
+
   function link(url, html, extra) {
-    var u = safeUrl(url), newTab = /^https?:/i.test(u) || /\.pdf$/i.test(u);
+    var u = rebase(safeUrl(url)), newTab = /^https?:/i.test(u) || /\.pdf$/i.test(u);
     return '<a href="' + attr(u) + '"' + (newTab ? ' target="_blank" rel="noopener"' : "") + (extra || "") + ">" + html + "</a>";
   }
 
@@ -255,7 +266,8 @@
   function media(p) {
     if (!p.image) return venueTile(p);
     var size = p.imageWidth && p.imageHeight ? ' width="' + p.imageWidth + '" height="' + p.imageHeight + '"' : "";
-    return '<a class="pub-media" href="' + attr(p.image) + '" target="_blank" rel="noopener"><img src="' + attr(p.image) + '"' +
+    var src = attr(rebase(p.image));
+    return '<a class="pub-media" href="' + src + '" target="_blank" rel="noopener"><img src="' + src + '"' +
       size + ' loading="lazy" alt="' + attr(p.imageAlt || p.title) + '"></a>';
   }
 
@@ -378,7 +390,7 @@
   function region(html, name, inner) {
     var start = "<!-- " + name + ":start -->", end = "<!-- " + name + ":end -->";
     var i = html.indexOf(start), j = i < 0 ? -1 : html.indexOf(end, i);
-    if (j < 0) throw new Error("index.html is missing the " + start + " … " + end + " markers");
+    if (j < 0) throw new Error("the page is missing the " + start + " … " + end + " markers");
     var lead = html.slice(html.lastIndexOf("\n", i) + 1, i);
     if (/\S/.test(lead)) return html.slice(0, i + start.length) + inner + html.slice(j);  // markers inside a line
     var nl = html.indexOf("\r\n") !== -1 ? "\r\n" : "\n";
@@ -392,9 +404,235 @@
     return html;
   }
 
+  /* ---------- the lab page (lab/index.html) ----------
+     Research cards, papers and news come from the homepage's data; data/lab.json holds what
+     only the lab page shows: introduction, the MUSE acronym, PI bio, members and contact. */
+  var LAB_REGIONS = ["lab-latest", "lab-about", "lab-acronym", "lab-research", "lab-applications", "lab-featured",
+    "lab-filters", "lab-publications", "lab-news", "lab-people", "lab-contact"];
+  var LAB_NEWS_SHOWN = 6;   // later entries fold away behind "show all"
+  var LINK_ICONS = { paper: "paper", code: "code", project: "globe" };
+
+  function icon(id) {
+    return '<svg class="icon" aria-hidden="true"><use href="#i-' + attr(id) + '"/></svg>';
+  }
+
+  function labNews(news) {
+    return news.filter(function (n) { return n.lab !== false; });
+  }
+
+  /* the newest lab news as a one-line link in the hero */
+  function latest(news) {
+    var n = labNews(news)[0];
+    if (!n) return "";
+    return '<a class="latest" href="#news"><span class="latest__tag"><span class="en">New</span><span class="zh">最新</span></span>' +
+      '<span class="latest__text"><span class="en">' + text(plain(pick(n, "en"))) + '</span><span class="zh">' + text(plain(pick(n, "zh"))) +
+      '</span></span><span class="latest__arrow" aria-hidden="true">→</span></a>';
+  }
+
+  function acronym(l) {
+    return (l.acronym || []).map(function (a) {
+      return [
+        '<li class="acro">',
+        '  <span class="acro__letter" aria-hidden="true">' + text(a.letter) + "</span>",
+        '  <div class="acro__body">',
+        '    <strong class="acro__word">' + text(a.word) + (a.zh ? '<span class="zh"> · ' + text(a.zh) + "</span>" : "") + "</strong>"
+      ].concat(indent(biBlock("p", "", a.text), "    "), ["  </div>", "</li>"]).join("\n");
+    }).join("\n");
+  }
+
+  /* a paper's short name: its tag without the venue ("StateTrack · EMNLP'26" → "StateTrack") */
+  function shortName(p) {
+    return String(p.tag || "").split(" · ")[0].trim() || p.title;
+  }
+
+  /* a research direction with the papers tagged for it */
+  function direction(t, pubs) {
+    var list = pubs.filter(function (p) { return p.theme === t.id && p.tag; }).map(function (p) {
+      return '    <li><a href="#p-' + attr(p.id) + '"><span class="dir__name">' + text(shortName(p)) + '</span><span class="dir__venue">' +
+        text(p.venue) + "</span></a></li>";
+    });
+    return [
+      '<article class="dir dir--' + attr(t.id) + ' spotlight reveal">',
+      '  <span class="dir__mark" aria-hidden="true">' + text(t.seal) + "</span>",
+      '  <div class="dir__head">',
+      '    <span class="dir__seal" aria-hidden="true">' + text(t.seal) + "</span>",
+      '    <h3 class="dir__title">' + bi(t.title) + "</h3>",
+      "  </div>"
+    ].concat(indent(biBlock("p", "dir__text", t.text), "  "), list.length ? [
+      '  <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>',
+      '  <ul class="dir__papers">'
+    ].concat(list, ["  </ul>"]) : [], ["</article>"]).join("\n");
+  }
+
+  function buttons(p) {
+    return LINKS.filter(function (l) { return p[l[0]]; }).map(function (l) {
+      return link(p[l[0]], icon(LINK_ICONS[l[0]]) + "<span>" + l[1] + "</span>", ' class="pbtn"');
+    }).join("");
+  }
+
+  /* the selected papers as tabs, one panel each with figure, summary and links */
+  function featured(pubs) {
+    var sel = pubs.filter(function (p) { return p.selected; });
+    var tabs = sel.map(function (p, i) {
+      return '<button type="button" class="ftab' + (i ? "" : " is-active") + '" role="tab" id="ftab-' + attr(p.id) + '" aria-controls="feature-' +
+        attr(p.id) + '" aria-selected="' + !i + '"' + (i ? ' tabindex="-1"' : "") + '><span class="ftab__name">' + text(shortName(p)) +
+        '</span><span class="ftab__venue">' + text(p.venue) + "</span></button>";
+    });
+    var panels = sel.map(function (p, i) {
+      var sum = { en: p.summaryEn, zh: p.summaryZh };
+      return [
+        '<article class="feature' + (i ? "" : " is-active") + '" role="tabpanel" id="feature-' + attr(p.id) + '" aria-labelledby="ftab-' + attr(p.id) + '">',
+        "  " + media(p),
+        '  <div class="feature__body">',
+        '    <div class="pub-meta"><span class="pub-venue">' + text(p.venue) + "</span>" + (p.note ? '<span class="pub-badge">' + text(p.note) + "</span>" : "") + "</div>",
+        '    <h4 class="feature__title">' + text(p.title) + "</h4>",
+        '    <p class="feature__authors">' + authors(p.authors) + "</p>"
+      ].concat(sum.en || sum.zh ? [
+        '    <p class="feature__desc en">' + inline(pick(sum, "en")) + "</p>",
+        '    <p class="feature__desc zh">' + inline(pick(sum, "zh")) + "</p>"
+      ] : [], ['    <p class="feature__links">' + buttons(p) + "</p>", "  </div>", "</article>"]).join("\n");
+    });
+    return ['<div class="ftabs" role="tablist" aria-labelledby="featured-title">'].concat(indent(tabs, "  "), ["</div>", '<div class="features">'],
+      indent(panels, "  "), ["</div>"]).join("\n");
+  }
+
+  function filters(h, pubs, l) {
+    var short = l.themeShort || {};
+    var chips = ['<button type="button" class="chip is-active" data-filter="all" aria-pressed="true"><span class="en">All</span><span class="zh">全部</span>' +
+      '<span class="chip__n">' + pubs.length + "</span></button>"];
+    (h.themes || []).forEach(function (t) {
+      var n = pubs.filter(function (p) { return p.theme === t.id; }).length;
+      if (n) {
+        chips.push('<button type="button" class="chip chip--' + attr(t.id) + '" data-filter="' + attr(t.id) + '" aria-pressed="false">' +
+          '<span class="chip__seal" aria-hidden="true">' + text(t.seal) + "</span>" + bi(short[t.id] || t.title) + '<span class="chip__n">' + n + "</span></button>");
+      }
+    });
+    return chips.join("\n");
+  }
+
+  function yearOf(p) {
+    var m = String(p.venue || "").match(/(?:19|20)\d\d/g) || String(p.details || "").match(/(?:19|20)\d\d/g);
+    return m ? m[m.length - 1] : "";
+  }
+
+  function entry(p, seals) {
+    var names = String(p.authors || "").trim(), links = linkList(p);
+    var extra = (p.note ? '<span class="pitem__note">' + text(p.note) + "</span>" : "") + (links ? '<span class="pitem__links">' + links + "</span>" : "");
+    return [
+      '<li class="pitem" id="p-' + attr(p.id) + '" data-theme="' + attr(p.theme) + '">',
+      '  <span class="pitem__venue' + (MUTED[p.type] ? " pitem__venue--muted" : "") + '">' + text(p.venue) + "</span>",
+      '  <div class="pitem__body">',
+      '    <span class="pitem__title">' + text(p.title) + "</span>",
+      '    <span class="pitem__authors">' + authors(names) + (/[.!?。]$/.test(names) ? "" : ".") + (p.details ? " " + inline(p.details) : "") + "</span>"
+    ].concat(extra ? ['    <span class="pitem__extra">' + extra + "</span>"] : [], ["  </div>"],
+      seals[p.theme] ? ['  <span class="pitem__seal pitem__seal--' + attr(p.theme) + '" aria-hidden="true">' + text(seals[p.theme]) + "</span>"] : [],
+      ["</li>"]).join("\n");
+  }
+
+  /* every paper, grouped by year, newest year first */
+  function labPublications(h, pubs) {
+    var seals = {}, years = [], groups = {};
+    (h.themes || []).forEach(function (t) { seals[t.id] = t.seal; });
+    pubs.forEach(function (p) {
+      var y = yearOf(p) || "—";
+      if (!groups[y]) { groups[y] = []; years.push(y); }
+      groups[y].push(p);
+    });
+    years.sort(function (a, b) { return (+b || 0) - (+a || 0); });
+    return years.map(function (y) {
+      return ['<section class="year reveal" data-year="' + attr(y) + '">', '  <h3 class="year__label">' + text(y) + "</h3>", '  <ol class="plist">']
+        .concat(indent(groups[y].map(function (p) { return entry(p, seals); }), "    "), ["  </ol>", "</section>"]).join("\n");
+    }).join("\n");
+  }
+
+  function labNewsList(news) {
+    var items = labNews(news), more = items.length > LAB_NEWS_SHOWN;
+    var lis = items.map(function (n, i) {
+      return '<li class="nitem' + (i >= LAB_NEWS_SHOWN ? " is-more" : "") + '"><span class="nitem__date">' + text(n.date) + "</span>" +
+        '<p class="nitem__text">' + (n.icon ? '<span class="nitem__icon" aria-hidden="true">' + text(n.icon) + "</span>" : "") +
+        '<span class="en">' + inline(pick(n, "en")) + '</span><span class="zh">' + inline(pick(n, "zh")) + "</span></p></li>";
+    });
+    return ['<ol class="nlist' + (more ? " is-folded" : "") + '">'].concat(indent(lis, "  "), ["</ol>"], more ? [
+      '<button type="button" class="more" aria-expanded="false"><span class="en">Show all ' + items.length + ' updates</span><span class="zh">查看全部 ' +
+        items.length + " 条动态</span></button>"
+    ] : []).join("\n");
+  }
+
+  function member(m) {
+    var nm = m.name || {}, initial = String(nm.zh || nm.en || "").trim().charAt(0);
+    var face = m.photo ? '<img class="member__photo" src="' + attr(rebase(m.photo)) + '" alt="" loading="lazy">'
+      : '<span class="member__photo member__photo--empty" aria-hidden="true">' + text(initial) + "</span>";
+    var body = '<span class="member__name">' + bi(nm) + "</span>" + (m.since ? '<span class="member__since">' + text(m.since) + "</span>" : "") +
+      (m.topic && (m.topic.en || m.topic.zh) ? '<span class="member__topic">' + bi(m.topic) + "</span>" : "");
+    return '<li class="member">' + (m.url ? link(m.url, face + body) : face + body) + "</li>";
+  }
+
+  /* the PI (name, title and photo from home.json), then any member groups that have people */
+  function people(h, l) {
+    var p = h.profile || {}, photo = p.photo || {}, n = p.name || {}, t = p.title || {}, pi = l.pi || {};
+    var out = [
+      '<article class="pi spotlight reveal">',
+      '  <img class="pi__photo" src="' + attr(rebase(photo.src)) + '"' + (photo.width && photo.height ? ' width="' + photo.width + '" height="' + photo.height + '"' : "") +
+        ' loading="lazy" alt="' + attr([n.en, n.zh].filter(Boolean).join(" ")) + '">',
+      '  <div class="pi__body">',
+      '    <p class="pi__role"><span class="en">Principal Investigator</span><span class="zh">实验室负责人</span></p>',
+      '    <h3 class="pi__name"><span class="en">' + text(n.en) + ' <span class="pi__alt" lang="zh-CN">' + text(n.zh) + '</span></span><span class="zh">' +
+        text(n.zh) + ' <span class="pi__alt" lang="en">' + text(n.en) + "</span></span></h3>",
+      '    <p class="pi__title"><span class="en">' + text((t.en || []).join(", ")) + '</span><span class="zh">' + text((t.zh || []).join(" ")) + "</span></p>"
+    ].concat(indent(biBlock("p", "pi__bio", pi.bio), "    "), [
+      '    <p class="pi__links">' + (pi.links || []).map(function (x) { return link(x.url, icon(x.icon || "link") + bi(x), ' class="pbtn"'); }).join("") + "</p>",
+      "  </div>",
+      "</article>"
+    ]);
+    (l.memberGroups || []).forEach(function (g) {
+      var ms = (l.members || []).filter(function (m) { return m.group === g.id; });
+      if (!ms.length) return;
+      out.push('<div class="members reveal">', '  <h4 class="members__title">' + bi(g) + "</h4>", '  <ul class="mgrid">');
+      ms.forEach(function (m) { out.push("    " + member(m)); });
+      out.push("  </ul>", "</div>");
+    });
+    return out.join("\n");
+  }
+
+  function labContact(l) {
+    return ((l.contact || {}).items || []).map(function (x) {
+      return '<li class="crow">' + icon(x.icon || "link") + '<span class="crow__label">' + bi(x.label) + '</span><span class="crow__value">' +
+        (x.url ? link(x.url, bi(x.value)) : bi(x.value)) + "</span></li>";
+    }).join("\n");
+  }
+
+  function labSections(data) {
+    var h = data.home || {}, news = data.news || [], pubs = data.publications || [], l = data.lab || {};
+    return {
+      "lab-latest": latest(news),
+      "lab-about": (l.about || []).map(function (p) { return biBlock("p", "", p).join("\n"); }).join("\n"),
+      "lab-acronym": acronym(l),
+      "lab-research": (h.themes || []).map(function (t) { return direction(t, pubs); }).join("\n"),
+      "lab-applications": bi(h.applications, false, "", true),
+      "lab-featured": featured(pubs),
+      "lab-filters": filters(h, pubs, l),
+      "lab-publications": labPublications(h, pubs),
+      "lab-news": labNewsList(news),
+      "lab-people": people(h, l),
+      "lab-contact": labContact(l)
+    };
+  }
+
+  function buildLab(html, data) {
+    base = "../";
+    try {
+      var parts = labSections(data);
+      LAB_REGIONS.forEach(function (name) { html = region(html, name, parts[name]); });
+      return html;
+    } finally {
+      base = "";
+    }
+  }
+
   return {
     ME: ME,
     REGIONS: REGIONS,
+    LAB_REGIONS: LAB_REGIONS,
     normalizeNews: function (n) { return normalize(n, NEWS_FIELDS); },
     normalizePub: function (p) { return normalize(p, PUB_FIELDS); },
     serialize: serialize,
@@ -403,6 +641,7 @@
     plain: plain,
     authors: authors,
     sections: sections,
-    build: build
+    build: build,
+    buildLab: buildLab
   };
 });

@@ -187,7 +187,8 @@
         { k: "date", label: "日期", placeholder: "2026.11", half: true },
         { k: "icon", t: "icons", label: "图标" },
         { k: "zh", t: "rich", label: "中文" },
-        { k: "en", t: "rich", label: "English" }
+        { k: "en", t: "rich", label: "English" },
+        { k: "lab", t: "switch", label: "也显示在实验室网站上（个人经历类动态可以关掉）" }
       ],
       validate: function (n) {
         if (!normDate(n.date)) return ["日期请写成“年.月”，例如 2026.11。", "date"];
@@ -223,8 +224,8 @@
             return [t.id, t.seal + " · " + (t.title.zh || t.title.en)];
           })) },
           { k: "tag", label: "标签文字", half: true },
-          { group: "代表论文" },
-          { k: "selected", t: "switch", label: "显示在“代表论文”里，配框架图和简介" },
+          { group: "代表性论文" },
+          { k: "selected", t: "switch", label: "显示在“代表性论文”里，配框架图和简介" },
           { k: "image", t: "figure", label: "框架图", show: shown },
           { k: "imageAlt", label: "图片说明", optional: "英文一句话，给读屏软件和搜索引擎", placeholder: "Overview of …", show: shown },
           { k: "summaryZh", t: "rich", label: "中文简介", show: shown },
@@ -1276,6 +1277,13 @@
     return { home: R.serialize(d.home), news: R.serialize(d.news), pubs: R.serialize(d.pubs) };
   }
 
+  /* the lab page and its own data, or null when the repository has no lab page to update */
+  function readLab(sha) {
+    return Promise.all([repo.read("lab/index.html", sha), repo.read("data/lab.json", sha)]).then(function (f) {
+      return { html: f[0], data: JSON.parse(f[1]) };
+    }).catch(function () { return null; });
+  }
+
   function load() {
     return repo.head().then(function (sha) {
       return Promise.all([readData(sha), repo.read("index.html", sha)]).then(function (r) {
@@ -1315,14 +1323,20 @@
         }
       });
       return check.then(function () {
-        return repo.read("index.html", head);
-      }).then(function (remoteIndex) {
+        return Promise.all([repo.read("index.html", head), readLab(head)]);
+      }).then(function (r) {
+        var remoteIndex = r[0], lab = r[1];
         var html = R.build(remoteIndex, { home: home, news: data.news, publications: data.pubs });
         var files = [];
         if (texts.home !== base.home) files.push({ path: "data/home.json", text: texts.home });
         if (texts.news !== base.news) files.push({ path: "data/news.json", text: texts.news });
         if (texts.pubs !== base.pubs) files.push({ path: "data/publications.json", text: texts.pubs });
         if (html !== remoteIndex) files.push({ path: "index.html", text: html });
+        if (lab) {  // the lab page shows the same news, research cards and papers
+          var labHtml = null;
+          try { labHtml = R.buildLab(lab.html, { home: home, news: data.news, publications: data.pubs, lab: lab.data }); } catch (e) {}
+          if (labHtml && labHtml !== lab.html) files.push({ path: "lab/index.html", text: labHtml });
+        }
         usedUploads().forEach(function (p) { files.push({ path: p, base64: uploads[p] }); });
         if (!files.length) return { head: head };
         busy("正在上传 " + files.length + " 个文件…");
