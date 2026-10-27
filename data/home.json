@@ -78,6 +78,10 @@
     {
       "en": "My research aims to make generative AI **controllable, interpretable, and trustworthy**. I study why text-to-image diffusion models succeed or fail on specific concepts and how to edit images and videos precisely and consistently; how large language models and agents stay reliable — free of hallucination, bias, and state collapse — over long-horizon interaction; and how generative agents can perceive and express human emotion. I am also interested in bringing these models to real-world applications such as emotional companionship, virtual try-on, and digital humans.",
       "zh": "我的研究目标是让生成式 AI 更加**可控、可解释、可信**：研究文生图扩散模型为何在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。同时探索这些技术在情感陪伴、虚拟试衣、数字人等真实场景中的落地应用。"
+    },
+    {
+      "en": "Welcome research or business collaborations!",
+      "zh": "欢迎科研与商业合作！"
     }
   ],
   "headings": {
@@ -250,6 +254,22 @@
     },
     {
       "role": {
+        "en": "Main Participant",
+        "zh": "主要参与人"
+      },
+      "level": "muted",
+      "title": {
+        "en": "Embodied-Intelligence Foundation Models for Industrial Humanoid Robots",
+        "zh": "人形机器人工业具身智能基座大模型与垂直领域示范应用"
+      },
+      "funder": {
+        "en": "Shenzhen Key Industry R&D Program",
+        "zh": "深圳市重点产业研发计划"
+      },
+      "period": "2025.10 – 2028.09"
+    },
+    {
+      "role": {
         "en": "Lead Researcher",
         "zh": "主要负责人"
       },
@@ -279,22 +299,6 @@
         "zh": "广东省自然科学基金面上项目"
       },
       "period": "2026.01 – 2028.12"
-    },
-    {
-      "role": {
-        "en": "Participant",
-        "zh": "参与"
-      },
-      "level": "muted",
-      "title": {
-        "en": "Embodied-Intelligence Foundation Models for Industrial Humanoid Robots",
-        "zh": "人形机器人工业具身智能基座大模型与垂直领域示范应用"
-      },
-      "funder": {
-        "en": "Shenzhen Key Industry R&D Program",
-        "zh": "深圳市重点产业研发计划"
-      },
-      "period": "2025.10 – 2028.09"
     },
     {
       "role": {
