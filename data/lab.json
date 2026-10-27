@@ -1,0 +1,165 @@
+{
+  "about": [
+    {
+      "en": "**MUSE Lab** (Multimodal Understanding and Synthesis for Explainability) is a research group at the [College of Artificial Intelligence](https://ai.szu.edu.cn/), Shenzhen University, led by [Yifan Yuan](./). Our goal is to make generative AI **controllable, interpretable and trustworthy**.",
+      "zh": "**MUSE Lab**（Multimodal Understanding and Synthesis for Explainability）隶属于[深圳大学人工智能学院](https://ai.szu.edu.cn/)，由[袁一帆](./)助理教授负责。我们的目标是让生成式 AI 更加**可控、可解释、可信**。"
+    },
+    {
+      "en": "We study why text-to-image diffusion models succeed or fail on specific concepts, and how to edit images and videos precisely and consistently; how large language models and agents stay reliable over long-horizon interaction, free of hallucination, bias and state collapse; and how generative agents can perceive and express human emotion.",
+      "zh": "我们研究文生图扩散模型为何会在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。"
+    }
+  ],
+  "acronym": [
+    {
+      "letter": "M",
+      "word": "Multimodal",
+      "zh": "多模态",
+      "text": {
+        "en": "Images, video and language, modelled together.",
+        "zh": "联合建模图像、视频与语言。"
+      }
+    },
+    {
+      "letter": "U",
+      "word": "Understanding",
+      "zh": "理解",
+      "text": {
+        "en": "Knowing what a model sees, and why it fails.",
+        "zh": "看懂模型理解了什么、为什么会出错。"
+      }
+    },
+    {
+      "letter": "S",
+      "word": "Synthesis",
+      "zh": "生成",
+      "text": {
+        "en": "Generating and editing content with precise control.",
+        "zh": "精确、可控地生成与编辑内容。"
+      }
+    },
+    {
+      "letter": "E",
+      "word": "Explainability",
+      "zh": "可解释",
+      "text": {
+        "en": "Opening the black box, so that people can trust it.",
+        "zh": "打开黑箱，让人能够信任。"
+      }
+    }
+  ],
+  "themeShort": {
+    "visual": {
+      "en": "Visual Generation",
+      "zh": "视觉生成"
+    },
+    "trust": {
+      "en": "Trustworthy LLMs & Agents",
+      "zh": "可信大模型"
+    },
+    "affect": {
+      "en": "Affective & Embodied AI",
+      "zh": "情感与具身智能"
+    }
+  },
+  "pi": {
+    "bio": {
+      "en": "Ph.D. in Computer Science, Fudan University (2025), advised by Prof. Junping Zhang; B.S. in Physics, Fudan University (2019). AIGC research intern on text-to-image generation at Tencent Hunyuan and SenseTime during the Ph.D. Member of the Technical Committee on Hybrid Intelligence and the Science Popularization Committee, Chinese Association of Automation (CAA).",
+      "zh": "2025 年博士毕业于复旦大学计算机科学技术专业，师从张军平教授；2019 年本科毕业于复旦大学物理学专业。读博期间曾在腾讯混元文生图组、商汤科技从事 AIGC 算法研究实习。现为中国自动化学会混合智能专委会、普及工作专委会会员。"
+    },
+    "links": [
+      {
+        "icon": "home",
+        "en": "Homepage",
+        "zh": "个人主页",
+        "url": "./"
+      },
+      {
+        "icon": "mail",
+        "en": "Email",
+        "zh": "邮箱",
+        "url": "mailto:yifanyuan@szu.edu.cn"
+      },
+      {
+        "icon": "user",
+        "en": "Faculty Profile",
+        "zh": "学院主页",
+        "url": "https://ai.szu.edu.cn/info/1075/1315.htm"
+      }
+    ]
+  },
+  "memberGroups": [
+    {
+      "id": "phd",
+      "en": "Ph.D. Students",
+      "zh": "博士研究生"
+    },
+    {
+      "id": "master",
+      "en": "Master's Students",
+      "zh": "硕士研究生"
+    },
+    {
+      "id": "undergrad",
+      "en": "Undergraduate Researchers",
+      "zh": "本科生"
+    },
+    {
+      "id": "alumni",
+      "en": "Alumni",
+      "zh": "毕业生"
+    }
+  ],
+  "members": [],
+  "contact": {
+    "items": [
+      {
+        "icon": "mail",
+        "label": {
+          "en": "Email",
+          "zh": "邮箱"
+        },
+        "value": {
+          "en": "yifanyuan@szu.edu.cn",
+          "zh": "yifanyuan@szu.edu.cn"
+        },
+        "url": "mailto:yifanyuan@szu.edu.cn"
+      },
+      {
+        "icon": "pin",
+        "label": {
+          "en": "Address",
+          "zh": "地址"
+        },
+        "value": {
+          "en": "College of Artificial Intelligence, Shenzhen University, Shenzhen, China",
+          "zh": "中国 · 深圳 · 深圳大学人工智能学院"
+        },
+        "url": ""
+      },
+      {
+        "icon": "code",
+        "label": {
+          "en": "Code",
+          "zh": "代码"
+        },
+        "value": {
+          "en": "github.com/MUSE-AI-Lab",
+          "zh": "github.com/MUSE-AI-Lab"
+        },
+        "url": "https://github.com/MUSE-AI-Lab"
+      },
+      {
+        "icon": "user",
+        "label": {
+          "en": "PI",
+          "zh": "负责人"
+        },
+        "value": {
+          "en": "Yifan Yuan · yifanyuan.com",
+          "zh": "袁一帆 · yifanyuan.com"
+        },
+        "url": "./"
+      }
+    ]
+  }
+}
