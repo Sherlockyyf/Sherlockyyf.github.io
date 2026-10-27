@@ -405,13 +405,12 @@
   }
 
   /* ---------- the lab page (lab/index.html) ----------
-     News, papers and the PI's name, title and photo come from the homepage's data; data/lab.json
-     holds what only the lab page shows: mission, introduction, the MUSE acronym, figures,
-     research directions, collaboration note and contact. */
-  var LAB_REGIONS = ["lab-latest", "lab-topics", "lab-news", "lab-mission", "lab-about", "lab-pi", "lab-acronym", "lab-stats",
-    "lab-research-intro", "lab-index", "lab-directions", "lab-featured", "lab-filters", "lab-publications", "lab-cta", "lab-contact"];
+     News, papers and the PI's name, title and photo come from the homepage's data; data/lab.json holds
+     what only the lab page shows: introduction, the MUSE acronym, research directions and contact. */
+  var LAB_REGIONS = ["lab-latest", "lab-news", "lab-about", "lab-pi", "lab-acronym", "lab-research", "lab-featured",
+    "lab-filters", "lab-publications", "lab-contact-intro", "lab-contact", "lab-credits"];
+  var LAB_NEWS_SHOWN = 6;   // later entries fold away behind "show all"
   var LINK_ICONS = { paper: "paper", code: "code", project: "globe" };
-  var VENUE_RE = /\b(EMNLP|ACM MM|ICASSP|CVPR|ICCV|ECCV|ICLR|NeurIPS|ICML|AAAI|IJCAI|ACL|NAACL|KDD)\s*((?:19|20)\d\d)\b/;
 
   function icon(id) {
     return '<svg class="icon" aria-hidden="true"><use href="#i-' + attr(id) + '"/></svg>';
@@ -430,43 +429,17 @@
       '</span></span><span class="latest__arrow" aria-hidden="true">→</span></a>';
   }
 
-  /* the research directions as chips in the hero, each jumping to its block */
-  function topics(l) {
-    return (l.directions || []).map(function (d) {
-      return '<li><a href="#dir-' + attr(d.id) + '">' + bi(d.title) + "</a></li>";
-    }).join("\n");
-  }
-
-  /* what a news card shows in its picture: the venue it mentions, or the month */
-  function newsLabel(n) {
-    var s = plain(n.en || n.zh || ""), m = VENUE_RE.exec(s);
-    if (m) return m[1] + " " + m[2];
-    if (/Automatica Sinica/i.test(s)) return "IEEE/CAA JAS";
-    if (/preprint|arXiv/i.test(s)) return "Preprint";
-    return n.date;
-  }
-
-  function newsKind(n) {
-    var s = (n.icon || "") + " " + plain(n.en || "");
-    if (/🏆|award|prize/i.test(s)) return { en: "Award", zh: "获奖" };
-    if (/accepted/i.test(s)) return { en: "Accepted", zh: "论文录用" };
-    if (/published/i.test(s)) return { en: "Published", zh: "论文发表" };
-    if (/📄|arXiv|preprint|code/i.test(s)) return { en: "Release", zh: "论文发布" };
-    return { en: "News", zh: "动态" };
-  }
-
-  function newsCards(news) {
-    return labNews(news).slice(0, 6).map(function (n, i) {
-      return [
-        '<article class="ncard reveal">',
-        '  <div class="ncard__art ncard__art--' + (i % 6) + '" aria-hidden="true"><span class="ncard__label">' + text(newsLabel(n)) + "</span></div>",
-        '  <div class="ncard__body">',
-        '    <p class="ncard__meta"><span class="ncard__kind">' + bi(newsKind(n)) + '</span><span class="ncard__date">' + text(n.date) + "</span></p>",
-        '    <p class="ncard__text"><span class="en">' + inline(pick(n, "en")) + '</span><span class="zh">' + inline(pick(n, "zh")) + "</span></p>",
-        "  </div>",
-        "</article>"
-      ].join("\n");
-    }).join("\n");
+  function labNewsList(news) {
+    var items = labNews(news), more = items.length > LAB_NEWS_SHOWN;
+    var lis = items.map(function (n, i) {
+      return '<li class="nitem' + (i >= LAB_NEWS_SHOWN ? " is-more" : "") + '"><span class="nitem__date">' + text(n.date) + "</span>" +
+        '<p class="nitem__text">' + (n.icon ? '<span class="nitem__icon" aria-hidden="true">' + text(n.icon) + "</span>" : "") +
+        '<span class="en">' + inline(pick(n, "en")) + '</span><span class="zh">' + inline(pick(n, "zh")) + "</span></p></li>";
+    });
+    return ['<ol class="nlist' + (more ? " is-folded" : "") + '">'].concat(indent(lis, "  "), ["</ol>"], more ? [
+      '<button type="button" class="more" aria-expanded="false"><span class="en">Show all ' + items.length + ' updates</span><span class="zh">查看全部 ' +
+        items.length + " 条动态</span></button>"
+    ] : []).join("\n");
   }
 
   function acronym(l) {
@@ -477,14 +450,6 @@
         '  <div class="acro__body">',
         '    <strong class="acro__word">' + text(a.word) + (a.zh ? '<span class="zh"> · ' + text(a.zh) + "</span>" : "") + "</strong>"
       ].concat(indent(biBlock("p", "", a.text), "    "), ["  </div>", "</li>"]).join("\n");
-    }).join("\n");
-  }
-
-  /* big figures; the number counts up when it scrolls into view */
-  function stats(l) {
-    return (l.stats || []).map(function (s) {
-      var m = /^(\d+)(.*)$/.exec(String(s.value || "")), count = m ? ' data-count="' + m[1] + '" data-suffix="' + attr(m[2]) + '"' : "";
-      return '<div class="stat"><span class="stat__num"' + count + ">" + text(s.value) + '</span><span class="stat__label">' + bi(s.label) + "</span></div>";
     }).join("\n");
   }
 
@@ -509,107 +474,67 @@
     return String(p.tag || "").split(" · ")[0].trim() || p.title;
   }
 
-  function two(i) {
-    return (i < 9 ? "0" : "") + (i + 1);
+  /* a figure that opens large: the link points at the image, its caption waits in a <template> (lab.js) */
+  function zoomCaption(id, f, byId) {
+    var p = byId[f.paper];
+    return '<template id="' + id + '">' + bi(f.caption) + (p ? ' <a class="dfig__paper" href="#p-' + attr(p.id) + '">' + text(shortName(p)) + " · " +
+      text(p.venue) + "</a>" : "") + "</template>";
   }
 
-  /* the list of directions that stays beside the research blocks on wide screens */
-  function researchIndex(l) {
-    return (l.directions || []).map(function (d, i) {
-      return '<li><a class="rindex__link" href="#dir-' + attr(d.id) + '"><span class="rindex__num">' + two(i) + '</span><span class="rindex__seal" aria-hidden="true">' +
-        text(d.seal) + '</span><span class="rindex__title">' + bi(d.title) + "</span></a></li>";
-    }).join("\n");
+  /* the pictures across the top of a direction card; a published figure among them opens large */
+  function cover(d, byId) {
+    var shots = (d.cover || []).filter(function (c) { return c.src; });
+    if (!shots.length) return [];
+    var out = ['  <div class="dir__cover dir__cover--' + shots.length + '">'];
+    shots.forEach(function (c, i) {
+      var img = '<img src="' + attr(rebase(c.src)) + '" alt="' + attr(c.alt || "") + '" loading="lazy"' +
+        (c.position ? ' style="object-position:' + attr(c.position) + '"' : "") + ">";
+      if (c.figure) {
+        var id = "zoom-" + d.id + "-" + i;
+        out.push('    <a class="dir__shot dir__shot--zoom" href="' + attr(rebase(c.src)) + '" target="_blank" rel="noopener" data-zoom="' + id + '">' + img + "</a>",
+          "    " + zoomCaption(id, c.figure, byId));
+      } else {
+        out.push('    <span class="dir__shot">' + img + "</span>");
+      }
+    });
+    out.push("  </div>");
+    return out;
   }
 
-  /* small looping illustrations for each direction (decorative) */
-  var VISUALS = {
-    scan: function () {   // a beam reads the tokens; a few flare up as risky, then settle once corrected
-      var cells = "", risky = { 13: 1, 26: 1, 37: 1 };
-      for (var i = 0; i < 40; i++) cells += "<i" + (risky[i] ? ' class="is-risk"' : "") + ' style="--c:' + (i % 10) + '"></i>';
-      return '<div class="viz__grid">' + cells + '</div><span class="viz__beam"></span>';
-    },
-    timeline: function () {
-      var frames = "", bars = "", hs = [28, 46, 38, 72, 94, 66, 40, 30, 52, 86, 58, 34, 26, 44, 62, 36];
-      for (var i = 0; i < 8; i++) frames += '<i style="--i:' + i + '"></i>';
-      hs.forEach(function (h, j) { bars += '<b style="--h:' + h + "%;--i:" + j + '"></b>'; });
-      return '<div class="viz__frames">' + frames + '</div><div class="viz__bars">' + bars + '</div><span class="viz__window"></span><span class="viz__head"></span>';
-    },
-    waves: function () {
-      var wave = function (amp, y) {   // four periods of a soft wave; the drawing slides by one period and loops
-        var d = "M0 " + y;
-        for (var x = 0, up = true; x < 1200; x += 150, up = !up) d += " Q" + (x + 75) + " " + (up ? y - amp : y + amp) + " " + (x + 150) + " " + y;
-        return d;
-      };
-      return '<svg class="viz__waves" viewBox="0 0 600 200" preserveAspectRatio="none"><path class="w1" d="' + wave(46, 100) + '"/><path class="w2" d="' +
-        wave(30, 104) + '"/><path class="w3" d="' + wave(18, 96) + '"/></svg><span class="viz__pulse"></span>';
-    },
-    shield: function () {
-      return '<span class="viz__ring"></span><span class="viz__ring"></span><span class="viz__ring"></span>' +
-        '<svg class="viz__shield" viewBox="0 0 64 72"><path d="M32 4 7 14v19c0 17 10.6 29 25 35 14.4-6 25-18 25-35V14z"/><path class="viz__tick" d="m21 36 8 8 15-16"/></svg>' +
-        '<i class="viz__dot"></i><i class="viz__dot"></i><i class="viz__dot"></i><i class="viz__dot"></i>';
-    },
-    path: function () {
-      var d = "M40 170 C 130 40, 230 210, 320 115 S 500 30, 560 80";
-      return '<svg class="viz__path" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet"><path class="viz__track" d="' + d + '"/>' +
-        '<circle class="viz__node" cx="40" cy="170" r="7"/><circle class="viz__node" cx="320" cy="115" r="7"/><circle class="viz__node" cx="560" cy="80" r="7"/>' +
-        '<circle class="viz__bot" r="11"><animateMotion dur="6s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.45 0 0.55 1" path="' +
-        d + '"/></circle></svg>';
-    }
-  };
-
-  /* figures from the lab's published papers, in one row at equal height; a click opens them large (lab.js) */
-  function figures(d, byId) {
-    var figs = (d.figures || []).filter(function (f) { return f.src; });
-    if (!figs.length) return [];
-    return ['  <div class="dir__figs">'].concat(figs.map(function (f) {
-      var p = byId[f.paper], src = attr(rebase(f.src)), size = f.width && f.height;
-      return '    <figure class="dfig reveal" style="--ar:' + (size ? (f.width / f.height).toFixed(3) : "1.6") + '"><a class="dfig__img" href="' + src +
-        '" target="_blank" rel="noopener"><img src="' + src + '"' + (size ? ' width="' + f.width + '" height="' + f.height + '"' : "") + ' loading="lazy" alt="' +
-        attr(f.alt || "") + '"></a><figcaption>' + bi(f.caption) + (p ? ' <a class="dfig__paper" href="#p-' + attr(p.id) + '">' + text(shortName(p)) + " · " +
-        text(p.venue) + "</a>" : "") + "</figcaption></figure>";
-    }), ["  </div>"]);
-  }
-
-  function grantsFor(h, d) {
-    var all = (h.grants || []).concat(h.grantsEarlier || []);
-    return (d.grants || []).map(function (title) {
-      return all.filter(function (g) { return g.title && String(g.title.zh || "").indexOf(title) === 0; })[0];
-    }).filter(Boolean);
-  }
-
-  /* one research direction: heading, summary, illustration, topics, papers and projects */
-  function direction(d, i, h, pubs) {
+  /* one research direction as a card: pictures, seal and title, one line, its topics, papers */
+  function direction(d, pubs) {
     var byId = {};
     pubs.forEach(function (p) { byId[p.id] = p; });
     var papers = (d.papers || []).map(function (id) { return byId[id]; }).filter(Boolean);
-    var grants = grantsFor(h, d);
-    var refs = [];
+    var figs = (d.figures || []).filter(function (f) { return f.src; });
+    var body = [
+      '  <div class="dir__body">',
+      '    <div class="dir__head">',
+      '      <span class="dir__seal" aria-hidden="true">' + text(d.seal) + "</span>",
+      '      <h3 class="dir__title">' + bi(d.title) + "</h3>",
+      "    </div>"
+    ].concat(indent(biBlock("p", "dir__text", d.summary), "    "));
+    if ((d.topics || []).length) {
+      body.push('    <ul class="dir__topics">');
+      d.topics.forEach(function (t) { body.push("      <li>" + bi(t) + "</li>"); });
+      body.push("    </ul>");
+    }
+    if (figs.length) {
+      body.push('    <p class="dir__figs"><span class="dir__figs-label"><span class="en">Figures</span><span class="zh">配图</span></span>' + figs.map(function (f, i) {
+        var id = "zoom-" + d.id + "-f" + i;
+        return '<a class="dir__figlink" href="' + attr(rebase(f.src)) + '" target="_blank" rel="noopener" data-zoom="' + id + '" data-alt="' + attr(f.alt || "") + '">' +
+          bi(f.label || { en: "figure", zh: "配图" }) + "</a>" + zoomCaption(id, f, byId);
+      }).join('<span class="dir__dot" aria-hidden="true">·</span>') + "</p>");
+    }
     if (papers.length) {
-      refs.push('  <div class="dir__refs reveal">', '    <p class="dir__refs-label"><span class="en">Papers</span><span class="zh">代表论文</span></p>', '    <div class="dir__papers">');
+      body.push('    <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>', '    <ul class="dir__papers">');
       papers.forEach(function (p) {
-        refs.push('      <a href="#p-' + attr(p.id) + '"><span class="dir__name">' + text(shortName(p)) + '</span><span class="dir__venue">' + text(p.venue) + "</span></a>");
+        body.push('      <li><a href="#p-' + attr(p.id) + '"><span class="dir__name">' + text(shortName(p)) + '</span><span class="dir__venue">' + text(p.venue) + "</span></a></li>");
       });
-      refs.push("    </div>", "  </div>");
+      body.push("    </ul>");
     }
-    if (grants.length) {
-      refs.push('  <div class="dir__refs reveal">', '    <p class="dir__refs-label"><span class="en">Projects</span><span class="zh">相关项目</span></p>', '    <ul class="dir__grants">');
-      grants.forEach(function (g) { refs.push("      <li>" + bi(g.title) + '<span class="dir__funder">' + bi(g.funder) + "</span></li>"); });
-      refs.push("    </ul>", "  </div>");
-    }
-    return [
-      '<article class="dir dir--' + attr(d.id) + '" id="dir-' + attr(d.id) + '">',
-      '  <header class="dir__head reveal">',
-      '    <span class="dir__num">' + two(i) + "</span>",
-      '    <span class="dir__seal" aria-hidden="true">' + text(d.seal) + "</span>",
-      '    <h3 class="dir__title">' + bi(d.title) + "</h3>",
-      "  </header>"
-    ].concat(indent(biBlock("p", "dir__summary reveal", d.summary), "  "), [
-      '  <div class="viz viz--' + attr(d.visual || "scan") + ' reveal" aria-hidden="true">' + (VISUALS[d.visual] || VISUALS.scan)() + "</div>",
-      '  <div class="dir__topics">'
-    ], (d.topics || []).map(function (t) {
-      return ['    <section class="topic reveal">', '      <h4 class="topic__title">' + bi(t.title) + "</h4>"]
-        .concat(indent(biBlock("p", "topic__text", t.text), "      "), ["    </section>"]).join("\n");
-    }), ["  </div>"], figures(d, byId), refs, ["</article>"]).join("\n");
+    body.push("  </div>");
+    return ['<article class="dir dir--' + attr(d.id) + ' spotlight reveal" id="dir-' + attr(d.id) + '">'].concat(cover(d, byId), body, ["</article>"]).join("\n");
   }
 
   function buttons(p) {
@@ -693,11 +618,6 @@
     }).join("\n");
   }
 
-  function labCta(l) {
-    var c = l.cta || {};
-    return ['<h2 class="cta__title">' + bi(c.title) + "</h2>"].concat(biBlock("p", "cta__text", c.text)).join("\n");
-  }
-
   function labContact(l) {
     return ((l.contact || {}).items || []).map(function (x) {
       return '<li class="crow">' + icon(x.icon || "link") + '<span class="crow__label">' + bi(x.label) + '</span><span class="crow__value">' +
@@ -705,25 +625,33 @@
     }).join("\n");
   }
 
+  /* who took the photos on the research cards */
+  function credits(l) {
+    var list = [];
+    (l.directions || []).forEach(function (d) {
+      (d.cover || []).forEach(function (c) { if (c.credit) list.push(c.credit); });
+    });
+    if (!list.length) return "";
+    return '<span class="en">Photos:</span><span class="zh">图片来源：</span> ' + list.map(function (c) {
+      return c.url ? link(c.url, bi(c)) : bi(c);
+    }).join(" · ");
+  }
+
   function labSections(data) {
     var h = data.home || {}, news = data.news || [], pubs = data.publications || [], l = data.lab || {};
     return {
       "lab-latest": latest(news),
-      "lab-topics": topics(l),
-      "lab-news": newsCards(news),
-      "lab-mission": biBlock("p", "mission__text", l.mission).join("\n"),
+      "lab-news": labNewsList(news),
       "lab-about": (l.about || []).map(function (p) { return biBlock("p", "", p).join("\n"); }).join("\n"),
       "lab-pi": piCard(h, l),
       "lab-acronym": acronym(l),
-      "lab-stats": stats(l),
-      "lab-research-intro": bi(l.researchIntro),
-      "lab-index": researchIndex(l),
-      "lab-directions": (l.directions || []).map(function (d, i) { return direction(d, i, h, pubs); }).join("\n"),
+      "lab-research": (l.directions || []).map(function (d) { return direction(d, pubs); }).join("\n"),
       "lab-featured": featured(pubs),
       "lab-filters": filters(h, pubs, l),
       "lab-publications": labPublications(h, pubs),
-      "lab-cta": labCta(l),
-      "lab-contact": labContact(l)
+      "lab-contact-intro": bi(l.contactIntro),
+      "lab-contact": labContact(l),
+      "lab-credits": credits(l)
     };
   }
 
