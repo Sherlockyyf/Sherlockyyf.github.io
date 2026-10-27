@@ -891,12 +891,17 @@ img {
   box-shadow: var(--shadow);
 }
 
+/* every logo sits on a small white tile */
 .experience-logo {
   flex: none;
+  box-sizing: border-box;
   width: 60px;
   height: 60px;
   margin-right: 20px;
-  border-radius: 8px;
+  padding: 5px;
+  border: 1px solid #e3e7ee;
+  border-radius: 10px;
+  background: #fff;
   object-fit: contain;
 }
 
