@@ -266,6 +266,43 @@
     }, reduce ? 0 : 600);
   });
 
+  /* ---------- research figures open large (without scripts the link opens the image itself) ---------- */
+  var box = null, boxFrom = null;
+  function closeBox() {
+    if (!box) return;
+    var b = box;
+    box = null;
+    b.classList.remove("is-open");
+    root.classList.remove("no-scroll");
+    document.removeEventListener("keydown", boxKey);
+    setTimeout(function () { b.remove(); }, reduce ? 0 : 320);
+    if (boxFrom) boxFrom.focus({ preventScroll: true });
+  }
+  function boxKey(e) { if (e.key === "Escape") closeBox(); }
+  document.addEventListener("click", function (e) {
+    var a = closest(e.target, ".dfig__img");
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    e.preventDefault();
+    var img = a.querySelector("img"), cap = closest(a, ".dfig").querySelector("figcaption");
+    boxFrom = a;
+    box = document.createElement("div");
+    box.className = "lightbox";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.innerHTML = '<button type="button" class="lightbox__close"><span aria-hidden="true">×</span><span class="vh en">Close</span><span class="vh zh">关闭</span></button>' +
+      '<figure class="lightbox__fig"><img class="lightbox__img" alt=""><figcaption class="lightbox__cap"></figcaption></figure>';
+    var big = box.querySelector(".lightbox__img");
+    big.src = a.getAttribute("href");
+    big.alt = img ? img.alt : "";
+    if (cap) box.querySelector(".lightbox__cap").innerHTML = cap.innerHTML;
+    box.addEventListener("click", closeBox);   // a click anywhere closes it; the paper link then goes on to the list
+    document.body.appendChild(box);
+    root.classList.add("no-scroll");
+    document.addEventListener("keydown", boxKey);
+    requestAnimationFrame(function () { if (box) box.classList.add("is-open"); });
+    box.querySelector(".lightbox__close").focus({ preventScroll: true });
+  });
+
   /* ---------- news: show the folded older entries ---------- */
   var more = document.querySelector(".more");
   if (more) {
