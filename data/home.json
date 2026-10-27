@@ -78,6 +78,10 @@
     {
       "en": "My research aims to make generative AI **controllable, interpretable, and trustworthy**. I study why text-to-image diffusion models succeed or fail on specific concepts and how to edit images and videos precisely and consistently; how large language models and agents stay reliable — free of hallucination, bias, and state collapse — over long-horizon interaction; and how generative agents can perceive and express human emotion. I am also interested in bringing these models to real-world applications such as emotional companionship, virtual try-on, and digital humans.",
       "zh": "我的研究目标是让生成式 AI 更加**可控、可解释、可信**：研究文生图扩散模型为何在特定概念上成功或失败，以及如何实现精确、一致的图像与视频编辑；研究大语言模型与智能体如何在长程交互中保持可靠，避免幻觉、偏见与状态崩塌；研究生成式智能体如何感知并表达人类情感。同时探索这些技术在情感陪伴、虚拟试衣、数字人等真实场景中的落地应用。"
+    },
+    {
+      "en": "Welcome research or business collaborations!",
+      "zh": "欢迎科研与商业合作！"
     }
   ],
   "headings": {
