@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" class="lang-en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Semantic Discrepancy · MUSE Lab</title>
+  <script>
+    /* the language before first paint, as on the lab page: ?lang= → saved choice → browser language */
+    (function () {
+      var d = document.documentElement, l = null;
+      try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+      if (l !== "zh" && l !== "en") { try { l = localStorage.getItem("lang"); } catch (e) {} }
+      if (l !== "zh" && l !== "en") { l = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }
+      d.className = "js lang-" + l;
+      d.lang = l === "zh" ? "zh-CN" : "en";
+    })();
+  </script>
+  <meta name="description" content="Turning a photo into a painting, diffusion models invent things that were never there. One inversion step fixes it.">
+  <link rel="canonical" href="https://yifanyuan.com/lab/projects/semantic-discrepancy/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="MUSE Lab">
+  <meta property="og:title" content="Semantic Discrepancy · MUSE Lab">
+  <meta property="og:description" content="Turning a photo into a painting, diffusion models invent things that were never there. One inversion step fixes it.">
+  <meta property="og:url" content="https://yifanyuan.com/lab/projects/semantic-discrepancy/">
+  <meta property="og:image" content="https://yifanyuan.com/images/papers/semantic-discrepancy.jpg">
+  <meta name="theme-color" content="#fbf8f2">
+  <link rel="icon" type="image/png" href="../../../images/muse-favicon.png">
+  <link rel="preload" href="../../../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../../assets/fonts/fraunces-semibold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../lab.css">
+</head>
+<body class="project-page">
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+    <symbol id="i-paper" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m13.5 4-3 16"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7h4v4H7c0 3 1 4 3 5"/><path d="M14 7h4v4h-4c0 3 1 4 3 5"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="m14.5 5.5-6.5 6.5 6.5 6.5"/></symbol>
+  </svg>
+  <!-- Generated from data/lab.json ("projects") and data/publications.json by admin/render.js, like the
+       lab page: run `node tools/render_site.js`, or publish from the page editor; hand edits are overwritten. -->
+
+  <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>
+
+  <header class="bar is-scrolled">
+    <a class="brand" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>
+    <div class="tools">
+      <a class="bar__back" href="../../#work"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="en">All featured work</span><span class="zh">全部代表作</span></a>
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button type="button" data-set-lang="en" lang="en">EN</button>
+        <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
+      </div>
+      <a class="corner-logo" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt="MUSE Lab"></a>
+    </div>
+  </header>
+
+  <main class="project tone-sand" id="content">
+    <section class="project__hero">
+      <div class="project__intro">
+        <p class="project__venue"><span class="pub-venue">IEEE/CAA JAS 2025</span><span class="pub-badge">JCR Q1 · IF 19.3</span></p>
+        <h1 class="project__title">Semantic Discrepancy</h1>
+        <p class="project__paper">Dissecting and Mitigating Semantic Discrepancy in Stable Diffusion for Image-to-Image Translation</p>
+        <p class="project__blurb en">Turning a photo into a painting, diffusion models invent things that were never there. One inversion step fixes it.</p>
+        <p class="project__blurb zh">照片转油画时，模型会凭空“脑补”原图里没有的东西。一步反演就能修正。</p>
+        <p class="project__authors"><span class="me">Yifan Yuan</span>, Guanqun Yang, James Z. Wang, Hui Zhang, Hongming Shan, Feiyue Wang†, Junping Zhang</p>
+        <p class="project__links"><a href="https://doi.org/10.1109/JAS.2024.124800" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a><a class="pbtn" href="#cite"><svg class="icon" aria-hidden="true"><use href="#i-quote"/></svg><span>BibTeX</span></a></p>
+      </div>
+      <div class="project__visual"><img src="../../../images/work/semantic-discrepancy.svg" alt=""></div>
+    </section>
+
+    <section class="project__section">
+      <h2 class="project__h"><span class="en">Overview</span><span class="zh">概览</span></h2>
+      <p class="project__text en">When a text-to-image diffusion model is used for image-to-image translation — turning a photo into a painting, say — everything hinges on an initial noise that keeps the original image's information, and the common choice, SDEdit, simply adds random noise to the image. We find that this causes “semantic discrepancy”: the model misreads relations in the image and invents content that was never there, because the noise breaks the image's semantic integrity and makes U-Net upsampling link unrelated regions. We propose a training-free, plug-and-play fix for Stable Diffusion that exploits the determinism of DDIM inversion: a single inversion step of the reference image supplies accurate features and correlations, which replace the faulty ones in generation. Across translation tasks on COCO, ImageNet and ImageNet-R, it reduces semantic discrepancy and improves fidelity, outperforming PnP and similar methods with fewer priors while running 11.2× faster.</p>
+      <p class="project__text zh">用文生图扩散模型做图像转换（比如把照片变成油画）时，关键是找到既保留原图信息、又便于转换的初始噪声，常用的 SDEdit 做法是直接给原图加随机噪声。我们发现这会引起“语义偏差”：模型误解原图中物体之间的关系，凭空生成原图里没有的内容；剖析 Stable Diffusion 的网络后，我们定位到原因是加噪破坏了图像的语义完整性，使 U-Net 上采样时在不相关的区域之间建立了错误关联。我们提出一种免训练、即插即用的方法，利用 DDIM 反演的确定性，只需对参考图做一步反演，就能得到正确的特征和关联，用来替换生成过程中的错误部分。在 COCO、ImageNet 和 ImageNet-R 的多种图像转换任务上，该方法有效缓解了语义偏差、提升了保真度，用更少的先验超过 PnP 等方法，速度快 11.2 倍。</p>
+    </section>
+
+    <section class="project__section">
+      <h2 class="project__h"><span class="en">Highlights</span><span class="zh">要点</span></h2>
+      <ol class="project__points">
+        <li><span class="en">The cause: added noise breaks the image's semantics, so U-Net upsampling links unrelated regions.</span><span class="zh">定位病因：加噪破坏了图像的语义完整性，让 U-Net 上采样在不相关的区域之间建立错误关联。</span></li>
+        <li><span class="en">Training-free and plug-and-play: one DDIM inversion step of the reference image supplies the right features and correlations.</span><span class="zh">免训练、即插即用：对参考图做一步 DDIM 反演，就能得到正确的特征和关联。</span></li>
+        <li><span class="en">Higher fidelity on COCO, ImageNet and ImageNet-R, and 11.2× faster than PnP and similar methods.</span><span class="zh">在 COCO、ImageNet 和 ImageNet-R 上保真度更高，比 PnP 等方法快 11.2 倍。</span></li>
+      </ol>
+    </section>
+
+    <section class="project__section project__section--wide">
+      <h2 class="project__h"><span class="en">Method</span><span class="zh">方法</span></h2>
+      <figure class="project__figure"><a href="../../../images/papers/semantic-discrepancy.jpg" target="_blank" rel="noopener"><img src="../../../images/papers/semantic-discrepancy.jpg" width="1400" height="595" loading="lazy" alt="Overview of the training-free semantic discrepancy correction with single-step DDIM inversion"></a><figcaption>Overview of the training-free semantic discrepancy correction with single-step DDIM inversion</figcaption></figure>
+    </section>
+
+    <section class="project__section" id="cite">
+      <h2 class="project__h"><span class="en">Citation</span><span class="zh">引用</span></h2>
+      <div class="project__bib"><pre><code>@article{yuan2025semantic,
+  title   = {Dissecting and Mitigating Semantic Discrepancy in Stable Diffusion for Image-to-Image Translation},
+  author  = {Yifan Yuan and Guanqun Yang and James Z. Wang and Hui Zhang and Hongming Shan and Feiyue Wang and Junping Zhang},
+  journal = {IEEE/CAA Journal of Automatica Sinica},
+  volume  = {12},
+  number  = {4},
+  pages   = {705--718},
+  year    = {2025},
+  doi     = {10.1109/JAS.2024.124800}
+}</code></pre><button type="button" class="pbtn project__copy" data-copy><span class="en">Copy</span><span class="zh">复制</span></button></div>
+    </section>
+
+    <section class="project__section project__section--wide">
+      <h2 class="project__h"><span class="en">More featured work</span><span class="zh">更多代表作</span></h2>
+      <div class="project__more">
+        <a class="pcard tone-pink" href="../concept-brittleness/"><span class="pcard__visual"><img src="../../../images/work/concept-brittleness.svg" alt="" loading="lazy"></span><span class="pcard__name">Concept Brittleness</span><span class="pcard__blurb"><span class="en">Asked for an ink painting, why does an image generator paint grapes in black-and-white ink but always paint a cake in color? We found what makes the result depend on the object being drawn, and fix this “object-level concept brittleness” without any training.</span><span class="zh">同样画一幅水墨画，为什么图像生成模型能把葡萄画成黑白水墨色，而却把蛋糕始终画成彩色的？我们找到了这种因为画的物体不同而产生差异的原因，无需训练即可修正这种“物体级的概念脆弱性”。</span></span></a>
+        <a class="pcard tone-lavender" href="../surveygraph/"><span class="pcard__visual"><img src="../../../images/work/surveygraph.svg" alt="" loading="lazy"></span><span class="pcard__name">SurveyGraph</span><span class="pcard__blurb"><span class="en">An AI that first maps how a research field evolved, then writes a fully cited survey along that map.</span><span class="zh">让 AI 先画出一个领域的“方法—实体”知识图谱，再沿着它写出一篇有据可查的学术综述。</span></span></a>
+        <a class="pcard tone-mint" href="../statetrack/"><span class="pcard__visual"><img src="../../../images/work/statetrack.svg" alt="" loading="lazy"></span><span class="pcard__name">StateTrack</span><span class="pcard__blurb"><span class="en">LLMs still remember the rules you set; deep into a conversation they quietly stop following them. We found this collapse and measured it.</span><span class="zh">大模型还记得你定下的规则，却在长对话里悄悄不再遵守。我们发现并量化了这种“状态崩塌”。</span></span></a>
+        <a class="pcard tone-blue" href="../remcts/"><span class="pcard__visual"><img src="../../../images/work/remcts.svg" alt="" loading="lazy"></span><span class="pcard__name">ReMCTS</span><span class="pcard__blurb"><span class="en">Code-writing agents try many programs in a search tree, and every failed branch teaches the others.</span><span class="zh">写代码的智能体在一棵搜索树上多路尝试，失败分支的经验会分享给其他分支，少走弯路。</span></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>
+    <a class="to-top" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="en">MUSE Lab home</span><span class="zh">实验室主页</span></a>
+  </footer>
+
+  <script>
+    /* the language switch (one choice for the whole lab site) and copying the citation */
+    (function () {
+      var root = document.documentElement;
+      [].forEach.call(document.querySelectorAll("[data-set-lang]"), function (b) {
+        b.addEventListener("click", function () {
+          var l = b.getAttribute("data-set-lang");
+          root.classList.remove("lang-en", "lang-zh");
+          root.classList.add("lang-" + l);
+          root.lang = l === "zh" ? "zh-CN" : "en";
+          try { localStorage.setItem("lang", l); } catch (e) {}
+        });
+      });
+      var copy = document.querySelector("[data-copy]");
+      if (copy && navigator.clipboard) {
+        copy.addEventListener("click", function () {
+          navigator.clipboard.writeText(document.querySelector(".project__bib code").textContent).then(function () {
+            copy.classList.add("is-done");
+            setTimeout(function () { copy.classList.remove("is-done"); }, 1600);
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

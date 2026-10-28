@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" class="lang-en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StateTrack · MUSE Lab</title>
+  <script>
+    /* the language before first paint, as on the lab page: ?lang= → saved choice → browser language */
+    (function () {
+      var d = document.documentElement, l = null;
+      try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+      if (l !== "zh" && l !== "en") { try { l = localStorage.getItem("lang"); } catch (e) {} }
+      if (l !== "zh" && l !== "en") { l = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }
+      d.className = "js lang-" + l;
+      d.lang = l === "zh" ? "zh-CN" : "en";
+    })();
+  </script>
+  <meta name="description" content="LLMs still remember the rules you set; deep into a conversation they quietly stop following them. We found this collapse and measured it.">
+  <link rel="canonical" href="https://yifanyuan.com/lab/projects/statetrack/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="MUSE Lab">
+  <meta property="og:title" content="StateTrack · MUSE Lab">
+  <meta property="og:description" content="LLMs still remember the rules you set; deep into a conversation they quietly stop following them. We found this collapse and measured it.">
+  <meta property="og:url" content="https://yifanyuan.com/lab/projects/statetrack/">
+  <meta property="og:image" content="https://yifanyuan.com/images/papers/statetrack.jpg">
+  <meta name="theme-color" content="#fbf8f2">
+  <link rel="icon" type="image/png" href="../../../images/muse-favicon.png">
+  <link rel="preload" href="../../../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../../assets/fonts/fraunces-semibold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../lab.css">
+</head>
+<body class="project-page">
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+    <symbol id="i-paper" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m13.5 4-3 16"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7h4v4H7c0 3 1 4 3 5"/><path d="M14 7h4v4h-4c0 3 1 4 3 5"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="m14.5 5.5-6.5 6.5 6.5 6.5"/></symbol>
+  </svg>
+  <!-- Generated from data/lab.json ("projects") and data/publications.json by admin/render.js, like the
+       lab page: run `node tools/render_site.js`, or publish from the page editor; hand edits are overwritten. -->
+
+  <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>
+
+  <header class="bar is-scrolled">
+    <a class="brand" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>
+    <div class="tools">
+      <a class="bar__back" href="../../#work"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="en">All featured work</span><span class="zh">全部代表作</span></a>
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button type="button" data-set-lang="en" lang="en">EN</button>
+        <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
+      </div>
+      <a class="corner-logo" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt="MUSE Lab"></a>
+    </div>
+  </header>
+
+  <main class="project tone-mint" id="content">
+    <section class="project__hero">
+      <div class="project__intro">
+        <p class="project__venue"><span class="pub-venue">EMNLP 2026</span></p>
+        <h1 class="project__title">StateTrack</h1>
+        <p class="project__paper">When LLMs Forget What They Believe: Characterizing State Integrity Collapse in Long-Horizon Dialogues</p>
+        <p class="project__blurb en">LLMs still remember the rules you set; deep into a conversation they quietly stop following them. We found this collapse and measured it.</p>
+        <p class="project__blurb zh">大模型还记得你定下的规则，却在长对话里悄悄不再遵守。我们发现并量化了这种“状态崩塌”。</p>
+        <p class="project__authors">Yancheng Zhu, <span class="me">Yifan Yuan†</span></p>
+        <p class="project__links"><a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/StateTrack" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a><a class="pbtn" href="#cite"><svg class="icon" aria-hidden="true"><use href="#i-quote"/></svg><span>BibTeX</span></a></p>
+      </div>
+      <div class="project__visual"><img src="../../../images/work/statetrack.svg" alt=""></div>
+    </section>
+
+    <section class="project__section">
+      <h2 class="project__h"><span class="en">Overview</span><span class="zh">概览</span></h2>
+      <p class="project__text en">Assistants must keep obeying user-set constraints — formats, personas, safety boundaries — over many turns, but evaluations mostly test instruction following in a single turn or a short exchange. We identify a subtle but dangerous failure, State Integrity Collapse: asked about it, the model can still restate the constraint, yet its next answers stop following it — unlike ordinary forgetting, this is not fixed by longer context or memory retrieval. We build StateTrack-Bench, which plants one persistent constraint (numerical, format, persona, factual-memory or logical) in a conversation, checks compliance at increasing dialogue depths, and uses a forked recall audit to tell forgetting apart from remembering without complying. Across seven models, 88.6% of failures are such behavioral drift rather than forgetting, and our Structured State Anchoring recovers up to 24.4 points.</p>
+      <p class="project__text zh">对话助手需要在很多轮对话里一直遵守用户设定的约束（格式、角色、安全边界等），但现有评测大多只看单轮或短对话里能否遵守指令。我们发现一种隐蔽而危险的失败：问起来模型还能复述约束，接下来的回答却不再执行——我们称之为“状态完整性崩塌”，它不同于普通的遗忘，单靠更长的上下文或记忆检索解决不了。我们构建了 StateTrack-Bench：在对话中设定一条持续约束（数值、格式、角色、事实记忆、逻辑规则五类），在不同对话深度检验模型是否仍然遵守，并用“分叉回忆审计”区分“记不住”和“记得但不做”。在七个主流模型上，88.6% 的失败属于“记得但不做”的行为漂移而非遗忘；我们提出的结构化状态锚定最多可挽回 24.4 个百分点。</p>
+    </section>
+
+    <section class="project__section">
+      <h2 class="project__h"><span class="en">Highlights</span><span class="zh">要点</span></h2>
+      <ol class="project__points">
+        <li><span class="en">88.6% of failures are behavioral drift (remembering the rule but not following it) rather than forgetting.</span><span class="zh">88.6% 的失败是“记得但不做”的行为漂移，而不是遗忘。</span></li>
+        <li><span class="en">StateTrack-Bench plants five kinds of persistent constraints and checks them at increasing dialogue depths, with a forked recall audit.</span><span class="zh">StateTrack-Bench：五类持续约束，在不同对话深度检验，并用分叉回忆审计区分“记不住”和“不去做”。</span></li>
+        <li><span class="en">Structured State Anchoring recovers up to 24.4 points.</span><span class="zh">结构化状态锚定最多可挽回 24.4 个百分点。</span></li>
+      </ol>
+    </section>
+
+    <section class="project__section project__section--wide">
+      <h2 class="project__h"><span class="en">Method</span><span class="zh">方法</span></h2>
+      <figure class="project__figure"><a href="../../../images/papers/statetrack.jpg" target="_blank" rel="noopener"><img src="../../../images/papers/statetrack.jpg" width="926" height="626" loading="lazy" alt="StateTrack-Bench evaluation protocol"></a><figcaption>StateTrack-Bench evaluation protocol</figcaption></figure>
+    </section>
+
+    <section class="project__section" id="cite">
+      <h2 class="project__h"><span class="en">Citation</span><span class="zh">引用</span></h2>
+      <div class="project__bib"><pre><code>@inproceedings{zhu2026statetrack,
+  title     = {When LLMs Forget What They Believe: Characterizing State Integrity Collapse in Long-Horizon Dialogues},
+  author    = {Yancheng Zhu and Yifan Yuan},
+  booktitle = {Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing},
+  year      = {2026},
+  url       = {https://arxiv.org/abs/2610.31314}
+}</code></pre><button type="button" class="pbtn project__copy" data-copy><span class="en">Copy</span><span class="zh">复制</span></button></div>
+    </section>
+
+    <section class="project__section project__section--wide">
+      <h2 class="project__h"><span class="en">More featured work</span><span class="zh">更多代表作</span></h2>
+      <div class="project__more">
+        <a class="pcard tone-pink" href="../concept-brittleness/"><span class="pcard__visual"><img src="../../../images/work/concept-brittleness.svg" alt="" loading="lazy"></span><span class="pcard__name">Concept Brittleness</span><span class="pcard__blurb"><span class="en">Asked for an ink painting, why does an image generator paint grapes in black-and-white ink but always paint a cake in color? We found what makes the result depend on the object being drawn, and fix this “object-level concept brittleness” without any training.</span><span class="zh">同样画一幅水墨画，为什么图像生成模型能把葡萄画成黑白水墨色，而却把蛋糕始终画成彩色的？我们找到了这种因为画的物体不同而产生差异的原因，无需训练即可修正这种“物体级的概念脆弱性”。</span></span></a>
+        <a class="pcard tone-sand" href="../semantic-discrepancy/"><span class="pcard__visual"><img src="../../../images/work/semantic-discrepancy.svg" alt="" loading="lazy"></span><span class="pcard__name">Semantic Discrepancy</span><span class="pcard__blurb"><span class="en">Turning a photo into a painting, diffusion models invent things that were never there. One inversion step fixes it.</span><span class="zh">照片转油画时，模型会凭空“脑补”原图里没有的东西。一步反演就能修正。</span></span></a>
+        <a class="pcard tone-lavender" href="../surveygraph/"><span class="pcard__visual"><img src="../../../images/work/surveygraph.svg" alt="" loading="lazy"></span><span class="pcard__name">SurveyGraph</span><span class="pcard__blurb"><span class="en">An AI that first maps how a research field evolved, then writes a fully cited survey along that map.</span><span class="zh">让 AI 先画出一个领域的“方法—实体”知识图谱，再沿着它写出一篇有据可查的学术综述。</span></span></a>
+        <a class="pcard tone-blue" href="../remcts/"><span class="pcard__visual"><img src="../../../images/work/remcts.svg" alt="" loading="lazy"></span><span class="pcard__name">ReMCTS</span><span class="pcard__blurb"><span class="en">Code-writing agents try many programs in a search tree, and every failed branch teaches the others.</span><span class="zh">写代码的智能体在一棵搜索树上多路尝试，失败分支的经验会分享给其他分支，少走弯路。</span></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>
+    <a class="to-top" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="en">MUSE Lab home</span><span class="zh">实验室主页</span></a>
+  </footer>
+
+  <script>
+    /* the language switch (one choice for the whole lab site) and copying the citation */
+    (function () {
+      var root = document.documentElement;
+      [].forEach.call(document.querySelectorAll("[data-set-lang]"), function (b) {
+        b.addEventListener("click", function () {
+          var l = b.getAttribute("data-set-lang");
+          root.classList.remove("lang-en", "lang-zh");
+          root.classList.add("lang-" + l);
+          root.lang = l === "zh" ? "zh-CN" : "en";
+          try { localStorage.setItem("lang", l); } catch (e) {}
+        });
+      });
+      var copy = document.querySelector("[data-copy]");
+      if (copy && navigator.clipboard) {
+        copy.addEventListener("click", function () {
+          navigator.clipboard.writeText(document.querySelector(".project__bib code").textContent).then(function () {
+            copy.classList.add("is-done");
+            setTimeout(function () { copy.classList.remove("is-done"); }, 1600);
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" class="lang-en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SurveyGraph · MUSE Lab</title>
+  <script>
+    /* the language before first paint, as on the lab page: ?lang= → saved choice → browser language */
+    (function () {
+      var d = document.documentElement, l = null;
+      try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+      if (l !== "zh" && l !== "en") { try { l = localStorage.getItem("lang"); } catch (e) {} }
+      if (l !== "zh" && l !== "en") { l = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }
+      d.className = "js lang-" + l;
+      d.lang = l === "zh" ? "zh-CN" : "en";
+    })();
+  </script>
+  <meta name="description" content="An AI that first maps how a research field evolved, then writes a fully cited survey along that map.">
+  <link rel="canonical" href="https://yifanyuan.com/lab/projects/surveygraph/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="MUSE Lab">
+  <meta property="og:title" content="SurveyGraph · MUSE Lab">
+  <meta property="og:description" content="An AI that first maps how a research field evolved, then writes a fully cited survey along that map.">
+  <meta property="og:url" content="https://yifanyuan.com/lab/projects/surveygraph/">
+  <meta property="og:image" content="https://yifanyuan.com/images/papers/surveygraph.jpg">
+  <meta name="theme-color" content="#fbf8f2">
+  <link rel="icon" type="image/png" href="../../../images/muse-favicon.png">
+  <link rel="preload" href="../../../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../../assets/fonts/fraunces-semibold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../lab.css">
+</head>
+<body class="project-page">
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+    <symbol id="i-paper" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m13.5 4-3 16"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7h4v4H7c0 3 1 4 3 5"/><path d="M14 7h4v4h-4c0 3 1 4 3 5"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="m14.5 5.5-6.5 6.5 6.5 6.5"/></symbol>
+  </svg>
+  <!-- Generated from data/lab.json ("projects") and data/publications.json by admin/render.js, like the
+       lab page: run `node tools/render_site.js`, or publish from the page editor; hand edits are overwritten. -->
+
+  <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>
+
+  <header class="bar is-scrolled">
+    <a class="brand" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>
+    <div class="tools">
+      <a class="bar__back" href="../../#work"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="en">All featured work</span><span class="zh">全部代表作</span></a>
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button type="button" data-set-lang="en" lang="en">EN</button>
+        <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
+      </div>
+      <a class="corner-logo" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt="MUSE Lab"></a>
+    </div>
+  </header>
+
+  <main class="project tone-lavender" id="content">
+    <section class="project__hero">
+      <div class="project__intro">
+        <p class="project__venue"><span class="pub-venue">EMNLP 2026</span></p>
+        <h1 class="project__title">SurveyGraph</h1>
+        <p class="project__paper">SurveyGraph: Generating Academic Surveys via Methods-Entity Knowledge Graphs</p>
+        <p class="project__blurb en">An AI that first maps how a research field evolved, then writes a fully cited survey along that map.</p>
+        <p class="project__blurb zh">让 AI 先画出一个领域的“方法—实体”知识图谱，再沿着它写出一篇有据可查的学术综述。</p>
+        <p class="project__authors"><span class="me">Yifan Yuan</span>, Yancheng Zhu, Zuoyu Zhang, Xiaogang Peng†</p>
+        <p class="project__links"><a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/SurveyGraph" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a><a class="pbtn" href="#cite"><svg class="icon" aria-hidden="true"><use href="#i-quote"/></svg><span>BibTeX</span></a></p>
+      </div>
+      <div class="project__visual"><img src="../../../images/work/surveygraph.svg" alt=""></div>
+    </section>
+
+    <section class="project__section">
+      <h2 class="project__h"><span class="en">Overview</span><span class="zh">概览</span></h2>
+      <p class="project__text en">Publications are growing so fast that writing a good survey is ever more costly, and current LLM survey generators mostly retrieve papers as a flat pile of independent documents. A good survey explains how a field evolved — which work extends which, which methods compete, which benchmarks mark turning points — structure that similarity-based retrieval cannot see, so generated surveys read like a collage of summaries. SurveyGraph builds a Methods-Entity Knowledge Graph that records follow-on, competition and shared-resource relations between methods, and uses it as the backbone for core-paper discovery, graph-aware retrieval, outline generation and evolution-aware writing. Graph-aware retrieval nearly doubles recall over flat lexical baselines (p = 0.004), and citation audits find that 80.6% of generated sentences are fully or partly supported by the papers they cite.</p>
+      <p class="project__text zh">论文越来越多，写一篇好的综述越来越费时费力，而现有的大模型自动综述系统大多把文献当作一堆彼此独立的文档来检索。好的综述要讲清楚一个领域如何演化——哪项工作延续了谁、哪些方法相互竞争、哪些基准标志着转折，只按相似度检索看不到这些结构，生成的综述容易变成零散摘要的拼贴。SurveyGraph 构建“方法—实体知识图谱”（MEKG），显式记录方法之间的延续、竞争和共享资源等关系，并以它为主干完成核心论文发现、图感知检索、大纲生成和按演化脉络组织的写作。图感知检索的召回率接近平面检索基线的两倍（p=0.004），引用核查显示 80.6% 的生成句子能在所引文献中找到完全或部分支撑。</p>
+    </section>
+
+    <section class="project__section">
+      <h2 class="project__h"><span class="en">Highlights</span><span class="zh">要点</span></h2>
+      <ol class="project__points">
+        <li><span class="en">A Methods-Entity Knowledge Graph records which methods extend, compete with or share resources with others, and becomes the survey's backbone.</span><span class="zh">用“方法—实体知识图谱”记录方法之间的延续、竞争和共享资源，作为综述的骨架。</span></li>
+        <li><span class="en">Graph-aware retrieval nearly doubles recall over flat lexical baselines (p = 0.004).</span><span class="zh">图感知检索的召回率接近平面检索基线的两倍（p = 0.004）。</span></li>
+        <li><span class="en">Citation audits find 80.6% of generated sentences fully or partly supported by the papers they cite.</span><span class="zh">引用核查：80.6% 的生成句子能在所引文献中找到完全或部分支撑。</span></li>
+      </ol>
+    </section>
+
+    <section class="project__section project__section--wide">
+      <h2 class="project__h"><span class="en">Method</span><span class="zh">方法</span></h2>
+      <figure class="project__figure"><a href="../../../images/papers/surveygraph.jpg" target="_blank" rel="noopener"><img src="../../../images/papers/surveygraph.jpg" width="1400" height="732" loading="lazy" alt="The SurveyGraph pipeline"></a><figcaption>The SurveyGraph pipeline</figcaption></figure>
+    </section>
+
+    <section class="project__section" id="cite">
+      <h2 class="project__h"><span class="en">Citation</span><span class="zh">引用</span></h2>
+      <div class="project__bib"><pre><code>@inproceedings{yuan2026surveygraph,
+  title     = {SurveyGraph: Generating Academic Surveys via Methods-Entity Knowledge Graphs},
+  author    = {Yifan Yuan and Yancheng Zhu and Zuoyu Zhang and Xiaogang Peng},
+  booktitle = {Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing},
+  year      = {2026},
+  url       = {https://arxiv.org/abs/2610.31317}
+}</code></pre><button type="button" class="pbtn project__copy" data-copy><span class="en">Copy</span><span class="zh">复制</span></button></div>
+    </section>
+
+    <section class="project__section project__section--wide">
+      <h2 class="project__h"><span class="en">More featured work</span><span class="zh">更多代表作</span></h2>
+      <div class="project__more">
+        <a class="pcard tone-pink" href="../concept-brittleness/"><span class="pcard__visual"><img src="../../../images/work/concept-brittleness.svg" alt="" loading="lazy"></span><span class="pcard__name">Concept Brittleness</span><span class="pcard__blurb"><span class="en">Asked for an ink painting, why does an image generator paint grapes in black-and-white ink but always paint a cake in color? We found what makes the result depend on the object being drawn, and fix this “object-level concept brittleness” without any training.</span><span class="zh">同样画一幅水墨画，为什么图像生成模型能把葡萄画成黑白水墨色，而却把蛋糕始终画成彩色的？我们找到了这种因为画的物体不同而产生差异的原因，无需训练即可修正这种“物体级的概念脆弱性”。</span></span></a>
+        <a class="pcard tone-sand" href="../semantic-discrepancy/"><span class="pcard__visual"><img src="../../../images/work/semantic-discrepancy.svg" alt="" loading="lazy"></span><span class="pcard__name">Semantic Discrepancy</span><span class="pcard__blurb"><span class="en">Turning a photo into a painting, diffusion models invent things that were never there. One inversion step fixes it.</span><span class="zh">照片转油画时，模型会凭空“脑补”原图里没有的东西。一步反演就能修正。</span></span></a>
+        <a class="pcard tone-mint" href="../statetrack/"><span class="pcard__visual"><img src="../../../images/work/statetrack.svg" alt="" loading="lazy"></span><span class="pcard__name">StateTrack</span><span class="pcard__blurb"><span class="en">LLMs still remember the rules you set; deep into a conversation they quietly stop following them. We found this collapse and measured it.</span><span class="zh">大模型还记得你定下的规则，却在长对话里悄悄不再遵守。我们发现并量化了这种“状态崩塌”。</span></span></a>
+        <a class="pcard tone-blue" href="../remcts/"><span class="pcard__visual"><img src="../../../images/work/remcts.svg" alt="" loading="lazy"></span><span class="pcard__name">ReMCTS</span><span class="pcard__blurb"><span class="en">Code-writing agents try many programs in a search tree, and every failed branch teaches the others.</span><span class="zh">写代码的智能体在一棵搜索树上多路尝试，失败分支的经验会分享给其他分支，少走弯路。</span></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>© 2026 MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>
+    <a class="to-top" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="en">MUSE Lab home</span><span class="zh">实验室主页</span></a>
+  </footer>
+
+  <script>
+    /* the language switch (one choice for the whole lab site) and copying the citation */
+    (function () {
+      var root = document.documentElement;
+      [].forEach.call(document.querySelectorAll("[data-set-lang]"), function (b) {
+        b.addEventListener("click", function () {
+          var l = b.getAttribute("data-set-lang");
+          root.classList.remove("lang-en", "lang-zh");
+          root.classList.add("lang-" + l);
+          root.lang = l === "zh" ? "zh-CN" : "en";
+          try { localStorage.setItem("lang", l); } catch (e) {}
+        });
+      });
+      var copy = document.querySelector("[data-copy]");
+      if (copy && navigator.clipboard) {
+        copy.addEventListener("click", function () {
+          navigator.clipboard.writeText(document.querySelector(".project__bib code").textContent).then(function () {
+            copy.classList.add("is-done");
+            setTimeout(function () { copy.classList.remove("is-done"); }, 1600);
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
