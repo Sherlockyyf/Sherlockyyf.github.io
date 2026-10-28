@@ -71,6 +71,7 @@
       <a href="#work"><span class="en">Work</span><span class="zh">代表作</span></a>
       <a href="#news"><span class="en">News</span><span class="zh">动态</span></a>
       <a href="#publications"><span class="en">Publications</span><span class="zh">论文</span></a>
+      <a href="#projects"><span class="en">Projects</span><span class="zh">项目</span></a>
       <a href="#contact"><span class="en">Contact</span><span class="zh">联系</span></a>
       <a class="nav__pi" href="../"><span class="en">Yifan Yuan</span><span class="zh">袁一帆</span> <span aria-hidden="true">↗</span></a>
     </nav>
@@ -219,9 +220,7 @@
       <div class="rail dirs" role="group" aria-labelledby="research-title">
         <!-- lab-research:start -->
         <article class="dir dir--visual tone-blue spotlight reveal" id="dir-visual">
-          <div class="dir__cover dir__cover--1">
-            <span class="dir__shot"><img src="../images/dir-visual.webp" alt="Illustration: a canvas of noise turning into a mountain landscape, with a film strip and a paintbrush" loading="lazy"></span>
-          </div>
+          <img class="dir__bg" src="../images/dir-visual.webp" alt="" loading="lazy">
           <div class="dir__body">
             <div class="dir__head">
               <span class="dir__seal" aria-hidden="true">绘</span>
@@ -244,10 +243,25 @@
             </ul>
           </div>
         </article>
-        <article class="dir dir--trust tone-green spotlight reveal" id="dir-trust">
-          <div class="dir__cover dir__cover--1">
-            <span class="dir__shot"><img src="../images/dir-trust.webp" alt="Illustration: AI agents linked in a network above a chat bubble, a shield with a check mark and a checklist" loading="lazy"></span>
+        <article class="dir dir--understand tone-lavender spotlight reveal" id="dir-understand">
+          <img class="dir__bg" src="../images/dir-understand.webp" alt="" loading="lazy">
+          <div class="dir__body">
+            <div class="dir__head">
+              <span class="dir__seal" aria-hidden="true">懂</span>
+              <h3 class="dir__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></h3>
+            </div>
+            <p class="dir__text en">Models that understand video, images and text, put to work on real tasks.</p>
+            <p class="dir__text zh">让模型读懂视频、图像与文字，并落到真实场景中。</p>
+            <ul class="dir__topics">
+              <li><span class="en">Moment retrieval and highlights</span><span class="zh">视频时刻检索与高光检测</span></li>
+              <li><span class="en">Story-aware video editing</span><span class="zh">懂剧情的智能剪辑</span></li>
+              <li><span class="en">Virtual try-on quality checks</span><span class="zh">虚拟试衣失真检测</span></li>
+              <li><span class="en">Multimodal retrieval and moderation</span><span class="zh">多模态信息检索与审核</span></li>
+            </ul>
           </div>
+        </article>
+        <article class="dir dir--trust tone-green spotlight reveal" id="dir-trust">
+          <img class="dir__bg" src="../images/dir-trust.webp" alt="" loading="lazy">
           <div class="dir__body">
             <div class="dir__head">
               <span class="dir__seal" aria-hidden="true">信</span>
@@ -272,9 +286,7 @@
           </div>
         </article>
         <article class="dir dir--emotion tone-pink spotlight reveal" id="dir-emotion">
-          <div class="dir__cover dir__cover--1">
-            <span class="dir__shot"><img src="../images/dir-emotion.webp" alt="Illustration: a friendly companion robot between speech bubbles and small hearts" loading="lazy"></span>
-          </div>
+          <img class="dir__bg" src="../images/dir-emotion.webp" alt="" loading="lazy">
           <div class="dir__body">
             <div class="dir__head">
               <span class="dir__seal" aria-hidden="true">情</span>
@@ -296,47 +308,8 @@
             </ul>
           </div>
         </article>
-        <article class="dir dir--understand tone-lavender spotlight reveal" id="dir-understand">
-          <div class="dir__cover dir__cover--1">
-            <span class="dir__shot"><img src="../images/dir-understand.webp" alt="Illustration: an image, a video and a text bubble flowing into an eye that reads them" loading="lazy"></span>
-          </div>
-          <div class="dir__body">
-            <div class="dir__head">
-              <span class="dir__seal" aria-hidden="true">懂</span>
-              <h3 class="dir__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></h3>
-            </div>
-            <p class="dir__text en">Models that understand video, images and text, put to work on real tasks.</p>
-            <p class="dir__text zh">让模型读懂视频、图像与文字，并落到真实场景中。</p>
-            <ul class="dir__topics">
-              <li><span class="en">Moment retrieval and highlights</span><span class="zh">视频时刻检索与高光检测</span></li>
-              <li><span class="en">Story-aware video editing</span><span class="zh">懂剧情的智能剪辑</span></li>
-              <li><span class="en">Virtual try-on quality checks</span><span class="zh">虚拟试衣失真检测</span></li>
-              <li><span class="en">Multimodal retrieval and moderation</span><span class="zh">多模态信息检索与审核</span></li>
-            </ul>
-          </div>
-        </article>
-        <article class="dir dir--safety tone-steel spotlight reveal" id="dir-safety">
-          <div class="dir__cover dir__cover--1">
-            <span class="dir__shot"><img src="../images/dir-safety.webp" alt="Illustration: arrows bouncing off protective rings around a shield with a padlock" loading="lazy"></span>
-          </div>
-          <div class="dir__body">
-            <div class="dir__head">
-              <span class="dir__seal" aria-hidden="true">安</span>
-              <h3 class="dir__title"><span class="en">AI Safety</span><span class="zh">大模型安全</span></h3>
-            </div>
-            <p class="dir__text en">Why safety alignment works, why it can be bypassed, and how to keep multimodal models safe.</p>
-            <p class="dir__text zh">解释安全对齐为何有效、为何会被绕过，并为多模态大模型构建防护闭环。</p>
-            <ul class="dir__topics">
-              <li><span class="en">Jailbreaks and defences</span><span class="zh">越狱攻击与防御</span></li>
-              <li><span class="en">Multimodal safety</span><span class="zh">多模态安全</span></li>
-              <li><span class="en">Adaptive safety alignment</span><span class="zh">自适应安全对齐</span></li>
-            </ul>
-          </div>
-        </article>
         <article class="dir dir--embodied tone-sand spotlight reveal" id="dir-embodied">
-          <div class="dir__cover dir__cover--1">
-            <span class="dir__shot"><img src="../images/dir-embodied.webp" alt="Illustration: a robot arm lifting a block to stack it on others" loading="lazy"></span>
-          </div>
+          <img class="dir__bg" src="../images/dir-embodied.webp" alt="" loading="lazy">
           <div class="dir__body">
             <div class="dir__head">
               <span class="dir__seal" aria-hidden="true">机</span>
@@ -606,10 +579,64 @@
       </div>
     </section>
 
+    <!-- ===================== Projects: research and industry projects, one sentence each ===================== -->
+    <section class="section" id="projects">
+      <div class="sec-head reveal">
+        <span class="sec-num">06</span>
+        <h2 class="sec-title"><!-- lab-h-projects:start --><span class="en">Projects</span><span class="zh">科研项目</span><!-- lab-h-projects:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 C 50 16, 112 8, 172 13 S 250 10, 296 12"/></svg></h2>
+      </div>
+      <div class="grants">
+        <!-- lab-grants:start -->
+        <article class="grant reveal">
+          <p class="grant__meta"><span class="grant__role grant__role--solid"><span class="en">PI</span><span class="zh">主持</span></span><span class="grant__period">2025.08 – 2028.08</span></p>
+          <h3 class="grant__title"><span class="en">Reliability Evaluation and Controllable Editing Mechanisms for Generative Image Editing</span><span class="zh">生成式图像编辑的可靠性评估与可控编辑机制研究</span></h3>
+          <p class="grant__brief en">Measures whether AI image edits are correct and reliable, and makes editing change only what you ask for while keeping the rest intact.</p>
+          <p class="grant__brief zh">评估 AI 修图改得对不对、稳不稳，并让编辑只改想改的地方，其余内容保持不变。</p>
+          <p class="grant__funder"><span class="en">Shenzhen University Research Start-up Fund for Young Faculty</span><span class="zh">深圳大学青年教师科研启动经费</span></p>
+        </article>
+        <article class="grant reveal">
+          <p class="grant__meta"><span class="grant__role grant__role--muted"><span class="en">Main Participant</span><span class="zh">主要参与人</span></span><span class="grant__period">2025.10 – 2028.09</span></p>
+          <h3 class="grant__title"><span class="en">Embodied-Intelligence Foundation Models for Industrial Humanoid Robots</span><span class="zh">人形机器人工业具身智能基座大模型与垂直领域示范应用</span></h3>
+          <p class="grant__brief en">Develops an embodied foundation model for industrial humanoid robots, so they can perceive the workplace, plan their actions and carry out production tasks, demonstrated in specific industries.</p>
+          <p class="grant__brief zh">为工业人形机器人研发具身智能基座大模型，让机器人看懂现场、规划动作、完成生产任务，并在具体行业中示范应用。</p>
+          <p class="grant__funder"><span class="en">Shenzhen Key Industry R&amp;D Program</span><span class="zh">深圳市重点产业研发计划</span></p>
+        </article>
+        <article class="grant reveal">
+          <p class="grant__meta"><span class="grant__role"><span class="en">Lead Researcher</span><span class="zh">主要负责人</span></span><span class="grant__period">2025.06 – 2026.12</span></p>
+          <h3 class="grant__title"><span class="en">Intelligent Models for Multimodal Information Retrieval, Review and Moderation</span><span class="zh">多模态信息检索、审查与管控智能模型研究</span></h3>
+          <p class="grant__brief en">Develops models that understand images, video and text together, to find what is needed in large volumes of content and flag what needs review and moderation.</p>
+          <p class="grant__brief zh">研发同时读懂图像、视频和文字的模型，从海量信息中检索所需内容，并识别需要审查和管控的信息。</p>
+          <p class="grant__funder"><span class="en">Industry project with China Mobile</span><span class="zh">横向项目，中国移动</span></p>
+        </article>
+        <article class="grant reveal">
+          <p class="grant__meta"><span class="grant__role grant__role--muted"><span class="en">Participant</span><span class="zh">参与</span></span><span class="grant__period">2026.01 – 2028.12</span></p>
+          <h3 class="grant__title"><span class="en">AI Virtual Patients for Clinical Teaching in Gastroenterology</span><span class="zh">面向消化科临床教学的AI虚拟病人技术研究与应用</span></h3>
+          <p class="grant__brief en">Builds AI virtual patients that act out real consultations, so gastroenterology students can practise history-taking and diagnosis as often as they need.</p>
+          <p class="grant__brief zh">打造能模拟真实问诊的 AI 虚拟病人，让消化科医学生反复练习问诊和诊断。</p>
+          <p class="grant__funder"><span class="en">Guangdong Natural Science Foundation, General Program</span><span class="zh">广东省自然科学基金面上项目</span></p>
+        </article>
+        <article class="grant reveal">
+          <p class="grant__meta"><span class="grant__role grant__role--muted"><span class="en">Participant</span><span class="zh">参与</span></span><span class="grant__period">2022.01 – 2025.12</span></p>
+          <h3 class="grant__title"><span class="en">Deep Learning Based on Graph Convolutional Networks and Disentangled Learning</span><span class="zh">基于图卷积神经网络和解耦学习的深度学习研究</span></h3>
+          <p class="grant__brief en">Studies graph convolutional networks and disentangled representation learning, so models learn clearer, more interpretable features from complex relational data.</p>
+          <p class="grant__brief zh">研究图卷积网络与解耦表示学习，让模型从复杂的关联数据中学到更清晰、更可解释的特征。</p>
+          <p class="grant__funder"><span class="en">National Natural Science Foundation of China, General Program</span><span class="zh">国家自然科学基金面上项目</span></p>
+        </article>
+        <article class="grant reveal">
+          <p class="grant__meta"><span class="grant__role grant__role--muted"><span class="en">Participant</span><span class="zh">参与</span></span><span class="grant__period">2019.06 – 2022.05</span></p>
+          <h3 class="grant__title"><span class="en">Key Theories and Technologies of Human–Robot Collaboration Based on Imitation Learning from Demonstration</span><span class="zh">基于示教模仿学习的人机协同关键理论与技术</span></h3>
+          <p class="grant__brief en">Teaches robots manipulation skills from human demonstrations, for safe and efficient human–robot collaboration.</p>
+          <p class="grant__brief zh">让机器人看人示范就能学会操作技能，实现安全、高效的人机协作。</p>
+          <p class="grant__funder"><span class="en">National Key R&amp;D Program of China, No. 2018YFB1305104</span><span class="zh">国家重点研发计划（十三五），项目编号 2018YFB1305104</span></p>
+        </article>
+        <!-- lab-grants:end -->
+      </div>
+    </section>
+
     <!-- ===================== Contact ===================== -->
     <section class="section" id="contact">
       <div class="sec-head reveal">
-        <span class="sec-num">06</span>
+        <span class="sec-num">07</span>
         <h2 class="sec-title"><!-- lab-h-contact:start --><span class="en">Contact</span><span class="zh">联系我们</span><!-- lab-h-contact:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 8, 120 16, 180 11 S 255 12, 296 12"/></svg></h2>
       </div>
       <p class="contact__intro reveal"><!-- lab-contact-intro:start --><span class="en">Research and business collaborations are welcome. Get in touch:</span><span class="zh">欢迎科研与商业合作，有合作意向欢迎联系我们：</span><!-- lab-contact-intro:end --></p>
