@@ -250,7 +250,12 @@
         "en": "Shenzhen University Research Start-up Fund for Young Faculty",
         "zh": "深圳大学青年教师科研启动经费"
       },
-      "period": "2025.08 – 2028.08"
+      "period": "2025.08 – 2028.08",
+      "brief": {
+        "en": "Measures whether AI image edits are correct and reliable, and makes editing change only what you ask for while keeping the rest intact.",
+        "zh": "评估 AI 修图改得对不对、稳不稳，并让编辑只改想改的地方，其余内容保持不变。"
+      },
+      "lab": true
     },
     {
       "role": {
@@ -266,7 +271,12 @@
         "en": "Shenzhen Key Industry R&D Program",
         "zh": "深圳市重点产业研发计划"
       },
-      "period": "2025.10 – 2028.09"
+      "period": "2025.10 – 2028.09",
+      "brief": {
+        "en": "Develops an embodied foundation model for industrial humanoid robots, so they can perceive the workplace, plan their actions and carry out production tasks, demonstrated in specific industries.",
+        "zh": "为工业人形机器人研发具身智能基座大模型，让机器人看懂现场、规划动作、完成生产任务，并在具体行业中示范应用。"
+      },
+      "lab": true
     },
     {
       "role": {
@@ -282,7 +292,12 @@
         "en": "Industry project with China Mobile",
         "zh": "横向项目，中国移动"
       },
-      "period": "2025.06 – 2026.12"
+      "period": "2025.06 – 2026.12",
+      "brief": {
+        "en": "Develops models that understand images, video and text together, to find what is needed in large volumes of content and flag what needs review and moderation.",
+        "zh": "研发同时读懂图像、视频和文字的模型，从海量信息中检索所需内容，并识别需要审查和管控的信息。"
+      },
+      "lab": true
     },
     {
       "role": {
@@ -298,7 +313,12 @@
         "en": "Guangdong Natural Science Foundation, General Program",
         "zh": "广东省自然科学基金面上项目"
       },
-      "period": "2026.01 – 2028.12"
+      "period": "2026.01 – 2028.12",
+      "brief": {
+        "en": "Builds AI virtual patients that act out real consultations, so gastroenterology students can practise history-taking and diagnosis as often as they need.",
+        "zh": "打造能模拟真实问诊的 AI 虚拟病人，让消化科医学生反复练习问诊和诊断。"
+      },
+      "lab": true
     },
     {
       "role": {
@@ -314,7 +334,12 @@
         "en": "National Natural Science Foundation of China, General Program",
         "zh": "国家自然科学基金面上项目"
       },
-      "period": "2022.01 – 2025.12"
+      "period": "2022.01 – 2025.12",
+      "brief": {
+        "en": "Studies graph convolutional networks and disentangled representation learning, so models learn clearer, more interpretable features from complex relational data.",
+        "zh": "研究图卷积网络与解耦表示学习，让模型从复杂的关联数据中学到更清晰、更可解释的特征。"
+      },
+      "lab": true
     },
     {
       "role": {
@@ -330,7 +355,12 @@
         "en": "National Key R&D Program of China, No. 2018YFB1305104",
         "zh": "国家重点研发计划（十三五），项目编号 2018YFB1305104"
       },
-      "period": "2019.06 – 2022.05"
+      "period": "2019.06 – 2022.05",
+      "brief": {
+        "en": "Teaches robots manipulation skills from human demonstrations, for safe and efficient human–robot collaboration.",
+        "zh": "让机器人看人示范就能学会操作技能，实现安全、高效的人机协作。"
+      },
+      "lab": true
     }
   ],
   "grantsEarlierSummary": {
