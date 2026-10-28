@@ -1,4 +1,270 @@
 {
+  "hero": {
+    "tagline": {
+      "en": "We build ==trustworthy== generative AI",
+      "zh": "构建==可信==的生成式 AI"
+    },
+    "topics": [
+      {
+        "en": "AIGC",
+        "zh": "AIGC"
+      },
+      {
+        "en": "Multimodal Understanding & Generation",
+        "zh": "多模态理解与生成"
+      },
+      {
+        "en": "LLMs & Agents",
+        "zh": "大模型与智能体"
+      },
+      {
+        "en": "Retrieval-Augmented Generation",
+        "zh": "检索增强生成"
+      },
+      {
+        "en": "Persona Modeling",
+        "zh": "人格化语言建模"
+      },
+      {
+        "en": "Emotional Agents",
+        "zh": "情感智能体"
+      }
+    ]
+  },
+  "headings": {
+    "work": {
+      "en": "Featured Work",
+      "zh": "代表作"
+    },
+    "news": {
+      "en": "Latest News",
+      "zh": "最新动态"
+    },
+    "about": {
+      "en": "About the Lab",
+      "zh": "实验室简介"
+    },
+    "research": {
+      "en": "Research Directions",
+      "zh": "研究方向"
+    },
+    "publications": {
+      "en": "Publications",
+      "zh": "论文成果"
+    },
+    "contact": {
+      "en": "Contact",
+      "zh": "联系我们"
+    }
+  },
+  "projects": [
+    {
+      "paper": "mm26",
+      "slug": "concept-brittleness",
+      "tone": "pink",
+      "visual": "images/work/concept-brittleness.svg",
+      "blurb": {
+        "en": "Asked for an ink painting, why does an image generator paint grapes in black-and-white ink but always paint a cake in color? We found what makes the result depend on the object being drawn, and fix this “object-level concept brittleness” without any training.",
+        "zh": "同样画一幅水墨画，为什么图像生成模型能把葡萄画成黑白水墨色，而却把蛋糕始终画成彩色的？我们找到了这种因为画的物体不同而产生差异的原因，无需训练即可修正这种“物体级的概念脆弱性”。"
+      },
+      "points": [
+        {
+          "en": "A concept keeps failing on a few objects whatever the seed: a systematic blind spot, not sampling noise.",
+          "zh": "同一个概念在少数物体上反复失败，换随机种子也一样：这是系统性盲区，而不是采样噪声。"
+        },
+        {
+          "en": "Sparse autoencoders at every denoising step locate the missing or weakened concept dimensions.",
+          "zh": "在去噪的每一步训练稀疏自编码器，定位缺失或减弱的概念维度。"
+        },
+        {
+          "en": "No retraining: concept consistency and repair rates rise markedly, and the earlier the intervention, the stronger the correction.",
+          "zh": "无需重新训练，概念一致性和修复成功率显著提升，而且越早干预、纠正效果越好。"
+        }
+      ]
+    },
+    {
+      "paper": "jas25",
+      "slug": "semantic-discrepancy",
+      "tone": "sand",
+      "visual": "images/work/semantic-discrepancy.svg",
+      "blurb": {
+        "en": "Turning a photo into a painting, diffusion models invent things that were never there. One inversion step fixes it.",
+        "zh": "照片转油画时，模型会凭空“脑补”原图里没有的东西。一步反演就能修正。"
+      },
+      "points": [
+        {
+          "en": "The cause: added noise breaks the image's semantics, so U-Net upsampling links unrelated regions.",
+          "zh": "定位病因：加噪破坏了图像的语义完整性，让 U-Net 上采样在不相关的区域之间建立错误关联。"
+        },
+        {
+          "en": "Training-free and plug-and-play: one DDIM inversion step of the reference image supplies the right features and correlations.",
+          "zh": "免训练、即插即用：对参考图做一步 DDIM 反演，就能得到正确的特征和关联。"
+        },
+        {
+          "en": "Higher fidelity on COCO, ImageNet and ImageNet-R, and 11.2× faster than PnP and similar methods.",
+          "zh": "在 COCO、ImageNet 和 ImageNet-R 上保真度更高，比 PnP 等方法快 11.2 倍。"
+        }
+      ]
+    },
+    {
+      "paper": "surveygraph",
+      "slug": "surveygraph",
+      "tone": "lavender",
+      "visual": "images/work/surveygraph.svg",
+      "blurb": {
+        "en": "An AI that first maps how a research field evolved, then writes a fully cited survey along that map.",
+        "zh": "让 AI 先画出一个领域的“方法—实体”知识图谱，再沿着它写出一篇有据可查的学术综述。"
+      },
+      "points": [
+        {
+          "en": "A Methods-Entity Knowledge Graph records which methods extend, compete with or share resources with others, and becomes the survey's backbone.",
+          "zh": "用“方法—实体知识图谱”记录方法之间的延续、竞争和共享资源，作为综述的骨架。"
+        },
+        {
+          "en": "Graph-aware retrieval nearly doubles recall over flat lexical baselines (p = 0.004).",
+          "zh": "图感知检索的召回率接近平面检索基线的两倍（p = 0.004）。"
+        },
+        {
+          "en": "Citation audits find 80.6% of generated sentences fully or partly supported by the papers they cite.",
+          "zh": "引用核查：80.6% 的生成句子能在所引文献中找到完全或部分支撑。"
+        }
+      ]
+    },
+    {
+      "paper": "state",
+      "slug": "statetrack",
+      "tone": "mint",
+      "visual": "images/work/statetrack.svg",
+      "blurb": {
+        "en": "LLMs still remember the rules you set; deep into a conversation they quietly stop following them. We found this collapse and measured it.",
+        "zh": "大模型还记得你定下的规则，却在长对话里悄悄不再遵守。我们发现并量化了这种“状态崩塌”。"
+      },
+      "points": [
+        {
+          "en": "88.6% of failures are behavioral drift (remembering the rule but not following it) rather than forgetting.",
+          "zh": "88.6% 的失败是“记得但不做”的行为漂移，而不是遗忘。"
+        },
+        {
+          "en": "StateTrack-Bench plants five kinds of persistent constraints and checks them at increasing dialogue depths, with a forked recall audit.",
+          "zh": "StateTrack-Bench：五类持续约束，在不同对话深度检验，并用分叉回忆审计区分“记不住”和“不去做”。"
+        },
+        {
+          "en": "Structured State Anchoring recovers up to 24.4 points.",
+          "zh": "结构化状态锚定最多可挽回 24.4 个百分点。"
+        }
+      ]
+    },
+    {
+      "paper": "remcts",
+      "slug": "remcts",
+      "tone": "blue",
+      "visual": "images/work/remcts.svg",
+      "blurb": {
+        "en": "Code-writing agents try many programs in a search tree, and every failed branch teaches the others.",
+        "zh": "写代码的智能体在一棵搜索树上多路尝试，失败分支的经验会分享给其他分支，少走弯路。"
+      },
+      "points": [
+        {
+          "en": "Candidate programs grow into a search tree and run in a sandbox for feedback.",
+          "zh": "把多个候选程序组织成搜索树，在沙箱里执行获取反馈。"
+        },
+        {
+          "en": "Failure diagnoses go into a shared memory that other branches retrieve; failed checks are told apart from missing evidence.",
+          "zh": "失败诊断写进全局记忆，供其他分支检索复用，并区分“检查未通过”和“证据不足”。"
+        },
+        {
+          "en": "Beats direct generation in 8 of 10 model–dataset pairs on HumanEval and MBPP.",
+          "zh": "在 HumanEval 和 MBPP 上，10 组模型—数据集组合中有 8 组优于直接生成。"
+        }
+      ]
+    }
+  ],
+  "stories": [
+    {
+      "date": "2026.10",
+      "tag": {
+        "en": "Paper · EMNLP 2026",
+        "zh": "论文 · EMNLP 2026"
+      },
+      "title": {
+        "en": "Introducing SurveyGraph: an AI framework that writes academic surveys on its own",
+        "zh": "SurveyGraph：一套能自动写学术综述的 AI 框架"
+      },
+      "project": "surveygraph",
+      "url": "",
+      "image": ""
+    },
+    {
+      "date": "2026.10",
+      "tag": {
+        "en": "Paper · EMNLP 2026",
+        "zh": "论文 · EMNLP 2026"
+      },
+      "title": {
+        "en": "Your chatbot remembers the rules; it just stops following them",
+        "zh": "大模型记得规则，却不再遵守：揭示长对话中的“状态崩塌”"
+      },
+      "project": "statetrack",
+      "url": "",
+      "image": ""
+    },
+    {
+      "date": "2026.09",
+      "tag": {
+        "en": "Paper · EMNLP 2026",
+        "zh": "论文 · EMNLP 2026"
+      },
+      "title": {
+        "en": "ReMCTS: code agents that learn from each other's mistakes",
+        "zh": "ReMCTS：让写代码的智能体从彼此的失败中学习"
+      },
+      "project": "remcts",
+      "url": "",
+      "image": ""
+    },
+    {
+      "date": "2026.09",
+      "tag": {
+        "en": "Paper · ACM MM 2026",
+        "zh": "论文 · ACM MM 2026"
+      },
+      "title": {
+        "en": "Why diffusion models can sketch grapes but not cakes, and how to fix it",
+        "zh": "能画葡萄，却画不好蛋糕？解释并修复文生图模型的“概念脆弱性”"
+      },
+      "project": "concept-brittleness",
+      "url": "",
+      "image": ""
+    },
+    {
+      "date": "2026.08",
+      "tag": {
+        "en": "Preprint",
+        "zh": "预印本"
+      },
+      "title": {
+        "en": "When “must” becomes “maybe”: how rules erode as AI agents hand off work",
+        "zh": "当“必须”变成“也许”：多智能体交接时，规则如何悄悄流失"
+      },
+      "project": "",
+      "url": "https://arxiv.org/abs/2608.24569",
+      "image": "images/dir-trust.webp"
+    },
+    {
+      "date": "2025.04",
+      "tag": {
+        "en": "Paper · IEEE/CAA JAS",
+        "zh": "论文 · IEEE/CAA JAS"
+      },
+      "title": {
+        "en": "Photo to painting without inventing things: one step, 11× faster",
+        "zh": "照片转油画不再“脑补”：一步反演，快 11 倍"
+      },
+      "project": "semantic-discrepancy",
+      "url": "",
+      "image": ""
+    }
+  ],
   "about": [
     {
       "en": "MUSE Lab stands for **Multimodal Understanding and Synthesis for Explainability**. The Muses were the Greek goddesses of art and inspiration: we want generative AI to be just as creative, and at the same time **controllable, interpretable and trustworthy**.",
@@ -69,6 +335,7 @@
     {
       "id": "visual",
       "seal": "绘",
+      "tone": "blue",
       "title": {
         "en": "Image & Video Generation and Editing",
         "zh": "图像视频生成与编辑"
@@ -78,19 +345,40 @@
         "zh": "探究扩散模型为何在特定概念上失效，在保持语义与身份不变的前提下，精确地生成与编辑图像和视频。"
       },
       "topics": [
-        { "en": "Inside diffusion models", "zh": "扩散模型的内部机理" },
-        { "en": "Disentangled, controllable editing", "zh": "属性解耦与可控编辑" },
-        { "en": "Identity-preserving image and video editing", "zh": "保持身份的图像与视频编辑" },
-        { "en": "Reliability of generative editing", "zh": "生成式编辑的可靠性评估" }
+        {
+          "en": "Inside diffusion models",
+          "zh": "扩散模型的内部机理"
+        },
+        {
+          "en": "Disentangled, controllable editing",
+          "zh": "属性解耦与可控编辑"
+        },
+        {
+          "en": "Identity-preserving image and video editing",
+          "zh": "保持身份的图像与视频编辑"
+        },
+        {
+          "en": "Reliability of generative editing",
+          "zh": "生成式编辑的可靠性评估"
+        }
       ],
       "cover": [
-        { "src": "images/dir-visual.webp", "alt": "Illustration: a canvas of noise turning into a mountain landscape, with a film strip and a paintbrush" }
+        {
+          "src": "images/dir-visual.webp",
+          "alt": "Illustration: a canvas of noise turning into a mountain landscape, with a film strip and a paintbrush"
+        }
       ],
-      "papers": ["mm26", "jas25", "icassp23", "icassp22"]
+      "papers": [
+        "mm26",
+        "jas25",
+        "icassp23",
+        "icassp22"
+      ]
     },
     {
       "id": "trust",
       "seal": "信",
+      "tone": "green",
       "title": {
         "en": "Trustworthy LLMs & Agents",
         "zh": "可信大模型与智能体"
@@ -100,20 +388,44 @@
         "zh": "让大模型与智能体在长程对话与多智能体协作中保持可靠：守得住约束、查得出错误、说得出依据。"
       },
       "topics": [
-        { "en": "Predicting and steering hallucinations", "zh": "幻觉风险的预测与干预" },
-        { "en": "State integrity in long dialogues", "zh": "长程对话的状态保持" },
-        { "en": "Constraints across agent handoffs", "zh": "多智能体交接中的约束保持" },
-        { "en": "Reflective search for code generation", "zh": "代码生成的反思式搜索" },
-        { "en": "Grounded survey writing", "zh": "有依据的综述写作" }
+        {
+          "en": "Predicting and steering hallucinations",
+          "zh": "幻觉风险的预测与干预"
+        },
+        {
+          "en": "State integrity in long dialogues",
+          "zh": "长程对话的状态保持"
+        },
+        {
+          "en": "Constraints across agent handoffs",
+          "zh": "多智能体交接中的约束保持"
+        },
+        {
+          "en": "Reflective search for code generation",
+          "zh": "代码生成的反思式搜索"
+        },
+        {
+          "en": "Grounded survey writing",
+          "zh": "有依据的综述写作"
+        }
       ],
       "cover": [
-        { "src": "images/dir-trust.webp", "alt": "Illustration: AI agents linked in a network above a chat bubble, a shield with a check mark and a checklist" }
+        {
+          "src": "images/dir-trust.webp",
+          "alt": "Illustration: AI agents linked in a network above a chat bubble, a shield with a check mark and a checklist"
+        }
       ],
-      "papers": ["state", "remcts", "surveygraph", "handoff"]
+      "papers": [
+        "state",
+        "remcts",
+        "surveygraph",
+        "handoff"
+      ]
     },
     {
       "id": "emotion",
       "seal": "情",
+      "tone": "pink",
       "title": {
         "en": "Emotion AI",
         "zh": "情感智能"
@@ -123,19 +435,39 @@
         "zh": "让 AI 读懂人的情绪，给出恰当的陪伴与支持。"
       },
       "topics": [
-        { "en": "Multimodal emotion recognition", "zh": "多模态情绪识别" },
-        { "en": "Hallucinations in emotion descriptions", "zh": "情绪描述中的幻觉" },
-        { "en": "Emotional support conversation", "zh": "情感支持对话" },
-        { "en": "Companions with memory and personality", "zh": "有记忆、有人格的 AI 伙伴" }
+        {
+          "en": "Multimodal emotion recognition",
+          "zh": "多模态情绪识别"
+        },
+        {
+          "en": "Hallucinations in emotion descriptions",
+          "zh": "情绪描述中的幻觉"
+        },
+        {
+          "en": "Emotional support conversation",
+          "zh": "情感支持对话"
+        },
+        {
+          "en": "Companions with memory and personality",
+          "zh": "有记忆、有人格的 AI 伙伴"
+        }
       ],
       "cover": [
-        { "src": "images/dir-emotion.webp", "alt": "Illustration: a friendly companion robot between speech bubbles and small hearts" }
+        {
+          "src": "images/dir-emotion.webp",
+          "alt": "Illustration: a friendly companion robot between speech bubbles and small hearts"
+        }
       ],
-      "papers": ["ch7", "ch8", "jig20"]
+      "papers": [
+        "ch7",
+        "ch8",
+        "jig20"
+      ]
     },
     {
       "id": "understand",
       "seal": "懂",
+      "tone": "lavender",
       "title": {
         "en": "Multimodal Understanding & Applications",
         "zh": "多模态理解与应用"
@@ -145,19 +477,35 @@
         "zh": "让模型读懂视频、图像与文字，并落到真实场景中。"
       },
       "topics": [
-        { "en": "Moment retrieval and highlights", "zh": "视频时刻检索与高光检测" },
-        { "en": "Story-aware video editing", "zh": "懂剧情的智能剪辑" },
-        { "en": "Virtual try-on quality checks", "zh": "虚拟试衣失真检测" },
-        { "en": "Multimodal retrieval and moderation", "zh": "多模态信息检索与审核" }
+        {
+          "en": "Moment retrieval and highlights",
+          "zh": "视频时刻检索与高光检测"
+        },
+        {
+          "en": "Story-aware video editing",
+          "zh": "懂剧情的智能剪辑"
+        },
+        {
+          "en": "Virtual try-on quality checks",
+          "zh": "虚拟试衣失真检测"
+        },
+        {
+          "en": "Multimodal retrieval and moderation",
+          "zh": "多模态信息检索与审核"
+        }
       ],
       "cover": [
-        { "src": "images/dir-understand.webp", "alt": "Illustration: an image, a video and a text bubble flowing into an eye that reads them" }
+        {
+          "src": "images/dir-understand.webp",
+          "alt": "Illustration: an image, a video and a text bubble flowing into an eye that reads them"
+        }
       ],
       "papers": []
     },
     {
       "id": "safety",
       "seal": "安",
+      "tone": "steel",
       "title": {
         "en": "AI Safety",
         "zh": "大模型安全"
@@ -167,18 +515,31 @@
         "zh": "解释安全对齐为何有效、为何会被绕过，并为多模态大模型构建防护闭环。"
       },
       "topics": [
-        { "en": "Jailbreaks and defences", "zh": "越狱攻击与防御" },
-        { "en": "Multimodal safety", "zh": "多模态安全" },
-        { "en": "Adaptive safety alignment", "zh": "自适应安全对齐" }
+        {
+          "en": "Jailbreaks and defences",
+          "zh": "越狱攻击与防御"
+        },
+        {
+          "en": "Multimodal safety",
+          "zh": "多模态安全"
+        },
+        {
+          "en": "Adaptive safety alignment",
+          "zh": "自适应安全对齐"
+        }
       ],
       "cover": [
-        { "src": "images/dir-safety.webp", "alt": "Illustration: arrows bouncing off protective rings around a shield with a padlock" }
+        {
+          "src": "images/dir-safety.webp",
+          "alt": "Illustration: arrows bouncing off protective rings around a shield with a padlock"
+        }
       ],
       "papers": []
     },
     {
       "id": "embodied",
       "seal": "机",
+      "tone": "sand",
       "title": {
         "en": "Embodied AI",
         "zh": "具身智能"
@@ -188,12 +549,24 @@
         "zh": "让机器人在长周期任务中看得懂、想得清、做得稳。"
       },
       "topics": [
-        { "en": "End-to-end long-horizon decisions", "zh": "端到端长程决策" },
-        { "en": "Test-time adaptation for VLA models", "zh": "VLA 模型的测试时自适应" },
-        { "en": "Fine manipulation for industry", "zh": "工业场景中的精细操作" }
+        {
+          "en": "End-to-end long-horizon decisions",
+          "zh": "端到端长程决策"
+        },
+        {
+          "en": "Test-time adaptation for VLA models",
+          "zh": "VLA 模型的测试时自适应"
+        },
+        {
+          "en": "Fine manipulation for industry",
+          "zh": "工业场景中的精细操作"
+        }
       ],
       "cover": [
-        { "src": "images/dir-embodied.webp", "alt": "Illustration: a robot arm lifting a block to stack it on others" }
+        {
+          "src": "images/dir-embodied.webp",
+          "alt": "Illustration: a robot arm lifting a block to stack it on others"
+        }
       ],
       "papers": []
     }
