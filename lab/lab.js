@@ -1,6 +1,6 @@
 /* MUSE Lab page (lab/index.html): language switch, note sounds, the music-and-painting hero,
-   the news ticker, navigation, scroll reveal, featured-paper tabs, publication filters and the
-   viewer for research figures. */
+   the news ticker, navigation, scroll reveal, the rows of research cards and featured-work
+   panes, and the publication filters. */
 (function () {
   "use strict";
   var root = document.documentElement;
@@ -82,31 +82,6 @@
     card.style.setProperty("--my", e.clientY - r.top + "px");
   }, { passive: true });
 
-  /* ---------- featured papers: tabs (arrow keys move between them) ---------- */
-  var tabs = all(".ftab"), strip = document.querySelector(".ftabs");
-  function selectTab(tab, focus) {
-    tabs.forEach(function (t) {
-      var on = t === tab, panel = document.getElementById(t.getAttribute("aria-controls"));
-      t.classList.toggle("is-active", on);
-      t.setAttribute("aria-selected", on ? "true" : "false");
-      t.tabIndex = on ? 0 : -1;
-      if (panel) panel.classList.toggle("is-active", on);
-    });
-    if (focus) tab.focus({ preventScroll: true });
-    if (strip && strip.scrollWidth > strip.clientWidth) {
-      strip.scrollTo({ left: tab.offsetLeft - strip.clientWidth / 2 + tab.offsetWidth / 2, behavior: reduce ? "auto" : "smooth" });
-    }
-  }
-  tabs.forEach(function (t, i) {
-    t.addEventListener("click", function () { selectTab(t, false); });
-    t.addEventListener("keydown", function (e) {
-      var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
-      if (j === undefined) return;
-      e.preventDefault();
-      selectTab(tabs[(j + tabs.length) % tabs.length], true);
-    });
-  });
-
   /* ---------- publications: filter by research direction ---------- */
   var chips = all(".chip");
   function applyFilter(f, quiet) {
@@ -156,42 +131,58 @@
     }, reduce ? 0 : 600);
   });
 
-  /* ---------- research figures open large; a link carries the image, its caption waits in a
-     <template> (without scripts the link simply opens the image) ---------- */
-  var box = null, boxFrom = null;
-  function closeBox() {
-    if (!box) return;
-    var b = box;
-    box = null;
-    b.classList.remove("is-open");
-    root.classList.remove("no-scroll");
-    document.removeEventListener("keydown", boxKey);
-    setTimeout(function () { b.remove(); }, reduce ? 0 : 320);
-    if (boxFrom) boxFrom.focus({ preventScroll: true });
-  }
-  function boxKey(e) { if (e.key === "Escape") closeBox(); }
-  document.addEventListener("click", function (e) {
-    var a = closest(e.target, "a[data-zoom]");
-    if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
-    e.preventDefault();
-    var img = a.querySelector("img"), cap = document.getElementById(a.getAttribute("data-zoom"));
-    boxFrom = a;
-    box = document.createElement("div");
-    box.className = "lightbox";
-    box.setAttribute("role", "dialog");
-    box.setAttribute("aria-modal", "true");
-    box.innerHTML = '<button type="button" class="lightbox__close"><span aria-hidden="true">×</span><span class="vh en">Close</span><span class="vh zh">关闭</span></button>' +
-      '<figure class="lightbox__fig"><img class="lightbox__img" alt=""><figcaption class="lightbox__cap"></figcaption></figure>';
-    var big = box.querySelector(".lightbox__img");
-    big.src = a.getAttribute("href");
-    big.alt = img ? img.alt : a.getAttribute("data-alt") || "";
-    if (cap) box.querySelector(".lightbox__cap").innerHTML = cap.innerHTML;
-    box.addEventListener("click", closeBox);   // a click anywhere closes it; the paper link then goes on to the list
-    document.body.appendChild(box);
-    root.classList.add("no-scroll");
-    document.addEventListener("keydown", boxKey);
-    requestAnimationFrame(function () { if (box) box.classList.add("is-open"); });
-    box.querySelector(".lightbox__close").focus({ preventScroll: true });
+  /* ---------- rows of cards that scroll sideways (research directions, featured work), snapping to
+     a card. The arrows in the section's head move one card on, a mouse can drag a row; fingers and
+     trackpads scroll it natively. The editor redraws the cards but not the rows, so everything hangs
+     on the rows. ---------- */
+  all(".rail").forEach(function (row) {
+    var arrows = all("[data-rail]", closest(row, "section") || document), drag = null;
+    var step = function () {
+      var card = row.firstElementChild;
+      return card ? card.offsetWidth + (parseFloat(getComputedStyle(row).columnGap) || 0) : row.clientWidth * 0.8;
+    };
+    var syncArrows = function () {
+      var end = row.scrollWidth - row.clientWidth - 4;
+      arrows.forEach(function (b) { b.disabled = +b.getAttribute("data-rail") < 0 ? row.scrollLeft <= 4 : row.scrollLeft >= end; });
+    };
+    arrows.forEach(function (b) {
+      b.addEventListener("click", function () {
+        row.scrollBy({ left: +b.getAttribute("data-rail") * step(), behavior: reduce ? "auto" : "smooth" });
+      });
+    });
+    row.addEventListener("scroll", syncArrows, { passive: true });
+    window.addEventListener("resize", syncArrows);
+    syncArrows();
+
+    /* dragging: snapping is off while the row follows the mouse, then it glides to the nearest card;
+       a drag never counts as a click on the link it started on */
+    row.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse" || e.button !== 0 || root.classList.contains("yy-editing")) return;
+      drag = { x: e.clientX, left: row.scrollLeft, moved: false };
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) > 6) {
+        drag.moved = true;
+        row.classList.add("is-dragging");
+        if (window.getSelection) window.getSelection().removeAllRanges();
+      }
+      if (drag.moved) row.scrollLeft = drag.left - dx;
+    });
+    window.addEventListener("pointerup", function () {
+      if (!drag) return;
+      var moved = drag.moved;
+      drag = null;
+      if (!moved) return;
+      var swallow = function (e) { e.preventDefault(); e.stopPropagation(); };
+      row.addEventListener("click", swallow, true);
+      setTimeout(function () { row.removeEventListener("click", swallow, true); }, 0);
+      var s = step();
+      row.scrollTo({ left: Math.round(row.scrollLeft / s) * s, behavior: reduce ? "auto" : "smooth" });
+      setTimeout(function () { row.classList.remove("is-dragging"); }, reduce ? 0 : 450);
+    });
+    row.addEventListener("dragstart", function (e) { e.preventDefault(); });
   });
 
   /* ---------- news ticker in the hero: every few seconds the list moves up one item and the
@@ -205,7 +196,7 @@
     ticker.addEventListener("focusin", function () { held = true; });
     ticker.addEventListener("focusout", function () { held = false; });
     setInterval(function () {
-      if (held || moving || document.hidden) return;
+      if (held || moving || document.hidden || root.classList.contains("yy-editing")) return;   // still while being edited
       var first = tickList.firstElementChild;
       moving = true;
       tickList.style.transition = "transform 0.7s cubic-bezier(0.2, 0.65, 0.3, 1)";
@@ -942,8 +933,10 @@
 
   function leave() { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; }
 
-  /* a click or tap in the hero: paint splash, a fan of notes, nearby strings ring, the riff */
+  /* a click or tap in the hero: paint splash, a fan of notes, nearby strings ring, the riff
+     (not while the page is being edited: a click there starts editing a text) */
   function play(x, y, target) {
+    if (root.classList.contains("yy-editing")) return;
     splash(x, y);
     burst(x, y);
     shake(x, y);

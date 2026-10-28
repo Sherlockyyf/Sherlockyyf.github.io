@@ -48,12 +48,16 @@
     <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></symbol>
     <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="m14.5 5.5-6.5 6.5 6.5 6.5"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="m9.5 5.5 6.5 6.5-6.5 6.5"/></symbol>
   </svg>
   <!-- The news and papers on this page come from data/news.json and data/publications.json (the same
-       files as the homepage), the PI's name, title and photo from data/home.json, and the introduction,
-       research directions and contact from data/lab.json. They are generated between the "name:start" /
-       "name:end" comment markers below by `node tools/render_site.js`, and again whenever the page editor
-       publishes; hand edits between the markers are overwritten. -->
+       files as the homepage), the PI's name, title and photo from data/home.json, and the hero's tagline
+       and topics, section titles, featured work, news stories, introduction, research directions and
+       contact from data/lab.json. They are generated between the "name:start" / "name:end" comment
+       markers below by `node tools/render_site.js` (which also writes a page per featured work under
+       projects/), and again whenever the page editor publishes (edit this page on the page itself after
+       signing in at admin/); hand edits between the markers are overwritten. -->
 
   <a class="skip-link" href="#content"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
 
@@ -64,6 +68,8 @@
     <nav class="nav" id="nav" aria-label="Sections">
       <a href="#about"><span class="en">About</span><span class="zh">简介</span></a>
       <a href="#research"><span class="en">Research</span><span class="zh">研究方向</span></a>
+      <a href="#work"><span class="en">Work</span><span class="zh">代表作</span></a>
+      <a href="#news"><span class="en">News</span><span class="zh">动态</span></a>
       <a href="#publications"><span class="en">Publications</span><span class="zh">论文</span></a>
       <a href="#contact"><span class="en">Contact</span><span class="zh">联系</span></a>
       <a class="nav__pi" href="../"><span class="en">Yifan Yuan</span><span class="zh">袁一帆</span> <span aria-hidden="true">↗</span></a>
@@ -95,33 +101,32 @@
     <div class="hero__inner">
       <h1 class="title"><span class="muse">MUSE</span> Lab</h1>
       <p class="subtitle">Multimodal Understanding and Synthesis for Explainability</p>
-      <p class="tagline">
-        <span class="en">We build <mark class="hl">trustworthy</mark> generative AI</span>
-        <span class="zh">构建<mark class="hl">可信</mark>的生成式 AI</span>
-      </p>
+      <p class="tagline"><!-- lab-tagline:start --><span class="en">We build <mark class="hl">trustworthy</mark> generative AI</span><span class="zh">构建<mark class="hl">可信</mark>的生成式 AI</span><!-- lab-tagline:end --></p>
       <div class="actions">
         <a class="btn primary" href="#research"><span class="en">Our research</span><span class="zh">研究方向</span><span class="arrow arrow--down" aria-hidden="true">↓</span></a>
         <a class="btn" href="../"><span class="en">PI: Yifan Yuan</span><span class="zh">负责人：袁一帆</span><span class="arrow" aria-hidden="true">→</span></a>
       </div>
       <ul class="topics">
+        <!-- lab-topics:start -->
         <li>AIGC</li>
         <li><span class="en">Multimodal Understanding &amp; Generation</span><span class="zh">多模态理解与生成</span></li>
         <li><span class="en">LLMs &amp; Agents</span><span class="zh">大模型与智能体</span></li>
         <li><span class="en">Retrieval-Augmented Generation</span><span class="zh">检索增强生成</span></li>
         <li><span class="en">Persona Modeling</span><span class="zh">人格化语言建模</span></li>
         <li><span class="en">Emotional Agents</span><span class="zh">情感智能体</span></li>
+        <!-- lab-topics:end -->
       </ul>
       <!-- lab-latest:start -->
       <div class="ticker">
         <span class="ticker__tag"><span class="en">News</span><span class="zh">最新</span></span>
         <div class="ticker__view">
           <ul class="ticker__list">
-            <li class="ticker__item"><span class="ticker__date">2026.10</span><span class="ticker__text"><span class="en">Two EMNLP 2026 papers are on arXiv with code: <a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> and <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：<a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> 与 <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>。</span></span></li>
-            <li class="ticker__item"><span class="ticker__date">2026.09</span><span class="ticker__text"><span class="en"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a> (EMNLP 2026) and our ACM MM 2026 paper on <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">object-dependent concept brittleness</a> are on arXiv with code.</span><span class="zh"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a>（EMNLP 2026）与 ACM MM 2026 论文 <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</a> 已公开于 arXiv 并开源代码。</span></span></li>
-            <li class="ticker__item"><span class="ticker__date">2026.08</span><span class="ticker__text"><span class="en">New preprint on how LLM agent handoffs erode workflow constraints: <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”</a>.</span><span class="zh">新 Preprint <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</a>，研究多智能体交接过程中工作流约束的流失。</span></span></li>
-            <li class="ticker__item"><span class="ticker__date">2026.08</span><span class="ticker__text"><span class="en">Three papers accepted to <strong>EMNLP 2026</strong>.</span><span class="zh">三篇论文被 <strong>EMNLP 2026</strong> 接收。</span></span></li>
-            <li class="ticker__item"><span class="ticker__date">2026.07</span><span class="ticker__text"><span class="en">One paper accepted to <strong>ACM MM 2026</strong>.</span><span class="zh">一篇论文被 <strong>ACM MM 2026</strong> 接收。</span></span></li>
-            <li class="ticker__item"><span class="ticker__date">2025.04</span><span class="ticker__text"><span class="en">One paper published in <strong>IEEE/CAA Journal of Automatica Sinica</strong>, with <a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">code</a>.</span><span class="zh">一篇论文发表于 <strong>IEEE/CAA Journal of Automatica Sinica</strong>，<a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">代码</a>已开源。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.10</span><span class="ticker__text"><span class="ticker__icon" aria-hidden="true">📄</span><span class="en">Two EMNLP 2026 papers are on arXiv with code: <a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> and <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>.</span><span class="zh">两篇 EMNLP 2026 论文已公开于 arXiv 并开源代码：<a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener">StateTrack</a> 与 <a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener">SurveyGraph</a>。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.09</span><span class="ticker__text"><span class="ticker__icon" aria-hidden="true">📄</span><span class="en"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a> (EMNLP 2026) and our ACM MM 2026 paper on <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">object-dependent concept brittleness</a> are on arXiv with code.</span><span class="zh"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener">ReMCTS</a>（EMNLP 2026）与 ACM MM 2026 论文 <a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</a> 已公开于 arXiv 并开源代码。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.08</span><span class="ticker__text"><span class="ticker__icon" aria-hidden="true">📄</span><span class="en">New preprint on how LLM agent handoffs erode workflow constraints: <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”</a>.</span><span class="zh">新 Preprint <a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener">When “Must” Becomes “Maybe”: Erosion of Workflow Constraints in LLM Agent Handoffs</a>，研究多智能体交接过程中工作流约束的流失。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.08</span><span class="ticker__text"><span class="ticker__icon" aria-hidden="true">🎉🎉</span><span class="en">Three papers accepted to <strong>EMNLP 2026</strong>.</span><span class="zh">三篇论文被 <strong>EMNLP 2026</strong> 接收。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2026.07</span><span class="ticker__text"><span class="ticker__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper accepted to <strong>ACM MM 2026</strong>.</span><span class="zh">一篇论文被 <strong>ACM MM 2026</strong> 接收。</span></span></li>
+            <li class="ticker__item"><span class="ticker__date">2025.04</span><span class="ticker__text"><span class="ticker__icon" aria-hidden="true">🎉🎉</span><span class="en">One paper published in <strong>IEEE/CAA Journal of Automatica Sinica</strong>, with <a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">code</a>.</span><span class="zh">一篇论文发表于 <strong>IEEE/CAA Journal of Automatica Sinica</strong>，<a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener">代码</a>已开源。</span></span></li>
           </ul>
         </div>
       </div>
@@ -138,7 +143,7 @@
     <section class="section" id="about">
       <div class="sec-head reveal">
         <span class="sec-num">01</span>
-        <h2 class="sec-title"><span class="en">About the Lab</span><span class="zh">实验室简介</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 50 7, 100 17, 160 11 S 250 8, 296 13"/></svg></h2>
+        <h2 class="sec-title"><!-- lab-h-about:start --><span class="en">About the Lab</span><span class="zh">实验室简介</span><!-- lab-h-about:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 50 7, 100 17, 160 11 S 250 8, 296 13"/></svg></h2>
       </div>
       <div class="about__grid">
         <div class="about__col">
@@ -199,15 +204,21 @@
       </div>
     </section>
 
-    <!-- ===================== Research ===================== -->
-    <section class="section" id="research">
-      <div class="sec-head reveal">
-        <span class="sec-num">02</span>
-        <h2 class="sec-title"><span class="en">Research Directions</span><span class="zh">研究方向</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 17, 110 7, 170 12 S 255 15, 296 9"/></svg></h2>
+    <!-- ===================== Research: the directions as cards in a row that scrolls sideways ===================== -->
+    <section class="section section--wide" id="research">
+      <div class="section__inner">
+        <div class="sec-head reveal">
+          <span class="sec-num">02</span>
+          <h2 class="sec-title" id="research-title"><!-- lab-h-research:start --><span class="en">Research Directions</span><span class="zh">研究方向</span><!-- lab-h-research:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 17, 110 7, 170 12 S 255 15, 296 9"/></svg></h2>
+          <div class="sec-tools">
+            <button type="button" class="arrow-btn" data-rail="-1" disabled><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="vh en">Previous</span><span class="vh zh">上一项</span></button>
+            <button type="button" class="arrow-btn" data-rail="1"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg><span class="vh en">Next</span><span class="vh zh">下一项</span></button>
+          </div>
+        </div>
       </div>
-      <div class="dirs">
+      <div class="rail dirs" role="group" aria-labelledby="research-title">
         <!-- lab-research:start -->
-        <article class="dir dir--visual spotlight reveal" id="dir-visual">
+        <article class="dir dir--visual tone-blue spotlight reveal" id="dir-visual">
           <div class="dir__cover dir__cover--1">
             <span class="dir__shot"><img src="../images/dir-visual.webp" alt="Illustration: a canvas of noise turning into a mountain landscape, with a film strip and a paintbrush" loading="lazy"></span>
           </div>
@@ -233,7 +244,7 @@
             </ul>
           </div>
         </article>
-        <article class="dir dir--trust spotlight reveal" id="dir-trust">
+        <article class="dir dir--trust tone-green spotlight reveal" id="dir-trust">
           <div class="dir__cover dir__cover--1">
             <span class="dir__shot"><img src="../images/dir-trust.webp" alt="Illustration: AI agents linked in a network above a chat bubble, a shield with a check mark and a checklist" loading="lazy"></span>
           </div>
@@ -260,7 +271,7 @@
             </ul>
           </div>
         </article>
-        <article class="dir dir--emotion spotlight reveal" id="dir-emotion">
+        <article class="dir dir--emotion tone-pink spotlight reveal" id="dir-emotion">
           <div class="dir__cover dir__cover--1">
             <span class="dir__shot"><img src="../images/dir-emotion.webp" alt="Illustration: a friendly companion robot between speech bubbles and small hearts" loading="lazy"></span>
           </div>
@@ -285,7 +296,7 @@
             </ul>
           </div>
         </article>
-        <article class="dir dir--understand spotlight reveal" id="dir-understand">
+        <article class="dir dir--understand tone-lavender spotlight reveal" id="dir-understand">
           <div class="dir__cover dir__cover--1">
             <span class="dir__shot"><img src="../images/dir-understand.webp" alt="Illustration: an image, a video and a text bubble flowing into an eye that reads them" loading="lazy"></span>
           </div>
@@ -304,7 +315,7 @@
             </ul>
           </div>
         </article>
-        <article class="dir dir--safety spotlight reveal" id="dir-safety">
+        <article class="dir dir--safety tone-steel spotlight reveal" id="dir-safety">
           <div class="dir__cover dir__cover--1">
             <span class="dir__shot"><img src="../images/dir-safety.webp" alt="Illustration: arrows bouncing off protective rings around a shield with a padlock" loading="lazy"></span>
           </div>
@@ -322,7 +333,7 @@
             </ul>
           </div>
         </article>
-        <article class="dir dir--embodied spotlight reveal" id="dir-embodied">
+        <article class="dir dir--embodied tone-sand spotlight reveal" id="dir-embodied">
           <div class="dir__cover dir__cover--1">
             <span class="dir__shot"><img src="../images/dir-embodied.webp" alt="Illustration: a robot arm lifting a block to stack it on others" loading="lazy"></span>
           </div>
@@ -344,83 +355,120 @@
       </div>
     </section>
 
+    <!-- ===================== Featured work: a row of panes, each opening its project page ===================== -->
+    <section class="section section--wide" id="work">
+      <div class="section__inner">
+        <div class="sec-head reveal">
+          <span class="sec-num">03</span>
+          <h2 class="sec-title" id="work-title"><!-- lab-h-work:start --><span class="en">Featured Work</span><span class="zh">代表作</span><!-- lab-h-work:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 C 55 17, 115 8, 175 12 S 250 15, 296 10"/></svg></h2>
+          <div class="sec-tools">
+            <button type="button" class="arrow-btn" data-rail="-1" disabled><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="vh en">Previous</span><span class="vh zh">上一项</span></button>
+            <button type="button" class="arrow-btn" data-rail="1"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg><span class="vh en">Next</span><span class="vh zh">下一项</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="rail panes" role="group" aria-labelledby="work-title">
+        <!-- lab-work:start -->
+        <article class="pane tone-pink reveal">
+          <h3 class="pane__title">Concept Brittleness</h3>
+          <p class="pane__blurb en">Asked for an ink painting, why does an image generator paint grapes in black-and-white ink but always paint a cake in color? We found what makes the result depend on the object being drawn, and fix this “object-level concept brittleness” without any training.</p>
+          <p class="pane__blurb zh">同样画一幅水墨画，为什么图像生成模型能把葡萄画成黑白水墨色，而却把蛋糕始终画成彩色的？我们找到了这种因为画的物体不同而产生差异的原因，无需训练即可修正这种“物体级的概念脆弱性”。</p>
+          <img class="pane__visual" src="../images/work/concept-brittleness.svg" alt="" loading="lazy">
+          <p class="pane__actions"><a class="pane__btn" href="projects/concept-brittleness/"><span class="en">Learn more</span><span class="zh">了解更多</span></a><a href="https://github.com/Metecade/Object-Dependent-Concept-Brittleness" target="_blank" rel="noopener" class="pane__btn pane__btn--ghost"><span>Code</span></a></p>
+        </article>
+        <article class="pane tone-sand reveal">
+          <h3 class="pane__title">Semantic Discrepancy</h3>
+          <p class="pane__blurb en">Turning a photo into a painting, diffusion models invent things that were never there. One inversion step fixes it.</p>
+          <p class="pane__blurb zh">照片转油画时，模型会凭空“脑补”原图里没有的东西。一步反演就能修正。</p>
+          <img class="pane__visual" src="../images/work/semantic-discrepancy.svg" alt="" loading="lazy">
+          <p class="pane__actions"><a class="pane__btn" href="projects/semantic-discrepancy/"><span class="en">Learn more</span><span class="zh">了解更多</span></a><a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener" class="pane__btn pane__btn--ghost"><span>Code</span></a></p>
+        </article>
+        <article class="pane tone-lavender reveal">
+          <h3 class="pane__title">SurveyGraph</h3>
+          <p class="pane__blurb en">An AI that first maps how a research field evolved, then writes a fully cited survey along that map.</p>
+          <p class="pane__blurb zh">让 AI 先画出一个领域的“方法—实体”知识图谱，再沿着它写出一篇有据可查的学术综述。</p>
+          <img class="pane__visual" src="../images/work/surveygraph.svg" alt="" loading="lazy">
+          <p class="pane__actions"><a class="pane__btn" href="projects/surveygraph/"><span class="en">Learn more</span><span class="zh">了解更多</span></a><a href="https://github.com/MUSE-AI-Lab/SurveyGraph" target="_blank" rel="noopener" class="pane__btn pane__btn--ghost"><span>Code</span></a></p>
+        </article>
+        <article class="pane tone-mint reveal">
+          <h3 class="pane__title">StateTrack</h3>
+          <p class="pane__blurb en">LLMs still remember the rules you set; deep into a conversation they quietly stop following them. We found this collapse and measured it.</p>
+          <p class="pane__blurb zh">大模型还记得你定下的规则，却在长对话里悄悄不再遵守。我们发现并量化了这种“状态崩塌”。</p>
+          <img class="pane__visual" src="../images/work/statetrack.svg" alt="" loading="lazy">
+          <p class="pane__actions"><a class="pane__btn" href="projects/statetrack/"><span class="en">Learn more</span><span class="zh">了解更多</span></a><a href="https://github.com/MUSE-AI-Lab/StateTrack" target="_blank" rel="noopener" class="pane__btn pane__btn--ghost"><span>Code</span></a></p>
+        </article>
+        <article class="pane tone-blue reveal">
+          <h3 class="pane__title">ReMCTS</h3>
+          <p class="pane__blurb en">Code-writing agents try many programs in a search tree, and every failed branch teaches the others.</p>
+          <p class="pane__blurb zh">写代码的智能体在一棵搜索树上多路尝试，失败分支的经验会分享给其他分支，少走弯路。</p>
+          <img class="pane__visual" src="../images/work/remcts.svg" alt="" loading="lazy">
+          <p class="pane__actions"><a class="pane__btn" href="projects/remcts/"><span class="en">Learn more</span><span class="zh">了解更多</span></a><a href="https://github.com/MUSE-AI-Lab/ReMCTS" target="_blank" rel="noopener" class="pane__btn pane__btn--ghost"><span>Code</span></a></p>
+        </article>
+        <!-- lab-work:end -->
+      </div>
+    </section>
+
+    <!-- ===================== News: one sentence each ===================== -->
+    <section class="section" id="news">
+      <div class="sec-head reveal">
+        <span class="sec-num">04</span>
+        <h2 class="sec-title"><!-- lab-h-news:start --><span class="en">Latest News</span><span class="zh">最新动态</span><!-- lab-h-news:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 50 9, 110 16, 170 11 S 252 9, 296 13"/></svg></h2>
+      </div>
+      <div class="stories">
+        <!-- lab-news:start -->
+        <article class="story reveal">
+          <div class="story__text">
+            <h3 class="story__title"><a href="projects/surveygraph/" class="story__link"><span class="en">Introducing SurveyGraph: an AI framework that writes academic surveys on its own</span><span class="zh">SurveyGraph：一套能自动写学术综述的 AI 框架</span></a></h3>
+            <p class="story__meta"><span class="story__date">2026.10</span><span class="story__tag"><span class="en">Paper · EMNLP 2026</span><span class="zh">论文 · EMNLP 2026</span></span><a href="projects/surveygraph/" class="story__more"><span class="en">Learn more</span><span class="zh">了解更多</span><span class="story__chev" aria-hidden="true">›</span></a></p>
+          </div>
+          <span class="story__thumb tone-lavender" aria-hidden="true"><img src="../images/work/surveygraph.svg" alt="" loading="lazy"></span>
+        </article>
+        <article class="story reveal">
+          <div class="story__text">
+            <h3 class="story__title"><a href="projects/statetrack/" class="story__link"><span class="en">Your chatbot remembers the rules; it just stops following them</span><span class="zh">大模型记得规则，却不再遵守：揭示长对话中的“状态崩塌”</span></a></h3>
+            <p class="story__meta"><span class="story__date">2026.10</span><span class="story__tag"><span class="en">Paper · EMNLP 2026</span><span class="zh">论文 · EMNLP 2026</span></span><a href="projects/statetrack/" class="story__more"><span class="en">Learn more</span><span class="zh">了解更多</span><span class="story__chev" aria-hidden="true">›</span></a></p>
+          </div>
+          <span class="story__thumb tone-mint" aria-hidden="true"><img src="../images/work/statetrack.svg" alt="" loading="lazy"></span>
+        </article>
+        <article class="story reveal">
+          <div class="story__text">
+            <h3 class="story__title"><a href="projects/remcts/" class="story__link"><span class="en">ReMCTS: code agents that learn from each other's mistakes</span><span class="zh">ReMCTS：让写代码的智能体从彼此的失败中学习</span></a></h3>
+            <p class="story__meta"><span class="story__date">2026.09</span><span class="story__tag"><span class="en">Paper · EMNLP 2026</span><span class="zh">论文 · EMNLP 2026</span></span><a href="projects/remcts/" class="story__more"><span class="en">Learn more</span><span class="zh">了解更多</span><span class="story__chev" aria-hidden="true">›</span></a></p>
+          </div>
+          <span class="story__thumb tone-blue" aria-hidden="true"><img src="../images/work/remcts.svg" alt="" loading="lazy"></span>
+        </article>
+        <article class="story reveal">
+          <div class="story__text">
+            <h3 class="story__title"><a href="projects/concept-brittleness/" class="story__link"><span class="en">Why diffusion models can sketch grapes but not cakes, and how to fix it</span><span class="zh">能画葡萄，却画不好蛋糕？解释并修复文生图模型的“概念脆弱性”</span></a></h3>
+            <p class="story__meta"><span class="story__date">2026.09</span><span class="story__tag"><span class="en">Paper · ACM MM 2026</span><span class="zh">论文 · ACM MM 2026</span></span><a href="projects/concept-brittleness/" class="story__more"><span class="en">Learn more</span><span class="zh">了解更多</span><span class="story__chev" aria-hidden="true">›</span></a></p>
+          </div>
+          <span class="story__thumb tone-pink" aria-hidden="true"><img src="../images/work/concept-brittleness.svg" alt="" loading="lazy"></span>
+        </article>
+        <article class="story reveal">
+          <div class="story__text">
+            <h3 class="story__title"><a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener" class="story__link"><span class="en">When “must” becomes “maybe”: how rules erode as AI agents hand off work</span><span class="zh">当“必须”变成“也许”：多智能体交接时，规则如何悄悄流失</span></a></h3>
+            <p class="story__meta"><span class="story__date">2026.08</span><span class="story__tag"><span class="en">Preprint</span><span class="zh">预印本</span></span><a href="https://arxiv.org/abs/2608.24569" target="_blank" rel="noopener" class="story__more"><span class="en">Learn more</span><span class="zh">了解更多</span><span class="story__chev" aria-hidden="true">›</span></a></p>
+          </div>
+          <span class="story__thumb tone-steel" aria-hidden="true"><img src="../images/dir-trust.webp" alt="" loading="lazy"></span>
+        </article>
+        <article class="story reveal">
+          <div class="story__text">
+            <h3 class="story__title"><a href="projects/semantic-discrepancy/" class="story__link"><span class="en">Photo to painting without inventing things: one step, 11× faster</span><span class="zh">照片转油画不再“脑补”：一步反演，快 11 倍</span></a></h3>
+            <p class="story__meta"><span class="story__date">2025.04</span><span class="story__tag"><span class="en">Paper · IEEE/CAA JAS</span><span class="zh">论文 · IEEE/CAA JAS</span></span><a href="projects/semantic-discrepancy/" class="story__more"><span class="en">Learn more</span><span class="zh">了解更多</span><span class="story__chev" aria-hidden="true">›</span></a></p>
+          </div>
+          <span class="story__thumb tone-sand" aria-hidden="true"><img src="../images/work/semantic-discrepancy.svg" alt="" loading="lazy"></span>
+        </article>
+        <!-- lab-news:end -->
+      </div>
+    </section>
+
     <!-- ===================== Publications ===================== -->
     <section class="section" id="publications">
       <div class="sec-head reveal">
-        <span class="sec-num">03</span>
-        <h2 class="sec-title"><span class="en">Publications</span><span class="zh">论文成果</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 C 45 16, 105 8, 165 13 S 245 9, 296 14"/></svg></h2>
+        <span class="sec-num">05</span>
+        <h2 class="sec-title" id="publications-title"><!-- lab-h-publications:start --><span class="en">Publications</span><span class="zh">论文成果</span><!-- lab-h-publications:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 C 45 16, 105 8, 165 13 S 245 9, 296 14"/></svg></h2>
       </div>
-      <h3 class="sub reveal" id="featured-title"><span class="en">Featured</span><span class="zh">代表性论文</span></h3>
-      <div class="featured reveal">
-        <!-- lab-featured:start -->
-        <div class="ftabs" role="tablist" aria-labelledby="featured-title">
-          <button type="button" class="ftab is-active" role="tab" id="ftab-mm26" aria-controls="feature-mm26" aria-selected="true"><span class="ftab__name">Concept Brittleness</span><span class="ftab__venue">ACM MM 2026</span></button>
-          <button type="button" class="ftab" role="tab" id="ftab-state" aria-controls="feature-state" aria-selected="false" tabindex="-1"><span class="ftab__name">StateTrack</span><span class="ftab__venue">EMNLP 2026</span></button>
-          <button type="button" class="ftab" role="tab" id="ftab-remcts" aria-controls="feature-remcts" aria-selected="false" tabindex="-1"><span class="ftab__name">ReMCTS</span><span class="ftab__venue">EMNLP 2026</span></button>
-          <button type="button" class="ftab" role="tab" id="ftab-surveygraph" aria-controls="feature-surveygraph" aria-selected="false" tabindex="-1"><span class="ftab__name">SurveyGraph</span><span class="ftab__venue">EMNLP 2026</span></button>
-          <button type="button" class="ftab" role="tab" id="ftab-jas25" aria-controls="feature-jas25" aria-selected="false" tabindex="-1"><span class="ftab__name">Semantic Discrepancy</span><span class="ftab__venue">IEEE/CAA JAS 2025</span></button>
-        </div>
-        <div class="features">
-          <article class="feature is-active" role="tabpanel" id="feature-mm26" aria-labelledby="ftab-mm26">
-            <a class="pub-media" href="../images/papers/concept-brittleness.jpg" target="_blank" rel="noopener"><img src="../images/papers/concept-brittleness.jpg" width="1400" height="511" loading="lazy" alt="Two-stage framework: sparse prior construction in SAE space and prior-guided denoising intervention"></a>
-            <div class="feature__body">
-              <div class="pub-meta"><span class="pub-venue">ACM MM 2026</span><span class="pub-badge">CCF A</span></div>
-              <h4 class="feature__title">Interpreting Object-Dependent Concept Brittleness in Text-to-Image Diffusion Models</h4>
-              <p class="feature__authors"><span class="me">Yifan Yuan*</span>, Xiangyu Liu*, Hongming Shan, Yu Han, Yu Jiang, Hao Tan, Junping Zhang, Linlin Shen†</p>
-              <p class="feature__desc en">Text-to-image diffusion models usually follow prompts well, yet we found an overlooked failure: a concept such as “ink sketch” works for most objects but fails again and again on a few — Flux draws grapes as an ink sketch but keeps painting a cake in full color. These failures persist across random seeds, revealing systematic blind spots in how the model has learned the concept rather than sampling noise. We train sparse autoencoders at every denoising step, compare successful and failed generations in this sparse space where concepts become separable, locate the missing or weakened concept dimensions, and repair them at inference time by nudging features toward a concept prototype built from reliable samples, with no retraining. Across multiple diffusion backbones this markedly improves concept consistency, text fidelity and repair success, and the earlier the intervention, the stronger the correction.</p>
-              <p class="feature__desc zh">文生图模型通常能很好地按提示词作画，但我们发现了一种被忽视的失败：同一个概念（如“水墨素描”）用在大多数物体上都没问题，却在少数物体上反复失败——Flux 能把“葡萄”画成水墨素描，“蛋糕”却总是彩色的。这类失败换随机种子也照样出现，说明模型对概念的掌握存在系统性盲区，而不是偶然的采样噪声。我们在去噪的每一步训练稀疏自编码器，在这个概念更易区分的稀疏空间里对比成功与失败的生成，找出缺失或减弱的概念维度，再在推理时把特征向由可靠样本构建的概念原型轻量插值，无需重新训练即可修复。在多种主流扩散模型上，概念一致性、文本忠实度和修复成功率都显著提升，而且越早干预、纠正效果越好。</p>
-              <p class="feature__links"><a href="https://arxiv.org/abs/2609.09909" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/Metecade/Object-Dependent-Concept-Brittleness" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
-            </div>
-          </article>
-          <article class="feature" role="tabpanel" id="feature-state" aria-labelledby="ftab-state">
-            <a class="pub-media" href="../images/papers/statetrack.jpg" target="_blank" rel="noopener"><img src="../images/papers/statetrack.jpg" width="926" height="626" loading="lazy" alt="StateTrack-Bench evaluation protocol"></a>
-            <div class="feature__body">
-              <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span></div>
-              <h4 class="feature__title">When LLMs Forget What They Believe: Characterizing State Integrity Collapse in Long-Horizon Dialogues</h4>
-              <p class="feature__authors">Yancheng Zhu, <span class="me">Yifan Yuan†</span></p>
-              <p class="feature__desc en">Assistants must keep obeying user-set constraints — formats, personas, safety boundaries — over many turns, but evaluations mostly test instruction following in a single turn or a short exchange. We identify a subtle but dangerous failure, State Integrity Collapse: asked about it, the model can still restate the constraint, yet its next answers stop following it — unlike ordinary forgetting, this is not fixed by longer context or memory retrieval. We build StateTrack-Bench, which plants one persistent constraint (numerical, format, persona, factual-memory or logical) in a conversation, checks compliance at increasing dialogue depths, and uses a forked recall audit to tell forgetting apart from remembering without complying. Across seven models, 88.6% of failures are such behavioral drift rather than forgetting, and our Structured State Anchoring recovers up to 24.4 points.</p>
-              <p class="feature__desc zh">对话助手需要在很多轮对话里一直遵守用户设定的约束（格式、角色、安全边界等），但现有评测大多只看单轮或短对话里能否遵守指令。我们发现一种隐蔽而危险的失败：问起来模型还能复述约束，接下来的回答却不再执行——我们称之为“状态完整性崩塌”，它不同于普通的遗忘，单靠更长的上下文或记忆检索解决不了。我们构建了 StateTrack-Bench：在对话中设定一条持续约束（数值、格式、角色、事实记忆、逻辑规则五类），在不同对话深度检验模型是否仍然遵守，并用“分叉回忆审计”区分“记不住”和“记得但不做”。在七个主流模型上，88.6% 的失败属于“记得但不做”的行为漂移而非遗忘；我们提出的结构化状态锚定最多可挽回 24.4 个百分点。</p>
-              <p class="feature__links"><a href="https://arxiv.org/abs/2610.31314" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/StateTrack" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
-            </div>
-          </article>
-          <article class="feature" role="tabpanel" id="feature-remcts" aria-labelledby="ftab-remcts">
-            <a class="pub-media" href="../images/papers/remcts.jpg" target="_blank" rel="noopener"><img src="../images/papers/remcts.jpg" width="1400" height="595" loading="lazy" alt="Overview of ReMCTS"></a>
-            <div class="feature__body">
-              <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span></div>
-              <h4 class="feature__title">ReMCTS: Reflection-Enhanced Monte Carlo Tree Search for Code Generation</h4>
-              <p class="feature__authors">Wang Huifei, Huang Xinying, Sun Yiheng, <span class="me">Yifan Yuan†</span></p>
-              <p class="feature__desc en">Code written by large language models often looks right yet fails on edge cases and hidden tests, and common self-repair keeps patching a single attempt, so an early wrong algorithmic choice is hard to escape. Existing tree-search methods rank candidates with numeric rewards but do not share the textual diagnoses of failures across branches, and without tests they may mistake missing evidence for success. ReMCTS organizes candidate programs as a search tree, runs them in a sandbox for feedback, keeps each branch's debugging context, stores failure diagnoses in a shared memory that other branches retrieve, and tells failed checks apart from missing evidence. On HumanEval and MBPP it beats direct generation in 8 of 10 model–dataset pairs, and ablations show where the gains come from and where they stop.</p>
-              <p class="feature__desc zh">大模型写的代码常常“看起来对”，却在边界条件或隐藏测试上出错；常见的自我修复只沿着一次尝试反复打补丁，一旦最初的算法思路错了就很难跳出来。已有的树搜索方法又主要依赖数值奖励，失败时的文字诊断没法分享给其他分支，在没有测试用例时还容易把“缺少证据”误当成“通过”。ReMCTS 把多个候选程序组织成一棵搜索树，在沙箱里执行获取反馈，保留每条分支的调试上下文，把失败经验存入全局记忆供其他分支检索复用，并区分“检查未通过”和“证据不足”。在 HumanEval 和 MBPP 上，ReMCTS 在 10 组模型—数据集组合中有 8 组优于直接生成，消融实验也厘清了收益的来源与边界。</p>
-              <p class="feature__links"><a href="https://arxiv.org/abs/2609.34717" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/ReMCTS" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
-            </div>
-          </article>
-          <article class="feature" role="tabpanel" id="feature-surveygraph" aria-labelledby="ftab-surveygraph">
-            <a class="pub-media" href="../images/papers/surveygraph.jpg" target="_blank" rel="noopener"><img src="../images/papers/surveygraph.jpg" width="1400" height="732" loading="lazy" alt="The SurveyGraph pipeline"></a>
-            <div class="feature__body">
-              <div class="pub-meta"><span class="pub-venue">EMNLP 2026</span></div>
-              <h4 class="feature__title">SurveyGraph: Generating Academic Surveys via Methods-Entity Knowledge Graphs</h4>
-              <p class="feature__authors"><span class="me">Yifan Yuan</span>, Yancheng Zhu, Zuoyu Zhang, Xiaogang Peng†</p>
-              <p class="feature__desc en">Publications are growing so fast that writing a good survey is ever more costly, and current LLM survey generators mostly retrieve papers as a flat pile of independent documents. A good survey explains how a field evolved — which work extends which, which methods compete, which benchmarks mark turning points — structure that similarity-based retrieval cannot see, so generated surveys read like a collage of summaries. SurveyGraph builds a Methods-Entity Knowledge Graph that records follow-on, competition and shared-resource relations between methods, and uses it as the backbone for core-paper discovery, graph-aware retrieval, outline generation and evolution-aware writing. Graph-aware retrieval nearly doubles recall over flat lexical baselines (p = 0.004), and citation audits find that 80.6% of generated sentences are fully or partly supported by the papers they cite.</p>
-              <p class="feature__desc zh">论文越来越多，写一篇好的综述越来越费时费力，而现有的大模型自动综述系统大多把文献当作一堆彼此独立的文档来检索。好的综述要讲清楚一个领域如何演化——哪项工作延续了谁、哪些方法相互竞争、哪些基准标志着转折，只按相似度检索看不到这些结构，生成的综述容易变成零散摘要的拼贴。SurveyGraph 构建“方法—实体知识图谱”（MEKG），显式记录方法之间的延续、竞争和共享资源等关系，并以它为主干完成核心论文发现、图感知检索、大纲生成和按演化脉络组织的写作。图感知检索的召回率接近平面检索基线的两倍（p=0.004），引用核查显示 80.6% 的生成句子能在所引文献中找到完全或部分支撑。</p>
-              <p class="feature__links"><a href="https://arxiv.org/abs/2610.31317" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/MUSE-AI-Lab/SurveyGraph" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
-            </div>
-          </article>
-          <article class="feature" role="tabpanel" id="feature-jas25" aria-labelledby="ftab-jas25">
-            <a class="pub-media" href="../images/papers/semantic-discrepancy.jpg" target="_blank" rel="noopener"><img src="../images/papers/semantic-discrepancy.jpg" width="1400" height="595" loading="lazy" alt="Overview of the training-free semantic discrepancy correction with single-step DDIM inversion"></a>
-            <div class="feature__body">
-              <div class="pub-meta"><span class="pub-venue">IEEE/CAA JAS 2025</span><span class="pub-badge">JCR Q1 · IF 19.3</span></div>
-              <h4 class="feature__title">Dissecting and Mitigating Semantic Discrepancy in Stable Diffusion for Image-to-Image Translation</h4>
-              <p class="feature__authors"><span class="me">Yifan Yuan</span>, Guanqun Yang, James Z. Wang, Hui Zhang, Hongming Shan, Feiyue Wang†, Junping Zhang</p>
-              <p class="feature__desc en">When a text-to-image diffusion model is used for image-to-image translation — turning a photo into a painting, say — everything hinges on an initial noise that keeps the original image's information, and the common choice, SDEdit, simply adds random noise to the image. We find that this causes “semantic discrepancy”: the model misreads relations in the image and invents content that was never there, because the noise breaks the image's semantic integrity and makes U-Net upsampling link unrelated regions. We propose a training-free, plug-and-play fix for Stable Diffusion that exploits the determinism of DDIM inversion: a single inversion step of the reference image supplies accurate features and correlations, which replace the faulty ones in generation. Across translation tasks on COCO, ImageNet and ImageNet-R, it reduces semantic discrepancy and improves fidelity, outperforming PnP and similar methods with fewer priors while running 11.2× faster.</p>
-              <p class="feature__desc zh">用文生图扩散模型做图像转换（比如把照片变成油画）时，关键是找到既保留原图信息、又便于转换的初始噪声，常用的 SDEdit 做法是直接给原图加随机噪声。我们发现这会引起“语义偏差”：模型误解原图中物体之间的关系，凭空生成原图里没有的内容；剖析 Stable Diffusion 的网络后，我们定位到原因是加噪破坏了图像的语义完整性，使 U-Net 上采样时在不相关的区域之间建立了错误关联。我们提出一种免训练、即插即用的方法，利用 DDIM 反演的确定性，只需对参考图做一步反演，就能得到正确的特征和关联，用来替换生成过程中的错误部分。在 COCO、ImageNet 和 ImageNet-R 的多种图像转换任务上，该方法有效缓解了语义偏差、提升了保真度，用更少的先验超过 PnP 等方法，速度快 11.2 倍。</p>
-              <p class="feature__links"><a href="https://doi.org/10.1109/JAS.2024.124800" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-paper"/></svg><span>Paper</span></a><a href="https://github.com/Sherlockyyf/Semantic_Discrepancy" target="_blank" rel="noopener" class="pbtn"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span>Code</span></a></p>
-            </div>
-          </article>
-        </div>
-        <!-- lab-featured:end -->
-      </div>
-      <h3 class="sub sub--list reveal" id="all-title"><span class="en">All Publications</span><span class="zh">全部论文</span></h3>
-      <div class="chips reveal" role="group" aria-labelledby="all-title">
+      <div class="chips reveal" role="group" aria-labelledby="publications-title">
         <!-- lab-filters:start -->
         <button type="button" class="chip is-active" data-filter="all" aria-pressed="true"><span class="en">All</span><span class="zh">全部</span><span class="chip__n">11</span></button>
         <button type="button" class="chip chip--visual" data-filter="visual" aria-pressed="false"><span class="chip__seal" aria-hidden="true">绘</span><span class="en">Visual Generation</span><span class="zh">视觉生成</span><span class="chip__n">4</span></button>
@@ -561,8 +609,8 @@
     <!-- ===================== Contact ===================== -->
     <section class="section" id="contact">
       <div class="sec-head reveal">
-        <span class="sec-num">04</span>
-        <h2 class="sec-title"><span class="en">Contact</span><span class="zh">联系我们</span><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 8, 120 16, 180 11 S 255 12, 296 12"/></svg></h2>
+        <span class="sec-num">06</span>
+        <h2 class="sec-title"><!-- lab-h-contact:start --><span class="en">Contact</span><span class="zh">联系我们</span><!-- lab-h-contact:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 8, 120 16, 180 11 S 255 12, 296 12"/></svg></h2>
       </div>
       <p class="contact__intro reveal"><!-- lab-contact-intro:start --><span class="en">Research and business collaborations are welcome. Get in touch:</span><span class="zh">欢迎科研与商业合作，有合作意向欢迎联系我们：</span><!-- lab-contact-intro:end --></p>
       <ul class="contact__list reveal">
@@ -583,5 +631,36 @@
   </footer>
 
   <script src="lab.js"></script>
+  <script>
+    /* Edit mode for the site owner, as on the homepage: on a device signed in at admin/ an edit
+       button appears (visitors never see it); ?edit opens the page straight in edit mode. */
+    (function () {
+      var token = null, edit = /[?&]edit\b/.test(location.search);
+      try { token = localStorage.getItem("yyAdmin.token") || sessionStorage.getItem("yyAdmin.token"); } catch (e) {}
+      if (!token) {
+        if (edit) location.replace("../admin/?next=lab");
+        return;
+      }
+      function load() {
+        window.SITE_PAGE = "lab";
+        ["../admin/config.js", "../admin/render.js", "../admin/common.js", "../admin/editor.js"].forEach(function (src) {
+          var s = document.createElement("script");
+          s.src = src;
+          s.async = false;
+          document.body.appendChild(s);
+        });
+      }
+      if (edit) return load();
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "edit-entry";
+      button.textContent = "✎ 编辑页面";
+      button.addEventListener("click", function () {
+        button.remove();
+        load();
+      });
+      document.body.appendChild(button);
+    })();
+  </script>
 </body>
 </html>
