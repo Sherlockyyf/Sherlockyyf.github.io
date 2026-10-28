@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 420" fill="none">
+<style>
+@keyframes k1{0%,1.18% {opacity:0;transform:translateY(8px)} 7.06% {opacity:1;transform:none} 89.41% {opacity:1} 94.71%,100% {opacity:0}}
+.k1{animation:k1 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k2{0%,8.24% {opacity:0;transform:translateY(8px)} 12.94% {opacity:1;transform:none} 89.41% {opacity:1} 94.71%,100% {opacity:0}}
+.k2{animation:k2 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k3{0%,10.59% {clip-path:inset(0 100% 0 0)} 23.53% {clip-path:inset(0 0 0 0)} 89.41% {opacity:1} 94.71%,100% {opacity:0}}
+.k3{animation:k3 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k4{0%,28.24% {opacity:0;transform:scale(.3)} 31.41% {opacity:1;transform:scale(1.18)} 33.53% {transform:scale(1)} 57.65% {opacity:1} 62.94%,100% {opacity:0}}
+.k4{transform-box:fill-box;transform-origin:center;opacity:0;animation:k4 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k5{0%,32.94% {opacity:0;transform:translateY(8px)} 37.06% {opacity:1;transform:none} 57.65% {opacity:1} 62.94%,100% {opacity:0}}
+.k5{opacity:0;animation:k5 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k6{0%,36.47% {opacity:0;transform:scale(.3)} 39.29% {opacity:1;transform:scale(1.18)} 41.18% {transform:scale(1)} 57.65% {opacity:1} 62.94%,100% {opacity:0}}
+.k6{transform-box:fill-box;transform-origin:center;opacity:0;animation:k6 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k7{0%,48.24% {opacity:0;transform:scale(.3)} 51.41% {opacity:1;transform:scale(1.18)} 53.53% {transform:scale(1)} 89.41% {opacity:1} 94.71%,100% {opacity:0}}
+.k7{transform-box:fill-box;transform-origin:center;animation:k7 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k8{0%,61.18% {opacity:0;transform:scale(.3)} 64.00% {opacity:1;transform:scale(1.18)} 65.88% {transform:scale(1)} 89.41% {opacity:1} 94.71%,100% {opacity:0}}
+.k8{transform-box:fill-box;transform-origin:center;animation:k8 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+@keyframes k9{0%,65.88% {opacity:0;transform:scale(.3)} 69.41% {opacity:1;transform:scale(1.18)} 71.76% {transform:scale(1)} 89.41% {opacity:1} 94.71%,100% {opacity:0}}
+.k9{transform-box:fill-box;transform-origin:center;animation:k9 8.5s cubic-bezier(.3,.7,.3,1) infinite both}
+.flow{animation:flow 1.4s linear infinite}@keyframes flow{to{stroke-dashoffset:-18}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<defs><filter id="s" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#2f3a5a" flood-opacity=".14"/></filter><clipPath id="ca"><rect x="28" y="80" width="150" height="150" rx="18"/></clipPath><clipPath id="cb"><rect x="222" y="80" width="150" height="150" rx="18"/></clipPath><linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe0f5"/><stop offset="1" stop-color="#eef7fc"/></linearGradient><linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4c79f"/><stop offset="1" stop-color="#f9e6cf"/></linearGradient></defs>
+<g transform="translate(0 54)">
+<g class="k1"><rect x="28" y="80" width="150" height="150" rx="18" fill="#fff" filter="url(#s)"/><g clip-path="url(#ca)"><rect x="28" y="80" width="150" height="150" fill="url(#sky1)"/><circle cx="136" cy="118" r="15" fill="#f6d167"/><path d="M28 196L72 140L106 178L140 134L178 186V230H28Z" fill="#8aa2b8"/><path d="M28 206L88 170L132 198L178 176V230H28Z" fill="#a6bfa4"/><rect x="28" y="206" width="150" height="24" fill="#a8c98c"/><rect x="58" y="188" width="26" height="20" fill="#ebe1d3"/><path d="M54 190L71 176L88 190Z" fill="#b5654e"/></g></g>
+<g class="k2"><path d="M186 155H212M204 147L212 155L204 163" stroke="#9a5a22" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g class="k3"><rect x="222" y="80" width="150" height="150" rx="18" fill="#fff" filter="url(#s)"/><g clip-path="url(#cb)"><rect x="222" y="80" width="150" height="150" fill="url(#sky2)"/><circle cx="330" cy="118" r="15" fill="#f19a57"/><path d="M222 196L266 140L300 178L334 134L372 186V230H222Z" fill="#9b86b5"/><path d="M222 206L282 170L326 198L372 176V230H222Z" fill="#c99487"/><rect x="222" y="206" width="150" height="24" fill="#d9b56c"/><rect x="252" y="188" width="26" height="20" fill="#f3dcc0"/><path d="M248 190L265 176L282 190Z" fill="#b9574a"/><path d="M230 100Q262 92 292 102M242 214Q292 206 352 216M312 150Q332 146 354 154" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".45"/></g></g>
+<g class="k4"><rect x="338" y="182" width="6" height="24" rx="2" fill="#7a5a3a"/><circle cx="341" cy="176" r="14" fill="#6f9f63"/><circle cx="333" cy="182" r="9" fill="#7db06f"/></g>
+<g class="k5"><circle cx="340" cy="186" r="26" stroke="#e07a7a" stroke-width="2.4" stroke-dasharray="5 5"/></g>
+<g class="k6"><circle cx="366" cy="160" r="12" fill="#e07a7a" stroke="#fff" stroke-width="2.5"/><path d="M362.16 156.16L369.84 163.84M369.84 156.16L362.16 163.84" stroke="#fff" stroke-width="2.9" stroke-linecap="round"/></g>
+<g class="k7"><circle cx="200" cy="112" r="15" fill="#fff" stroke="#d29a5c" stroke-width="2"/><path d="M193 112A7 7 0 1 1 200 119" stroke="#9a5a22" stroke-width="2.2" stroke-linecap="round"/><path d="M196 122L200 119L197 115" stroke="#9a5a22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g class="k8"><circle cx="366" cy="94" r="12" fill="#5aa877" stroke="#fff" stroke-width="2.5"/><path d="M360.96 94.24L364.8 98.08L371.4 90.4" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g class="k9"><path d="M352 244Q354.6 251.4 362 254Q354.6 256.6 352 264Q349.4 256.6 342 254Q349.4 251.4 352 244Z" fill="#e8955a"/></g>
+</g>
+</svg>
