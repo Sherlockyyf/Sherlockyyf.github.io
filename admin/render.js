@@ -409,9 +409,9 @@
      what only the lab page shows: the hero's tagline and topics, section headings, introduction, the MUSE
      acronym, research directions, featured work (each with its own page), news stories and contact.
      With ed these carry data-yy* hooks like the homepage. */
-  var LAB_HEADINGS = ["about", "research", "work", "news", "publications", "contact"];
+  var LAB_HEADINGS = ["about", "research", "work", "news", "publications", "projects", "contact"];
   var LAB_REGIONS = ["lab-tagline", "lab-topics", "lab-latest", "lab-about", "lab-pi", "lab-acronym", "lab-research", "lab-work",
-    "lab-news", "lab-filters", "lab-publications", "lab-contact-intro", "lab-contact", "lab-credits"]
+    "lab-news", "lab-filters", "lab-publications", "lab-grants", "lab-contact-intro", "lab-contact", "lab-credits"]
     .concat(LAB_HEADINGS.map(function (k) { return "lab-h-" + k; }));
   var VENUES = {   // full names for the citations on project pages
     EMNLP: "Proceedings of the {y} Conference on Empirical Methods in Natural Language Processing",
@@ -558,18 +558,15 @@
     ].join("\n");
   }
 
-  /* ---------- research directions: picture cards in a row that scrolls sideways ---------- */
-  /* the picture across the top of a direction card */
-  function cover(d) {
-    var shots = (d.cover || []).filter(function (c) { return c.src; });
-    if (!shots.length) return [];
-    return ['  <div class="dir__cover dir__cover--' + shots.length + '">'].concat(shots.map(function (c) {
-      return '    <span class="dir__shot"><img src="' + attr(rebase(c.src)) + '" alt="' + attr(c.alt || "") + '" loading="lazy"' +
-        (c.position ? ' style="object-position:' + attr(c.position) + '"' : "") + "></span>";
-    }), ["  </div>"]);
+  /* ---------- research directions: cards in a row that scrolls sideways ---------- */
+  /* the direction's illustration, as the card's faded background (decoration: no alt text) */
+  function backdrop(d) {
+    var c = (d.cover || []).filter(function (x) { return x.src; })[0];
+    return c ? ['  <img class="dir__bg" src="' + attr(rebase(c.src)) + '" alt="" loading="lazy"' +
+      (c.position ? ' style="object-position:' + attr(c.position) + '"' : "") + ">"] : [];
   }
 
-  /* one research direction as a card: picture, seal and title, one line, its topics, papers;
+  /* one research direction as a card: seal and title, one line, its topics, papers, over its picture;
      its colour is a tone class (lab.css .tone-*) */
   function direction(d, i, pubs, ed) {
     var byId = byIds(pubs), path = "lab.directions." + i;
@@ -595,7 +592,7 @@
     }
     body.push("  </div>");
     var cls = "dir dir--" + attr(d.id) + " tone-" + attr(d.tone || "steel") + " spotlight reveal";
-    return ['<article class="' + cls + '" id="dir-' + attr(d.id) + '"' + I(ed, "directions", i) + ">"].concat(cover(d), body, ["</article>"]).join("\n");
+    return ['<article class="' + cls + '" id="dir-' + attr(d.id) + '"' + I(ed, "directions", i) + ">"].concat(backdrop(d), body, ["</article>"]).join("\n");
   }
 
   /* ---------- project pages (lab/projects/<slug>/): one template for every featured work ---------- */
@@ -838,6 +835,22 @@
     }).join("\n");
   }
 
+  /* the PI's research and industry projects (data/home.json "grants", edited on the homepage), each with
+     a sentence on what it is about ("brief"); lab: false keeps one off the lab page */
+  function labGrants(h, ed) {
+    var items = (h.grants || []).filter(function (g) { return g.lab !== false; }).map(function (g) {
+      var role = g.role || {}, brief = g.brief || {};
+      return [
+        '<article class="grant reveal">',
+        '  <p class="grant__meta">' + (role.en || role.zh ? '<span class="grant__role' + (g.level ? " grant__role--" + attr(g.level) : "") + '">' + bi(role) + "</span>" : "") +
+          (g.period ? '<span class="grant__period">' + text(g.period) + "</span>" : "") + "</p>",
+        '  <h3 class="grant__title">' + bi(g.title) + "</h3>"
+      ].concat(brief.en || brief.zh ? indent(biBlock("p", "grant__brief", brief), "  ") : [],
+        ['  <p class="grant__funder">' + bi(g.funder) + "</p>", "</article>"]).join("\n");
+    });
+    return items.concat(ed ? [sharedNote(ed, "科研项目")] : []).join("\n");
+  }
+
   function labContact(l, ed) {
     var items = ((l.contact || {}).items || []).map(function (x, i) {
       var path = "lab.contact.items." + i, value = bi(x.value, ed, path + ".value");
@@ -873,6 +886,7 @@
       "lab-news": (ed ? [ADD(ed, "stories", "div")] : []).concat((l.stories || []).map(function (s, i) { return story(s, i, l, ed); })).join("\n"),
       "lab-filters": filters(h, pubs, l),
       "lab-publications": (ed ? sharedNote(ed, "论文") + "\n" : "") + labPublications(h, pubs),
+      "lab-grants": labGrants(h, ed),
       "lab-contact-intro": bi(l.contactIntro, ed, "lab.contactIntro", true),
       "lab-contact": labContact(l, ed),
       "lab-credits": credits(l)

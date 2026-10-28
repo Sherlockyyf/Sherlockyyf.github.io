@@ -343,13 +343,18 @@
     grants: {
       name: "科研项目", add: "添加项目", at: "start", move: true, remove: true,
       list: function () { return data.home.grants; },
-      blank: function () { return { role: { en: "Participant", zh: "参与" }, level: "muted", title: { en: "", zh: "" }, funder: { en: "", zh: "" }, period: "" }; },
+      blank: function () {
+        return { role: { en: "Participant", zh: "参与" }, level: "muted", title: { en: "", zh: "" }, funder: { en: "", zh: "" }, period: "",
+          brief: { en: "", zh: "" }, lab: true };
+      },
       fields: [
         { k: "title", bi: true, label: "项目名称" },
         { k: "funder", bi: true, label: "项目来源" },
         { k: "period", label: "起止时间", placeholder: "2025.08 – 2028.08", half: true },
         { k: "level", t: "select", label: "标签颜色", half: true, options: [["solid", "深色（主持）"], ["", "浅色（负责）"], ["muted", "灰色（参与）"]] },
-        { k: "role", bi: true, label: "我的角色" }
+        { k: "role", bi: true, label: "我的角色" },
+        { k: "brief", bi: true, label: "一句话介绍", optional: "显示在实验室网站的“科研项目”里：这个项目在做什么" },
+        { k: "lab", t: "switch", label: "也显示在实验室网站上" }
       ],
       validate: function (g) { if (!clean(g.title.zh) && !clean(g.title.en)) return ["请填写项目名称。", "title.zh"]; },
       label: function (g) { return clip(g.title.zh || g.title.en, 20); }
@@ -476,7 +481,7 @@
         { k: "title", bi: true, label: "标题" },
         { k: "summary", bi: true, t: "rich", label: "一句话简介" },
         { k: "topics", t: "lines", label: "课题标签", hint: "每行一个，中文和英文按行对应。" },
-        { k: "cover", t: "cover", label: "配图", dir: "images/", width: COVER_WIDTH, type: "image/jpeg",
+        { k: "cover", t: "cover", label: "背景插画", dir: "images/", width: COVER_WIDTH, type: "image/jpeg",
           name: function (d) { return "dir-" + (clean(d.id) || slug(d.title.en) || "new"); } },
         { k: "papers", t: "papers", label: "代表工作", optional: "可选" },
         { group: "高级", collapsed: true },
@@ -1529,7 +1534,7 @@
     l.hero.tagline = pair(l.hero.tagline);
     l.hero.topics = l.hero.topics || [];
     l.headings = l.headings || {};
-    ["about", "research", "work", "news", "publications", "contact"].forEach(function (k) { l.headings[k] = pair(l.headings[k]); });
+    ["about", "research", "work", "news", "publications", "projects", "contact"].forEach(function (k) { l.headings[k] = pair(l.headings[k]); });
     l.projects = (l.projects || []).map(function (x) {
       x.blurb = pair(x.blurb);
       x.points = x.points || [];

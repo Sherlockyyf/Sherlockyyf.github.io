@@ -210,6 +210,8 @@ h2 .yy-add-slot {
 
 .yy-editing .story__link::after { display: none; }
 
+.grants > .yy-note { grid-column: 1 / -1; }
+
 .topics > .yy-add-slot,
 .pi__links > .yy-add-slot {
   display: inline-flex;
