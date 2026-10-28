@@ -1,14 +1,22 @@
-/* In-place editor for the homepage, loaded by index.html on a device that signed in at admin/.
+/* In-place editor for the homepage and the lab page, loaded by index.html or lab/index.html on a
+   device that signed in at admin/ (lab/index.html sets window.SITE_PAGE = "lab").
    Every text can be edited where it is; list entries get buttons to edit, move and delete them,
-   with a side panel for the details; "发布到网站" commits the data files, the regenerated
-   index.html and any new images to the site's GitHub repository in one go. */
+   with a side panel for the details; "发布到网站" commits the data files, the regenerated page(s)
+   and any new images to the site's GitHub repository in one go. */
 (function () {
   "use strict";
 
   var R = window.SiteRender, S = window.SiteAdmin, CONFIG = window.ADMIN_CONFIG || {};
+  var PAGE = window.SITE_PAGE === "lab" ? "lab" : "home";
   var ADMIN = new URL(".", document.currentScript.src).href;
   var SITE = new URL("../", ADMIN).href;
-  var PHOTO_WIDTH = 1200, FIGURE_WIDTH = 1400, LOGO_WIDTH = 320, PDF_LIMIT = 25 * 1024 * 1024;
+  var PHOTO_WIDTH = 1200, FIGURE_WIDTH = 1400, LOGO_WIDTH = 320, COVER_WIDTH = 1200, PDF_LIMIT = 25 * 1024 * 1024;
+  var LAB_ICONS = [["home", "主页"], ["mail", "邮箱"], ["user", "个人 / 负责人"], ["pin", "地址"], ["code", "代码"],
+    ["paper", "论文"], ["globe", "网站"], ["link", "其他链接"]];
+  var TONES = [["blue", "雾蓝"], ["green", "灰绿"], ["pink", "浅粉"], ["lavender", "淡紫"], ["steel", "钢灰"],
+    ["sand", "沙橙"], ["mint", "薄荷绿"], ["peach", "杏色"]];
+  var VISUAL_WIDTH = 720, STORY_WIDTH = 600;
+  var LAB_FIXED = { "lab-filters": true, "lab-credits": true };  // shared parts lab.js wires up once: never redrawn
   var NEWS_ICONS = [["🎉🎉", "论文录用"], ["📄", "新论文 / 预印本"], ["🏆", "获奖"], ["🎤", "报告 / 讲座"],
     ["🏫", "任职"], ["🎓", "毕业"], ["📢", "其他"], ["", "不加图标"]];
   var CONTACT_ICONS = [["pin", "地点"], ["mail", "邮箱"], ["uni", "学校 / 学院"], ["lab", "实验室"],
@@ -20,6 +28,9 @@
     [/^home\.lab/, "实验室介绍"], [/^home\.themes/, "研究方向"], [/^home\.applications/, "应用场景"],
     [/^home\.contacts/, "联系方式"], [/^home\.experience/, "经历"], [/^home\.grantsEarlier/, "此前的项目"],
     [/^home\.grants/, "科研项目"], [/^home\.service/, "学术服务"], [/^home\.footer/, "页脚"],
+    [/^lab\.hero/, "首屏文字"], [/^lab\.headings/, "栏目标题"], [/^lab\.projects/, "代表作"],
+    [/^lab\.stories/, "最新动态"], [/^lab\.about/, "实验室简介"], [/^lab\.acronym/, "MUSE 释义"],
+    [/^lab\.pi/, "负责人链接"], [/^lab\.directions/, "研究方向"], [/^lab\.contact/, "联系方式"],
     [/^news/, "动态"], [/^pubs/, "论文"]
   ];
 
@@ -134,13 +145,34 @@
     if (changes.indexOf(text) < 0) changes.push(text);
   }
 
-  /* files the page refers to */
+  /* a research card's picture (the lab page shows the first of its cover list) */
+  function coverOf(d) {
+    return (d.cover || [])[0] || {};
+  }
+
+  /* the paper's short name, as on its tag ("StateTrack · EMNLP'26" → "StateTrack") */
+  function paperName(p) {
+    return String(p.tag || "").split(" · ")[0].trim() || shortTitle(p.title);
+  }
+
+  /* files the pages refer to */
   function referenced() {
     var used = {};
     used[(data.home.profile.photo || {}).src] = true;
     (data.home.experience || []).forEach(function (x) { used[x.logo] = true; });
     data.pubs.forEach(function (p) { used[p.image] = true; used[p.paper] = true; });
+    if (data.lab) {
+      data.lab.directions.forEach(function (d) { used[coverOf(d).src] = true; });
+      data.lab.projects.forEach(function (x) { used[x.visual] = true; });
+      data.lab.stories.forEach(function (s) { used[s.image] = true; });
+    }
     return used;
+  }
+
+  /* a featured work's name: its paper's short name */
+  function projectName(x) {
+    var p = data.pubs.filter(function (q) { return q.id === x.paper; })[0];
+    return p ? paperName(p) : x.slug || "新代表作";
   }
 
   function usedUploads() {
@@ -167,13 +199,16 @@
     var map = {};
     Object.keys(urls).forEach(function (p) { map[p] = urls[p]; });
     if (drawer) Object.keys(drawer.pending).forEach(function (p) { map[p] = drawer.pending[p].url; });
-    Object.keys(map).forEach(function (p) { html = html.split('"' + esc(p) + '"').join('"' + map[p] + '"'); });
+    Object.keys(map).forEach(function (p) {
+      html = html.split('"' + esc(p) + '"').join('"' + map[p] + '"');
+      if (PAGE === "lab") html = html.split('"../' + esc(p) + '"').join('"' + map[p] + '"');  // the lab page links from lab/
+    });
     return html;
   }
 
   function isDirty() {
     return R.serialize(data.home) !== base.home || R.serialize(data.news) !== base.news ||
-      R.serialize(data.pubs) !== base.pubs || usedUploads().length > 0;
+      R.serialize(data.pubs) !== base.pubs || (!!data.lab && R.serialize(data.lab) !== base.lab) || usedUploads().length > 0;
   }
 
   /* ---------- the lists that can be edited ---------- */
@@ -356,6 +391,170 @@
         if (!/^(https?:\/\/|mailto:|[\w.-]+\/)/i.test(clean(l.url))) return ["链接要以 https:// 或 mailto: 开头。", "url"];
       },
       label: function (l) { return l.zh || l.en; }
+    },
+
+    /* ---- the lab page (data/lab.json) ---- */
+    projects: {
+      name: "代表作", add: "添加代表作", at: "end", move: true, remove: true,
+      list: function () { return data.lab.projects; },
+      blank: function () {
+        var used = data.lab.projects.map(function (x) { return x.tone; });
+        var tone = (TONES.filter(function (t) { return used.indexOf(t[0]) < 0; })[0] || TONES[0])[0];
+        return { paper: "", slug: "", tone: tone, visual: "", blurb: { en: "", zh: "" }, points: [] };
+      },
+      note: "每个代表作有自己的项目页（lab/projects/地址/），题目、作者、链接、概览和框架图都取自所选论文（论文在个人主页编辑）；这里写卡片上的一句话介绍、项目页的要点和配图。",
+      fields: function () {
+        return [
+          { k: "paper", t: "select", label: "论文", options: [["", "请选择一篇论文"]].concat(data.pubs.map(function (p) { return [p.id, paperName(p) + " · " + p.venue]; })) },
+          { k: "blurb", bi: true, t: "rich", label: "一句话介绍", hint: "一到三行、让外行也看得懂：它在做什么，厉害在哪里。" },
+          { k: "points", t: "lines", label: "项目页要点", optional: "可选", hint: "每行一条，中文和英文按行对应；三条左右最好。" },
+          { k: "tone", t: "select", label: "卡片颜色", half: true, options: TONES },
+          { k: "visual", t: "image", label: "卡片配图", dir: "images/work/", width: VISUAL_WIDTH, type: "image/png",
+            name: function (x) { return clean(x.slug) || slug(projectName(x)) || "work"; } },
+          { group: "高级", collapsed: true },
+          { k: "slug", label: "项目页地址", optional: "lab/projects/地址/ 里的“地址”，只能用小写字母、数字和 -，留空按论文名自动生成" }
+        ];
+      },
+      validate: function (x, index) {
+        if (!x.paper) return ["请选择这个代表作对应的论文。", "paper"];
+        if (!clean(x.blurb.zh) && !clean(x.blurb.en)) return ["请写一句话介绍。", "blurb.zh"];
+        var id = clean(x.slug).toLowerCase();
+        if (id && !/^[a-z0-9][a-z0-9-]*$/.test(id)) return ["地址只能用小写字母、数字和 -。", "slug"];
+        if (id && data.lab.projects.some(function (o, k) { return k !== index && o.slug === id; })) return ["地址“" + id + "”已经被另一个代表作用了，请换一个。", "slug"];
+      },
+      finish: function (x, index) {
+        var old = drawer && !drawer.isNew ? JSON.parse(drawer.original).slug : "";
+        var id = clean(x.slug).toLowerCase() || slug(projectName(x)) || "work", n = 2, baseId = id;
+        while (data.lab.projects.some(function (o, k) { return k !== index && o.slug === id; })) id = baseId + "-" + n++;
+        x.slug = id;
+        if (old && old !== id) data.lab.stories.forEach(function (s) { if (s.project === old) s.project = id; });  // news that opened it follow it
+        return x;
+      },
+      label: function (x) { return projectName(x); }
+    },
+    stories: {
+      name: "最新动态", add: "添加一条最新动态", at: "start", move: true, remove: true,
+      list: function () { return data.lab.stories; },
+      blank: function () { return { date: thisMonth(), tag: { en: "Paper", zh: "论文" }, title: { en: "", zh: "" }, project: "", url: "", image: "" }; },
+      note: "标题不必和论文题目一样：用一句话让人一眼看懂、又觉得厉害。点开后进入所选代表作的项目页，或者下面填的链接。（首屏滚动的动态和个人主页共用，在个人主页编辑。）",
+      fields: function () {
+        return [
+          { k: "date", label: "日期", placeholder: "2026.11", half: true },
+          { k: "tag", bi: true, label: "类别", hint: "例如 论文 · EMNLP 2026 / Paper · EMNLP 2026" },
+          { k: "title", bi: true, label: "一句话标题" },
+          { k: "project", t: "select", label: "点开后进入", options: [["", "下面填的链接"]].concat(data.lab.projects.map(function (x) {
+            return [x.slug, "代表作：" + projectName(x)];
+          })) },
+          { k: "url", label: "链接", optional: "不进入代表作时填写", placeholder: "https://…" },
+          { k: "image", t: "image", label: "配图", optional: "可选，进入代表作时默认用代表作的配图", dir: "images/news/", width: STORY_WIDTH, type: "image/jpeg",
+            name: function (s) { return "story-" + (normDate(s.date) || thisMonth()).replace(".", "-"); } }
+        ];
+      },
+      validate: function (s) {
+        if (!normDate(s.date)) return ["日期请写成“年.月”，例如 2026.11。", "date"];
+        if (!clean(s.title.zh) && !clean(s.title.en)) return ["请写一句话标题。", "title.zh"];
+        if (!s.project && clean(s.url) && !/^(https?:\/\/|files\/|[\w.-]+\/)/i.test(clean(s.url))) return ["链接要以 https:// 开头。", "url"];
+      },
+      finish: function (s) {
+        s.date = normDate(s.date);
+        return s;
+      },
+      label: function (s) { return s.title.zh || s.title.en; }
+    },
+    directions: {
+      name: "研究方向", add: "添加研究方向", at: "end", move: true, remove: true,
+      list: function () { return data.lab.directions; },
+      blank: function () {
+        var used = data.lab.directions.map(function (d) { return d.tone; });
+        var tone = (TONES.filter(function (t) { return used.indexOf(t[0]) < 0; })[0] || TONES[0])[0];
+        return { id: "", seal: "", tone: tone, title: { en: "", zh: "" }, summary: { en: "", zh: "" }, topics: [], cover: [], papers: [] };
+      },
+      note: "印章字或中文标题用了新字时，网页会先用楷体显示（毛笔字体之后可以重新生成）。论文本身在个人主页编辑，这里只勾选代表工作。",
+      fields: [
+        { k: "seal", label: "印章字", half: true, maxlength: 2, placeholder: "一个字，如“绘”" },
+        { k: "tone", t: "select", label: "卡片颜色", half: true, options: TONES },
+        { k: "title", bi: true, label: "标题" },
+        { k: "summary", bi: true, t: "rich", label: "一句话简介" },
+        { k: "topics", t: "lines", label: "课题标签", hint: "每行一个，中文和英文按行对应。" },
+        { k: "cover", t: "cover", label: "配图", dir: "images/", width: COVER_WIDTH, type: "image/jpeg",
+          name: function (d) { return "dir-" + (clean(d.id) || slug(d.title.en) || "new"); } },
+        { k: "papers", t: "papers", label: "代表工作", optional: "可选" },
+        { group: "高级", collapsed: true },
+        { k: "id", label: "编号", optional: "页面内跳转用（#dir-编号），只能用小写字母、数字和 -，留空自动生成" }
+      ],
+      validate: function (d, index) {
+        if (!clean(d.seal)) return ["请填写印章字（一个字最好看）。", "seal"];
+        if (!clean(d.title.zh) && !clean(d.title.en)) return ["请填写标题。", "title.zh"];
+        var id = clean(d.id).toLowerCase();
+        if (id && !/^[a-z0-9][a-z0-9-]*$/.test(id)) return ["编号只能用小写字母、数字和 -。", "id"];
+        if (id && data.lab.directions.some(function (x, k) { return k !== index && x.id === id; })) return ["编号“" + id + "”已经被另一个方向用了，请换一个。", "id"];
+      },
+      finish: function (d, index) {
+        var id = clean(d.id).toLowerCase() || slug(d.title.en) || "direction", n = 2, baseId = id;
+        while (data.lab.directions.some(function (x, k) { return k !== index && x.id === id; })) id = baseId + "-" + n++;
+        d.id = id;
+        return d;
+      },
+      label: function (d) { return d.title.zh || d.title.en; }
+    },
+    labAbout: {
+      name: "简介段落", add: "添加一段", at: "end", move: true, remove: true,
+      list: function () { return data.lab.about; },
+      blank: function () { return { en: "", zh: "" }; },
+      fields: [{ k: "zh", t: "rich", label: "中文", rows: 6 }, { k: "en", t: "rich", label: "English", rows: 6 }],
+      validate: function (x) { if (!clean(x.zh) && !clean(x.en)) return ["中文和英文至少写一种。", "zh"]; }
+    },
+    heroTopics: {
+      name: "首屏标签", add: "添加标签", at: "end", move: true, remove: true,
+      list: function () { return data.lab.hero.topics; },
+      blank: function () { return { en: "", zh: "" }; },
+      fields: [{ k: "zh", label: "中文", half: true }, { k: "en", label: "English", half: true }],
+      validate: function (t) { if (!clean(t.zh) && !clean(t.en)) return ["请填写标签文字。", "zh"]; },
+      label: function (t) { return t.zh || t.en; }
+    },
+    acronym: {
+      name: "字母释义", move: false, remove: false,
+      list: function () { return data.lab.acronym; },
+      fields: [
+        { k: "letter", label: "字母", half: true, maxlength: 2 },
+        { k: "word", label: "英文单词", half: true },
+        { k: "zh", label: "中文", half: true },
+        { k: "text", bi: true, t: "rich", label: "解释" }
+      ],
+      validate: function (a) { if (!clean(a.letter)) return ["请填写字母。", "letter"]; },
+      label: function (a) { return a.letter + " · " + a.word; }
+    },
+    piLinks: {
+      name: "负责人链接", add: "添加链接", at: "end", move: true, remove: true,
+      list: function () { return data.lab.pi.links; },
+      blank: function () { return { icon: "link", en: "", zh: "", url: "" }; },
+      fields: [
+        { k: "icon", t: "select", label: "图标", options: LAB_ICONS },
+        { k: "zh", label: "文字（中文）", half: true },
+        { k: "en", label: "文字（English）", half: true },
+        { k: "url", label: "链接", placeholder: "https://… 或 mailto:…" }
+      ],
+      validate: function (l) {
+        if (!clean(l.zh) && !clean(l.en)) return ["请填写文字。", "zh"];
+        if (!/^(https?:\/\/|mailto:|\.\/|[\w.-]+\/)/i.test(clean(l.url))) return ["链接要以 https:// 或 mailto: 开头。", "url"];
+      },
+      label: function (l) { return l.zh || l.en; }
+    },
+    labContact: {
+      name: "联系方式", add: "添加联系方式", at: "end", move: true, remove: true,
+      list: function () { return data.lab.contact.items; },
+      blank: function () { return { icon: "link", label: { en: "", zh: "" }, value: { en: "", zh: "" }, url: "" }; },
+      fields: [
+        { k: "icon", t: "select", label: "图标", options: LAB_ICONS },
+        { k: "label", bi: true, label: "名称", hint: "例如 邮箱 / Email" },
+        { k: "value", bi: true, label: "内容" },
+        { k: "url", label: "链接", optional: "可选", placeholder: "https://… 或 mailto:…", hint: "地址这类不需要链接的留空即可。" }
+      ],
+      validate: function (c) {
+        if (!clean(c.value.zh) && !clean(c.value.en)) return ["请填写内容。", "value.zh"];
+        if (clean(c.url) && !/^(https?:\/\/|mailto:|\.\/|[\w.-]+\/)/i.test(clean(c.url))) return ["链接要以 https:// 或 mailto: 开头。", "url"];
+      },
+      label: function (c) { return c.label.zh || c.label.en || c.value.zh || c.value.en; }
     }
   };
 
@@ -365,13 +564,17 @@
   }
 
   /* ---------- rendering into the page ---------- */
+  function regionNames() {
+    return PAGE === "lab" ? R.LAB_REGIONS : R.REGIONS;
+  }
+
   function findMarkers() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT), node;
     while ((node = walker.nextNode())) {
       var m = /^\s*([\w-]+):(start|end)\s*$/.exec(node.nodeValue);
       if (m) (markers[m[1]] = markers[m[1]] || [])[m[2] === "start" ? 0 : 1] = node;
     }
-    return R.REGIONS.every(function (name) { return markers[name] && markers[name][0] && markers[name][1]; });
+    return regionNames().every(function (name) { return markers[name] && markers[name][0] && markers[name][1]; });
   }
 
   function setRegion(name, html) {
@@ -385,8 +588,11 @@
   function renderAll() {
     clearTimeout(renderTimer);
     stale = false;
-    var parts = R.sections({ home: data.home, news: data.news, publications: data.pubs }, true);
-    R.REGIONS.forEach(function (name) { setRegion(name, withFiles(parts[name])); });
+    var d = { home: data.home, news: data.news, publications: data.pubs, lab: data.lab };
+    var parts = PAGE === "lab" ? R.labParts(d, true) : R.sections(d, true);
+    regionNames().forEach(function (name) {
+      if (PAGE !== "lab" || !LAB_FIXED[name]) setRegion(name, withFiles(parts[name]));
+    });
     decorate();
     updateBar();
   }
@@ -421,7 +627,7 @@
     $$("[data-yy]").forEach(function (el) { el.tabIndex = 0; });  // Tab to a text, Enter to edit it
     $$(".sidebar img, main img").forEach(function (img) {  // just published, not on the site yet: show it from the repository
       img.addEventListener("error", function () {
-        var src = img.getAttribute("src") || "";
+        var src = (img.getAttribute("src") || "").replace(/^\.\.\//, "");
         if (/^(blob:|data:|https?:)/.test(src)) return;
         img.src = "https://raw.githubusercontent.com/" + repo.owner + "/" + repo.name + "/" + headSha + "/" + repo.path(src);
       }, { once: true });
@@ -591,7 +797,7 @@
     var bar = $("#fmt"), ed = editing;
     $$("[data-cmd]", bar).forEach(function (b) {
       var cmd = b.getAttribute("data-cmd");
-      b.hidden = cmd !== "done" && (!ed.rich || (cmd === "mark" && !/^home\.tagline/.test(ed.path)));
+      b.hidden = cmd !== "done" && (!ed.rich || (cmd === "mark" && !/^(home|lab\.hero)\.tagline/.test(ed.path)));
     });
     bar.hidden = false;
     placeFormatBar();
@@ -746,11 +952,22 @@
         return wrap('<label class="switch"><input type="checkbox" name="' + f.k + '"><span class="switch__track" aria-hidden="true"></span>' + esc(f.label) + "</label>");
       case "image":
       case "figure":
+      case "cover":
         return wrap(label() + '<div class="figure-pick"><img class="figure-pick__thumb" data-thumb="' + f.k + '" alt="" hidden>' +
           '<div class="figure-pick__side"><div class="figure-pick__buttons"><label class="btn btn--small btn--file">选择图片' +
           '<input type="file" data-image="' + f.k + '" accept="image/png,image/jpeg,image/webp"></label>' +
           '<button type="button" class="link-btn" data-image-remove="' + f.k + '" hidden>移除</button></div>' +
-          '<p class="hint" data-image-info="' + f.k + '"></p></div></div>');
+          '<p class="hint" data-image-info="' + f.k + '"></p></div></div>' +
+          (f.t === "cover" ? '<input name="cover-alt" placeholder="图片说明（英文一句话，如 Illustration: a robot arm stacking blocks）" autocomplete="off" spellcheck="false">' : ""));
+      case "lines":  // a list of short bilingual texts, one per line
+        return wrap(label() + ["zh", "en"].map(function (l) {
+          return '<div class="pair"><span class="pair__tag">' + (l === "zh" ? "中" : "EN") + '</span><textarea name="' + f.k + "." + l + '" rows="4"></textarea></div>';
+        }).join(""));
+      case "papers":  // pick from the papers edited on the homepage
+        return wrap(label() + '<div class="checks">' + data.pubs.map(function (p) {
+          return '<label class="check"><input type="checkbox" name="' + f.k + '" value="' + esc(p.id) + '"><span>' + esc(paperName(p)) +
+            "</span><small>" + esc(p.venue) + "</small></label>";
+        }).join("") + "</div>");
       case "authors":
         return wrap('<div class="field__top">' + label(id) + '<span class="md-tools" data-target="' + id + '"><button type="button" data-insert="*" title="共同第一作者">插入 *</button>' +
           '<button type="button" data-insert="†" title="通讯作者">插入 †</button></span></div>' + input(f.k, id, f.placeholder));
@@ -798,8 +1015,13 @@
         formField(f.k).checked = !!item[f.k];
       } else if (f.t === "icons") {
         setIcon(item[f.k] || "");
-      } else if (f.t === "image" || f.t === "figure") {
+      } else if (f.t === "image" || f.t === "figure" || f.t === "cover") {
         imageInfo(f);
+        if (f.t === "cover") formField("cover-alt").value = coverOf(item).alt || "";
+      } else if (f.t === "lines") {
+        ["zh", "en"].forEach(function (l) { formField(f.k + "." + l).value = (item[f.k] || []).map(function (t) { return t[l] || ""; }).join("\n"); });
+      } else if (f.t === "papers") {
+        $$('input[name="' + f.k + '"]', drawer.form).forEach(function (c) { c.checked = (item[f.k] || []).indexOf(c.value) >= 0; });
       } else {
         formField(f.k).value = item[f.k] == null ? "" : item[f.k];
       }
@@ -812,6 +1034,22 @@
     var item = drawer.item;
     drawer.fields.forEach(function (f) {
       if (!f.k || f.t === "lookup" || f.t === "icons" || f.t === "image" || f.t === "figure") return;
+      if (f.t === "cover") {
+        if (coverOf(item).src) item.cover[0].alt = formField("cover-alt").value;
+        return;
+      }
+      if (f.t === "lines") {
+        var zh = formField(f.k + ".zh").value.split("\n"), en = formField(f.k + ".en").value.split("\n"), lines = [];
+        for (var i = 0; i < Math.max(zh.length, en.length); i++) {
+          if ((zh[i] || "").trim() || (en[i] || "").trim()) lines.push({ en: (en[i] || "").trim(), zh: (zh[i] || "").trim() });
+        }
+        item[f.k] = lines;
+        return;
+      }
+      if (f.t === "papers") {
+        item[f.k] = $$('input[name="' + f.k + '"]', drawer.form).filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+        return;
+      }
       if (f.bi) {
         item[f.k] = item[f.k] || {};
         ["zh", "en"].forEach(function (l) { item[f.k][l] = formField(f.k + "." + l).value; });
@@ -843,13 +1081,14 @@
   }
 
   function imageInfo(f, text, isError) {
-    var path = f.t === "figure" ? drawer.item.image : drawer.item[f.k];
+    var path = f.t === "figure" ? drawer.item.image : f.t === "cover" ? coverOf(drawer.item).src : drawer.item[f.k];
     var thumb = drawer.form.querySelector('[data-thumb="' + f.k + '"]'), info = drawer.form.querySelector('[data-image-info="' + f.k + '"]');
     thumb.hidden = !path;
     if (path) thumb.src = fileUrl(path);
     drawer.form.querySelector('[data-image-remove="' + f.k + '"]').hidden = !path;
     info.textContent = text || (path ? path.split("/").pop() :
-      f.t === "figure" ? "PNG 或 JPG，会自动压缩到 1400 像素宽。没有图时显示会议名方块。" : "PNG 或 JPG，透明背景的 PNG 最好。");
+      f.t === "figure" ? "PNG 或 JPG，会自动压缩到 1400 像素宽。没有图时显示会议名方块。" :
+      f.t === "cover" ? "PNG 或 JPG，会自动压缩到 1200 像素宽，横图最好；不放图片也可以。" : "PNG 或 JPG，透明背景的 PNG 最好。");
     info.classList.toggle("is-error", !!isError);
   }
 
@@ -898,10 +1137,8 @@
         formError(err[0], err[1]);
         return false;
       }
-      var item = k.finish ? k.finish(trimDeep(d.item), d.index) : trimDeep(d.item);
-      var kept = Object.keys(d.pending).filter(function (p) {
-        return p === item.image || p === item.paper || p === item.logo;
-      });
+      var item = k.finish ? k.finish(trimDeep(d.item), d.index) : trimDeep(d.item), saved = JSON.stringify(item);
+      var kept = Object.keys(d.pending).filter(function (p) { return saved.indexOf(JSON.stringify(p)) >= 0; });
       Object.keys(d.pending).forEach(function (p) {
         if (kept.indexOf(p) >= 0) {
           uploads[p] = d.pending[p].base64;
@@ -912,7 +1149,7 @@
       });
       list.splice(d.index, 1);
       var at = d.index;
-      if (d.kind === "news") {  // keep the news newest first
+      if (d.kind === "news" || d.kind === "stories") {  // keep the news newest first
         at = list.findIndex(function (n) { return n.date <= item.date; });
         if (at < 0) at = list.length;
       }
@@ -1085,14 +1322,14 @@
     input.value = "";
     if (!file) return;
     imageInfo(f, "正在处理图片…");
-    var figure = f.t === "figure";
+    var figure = f.t === "figure", cover = f.t === "cover";
     S.shrinkImage(file, figure ? FIGURE_WIDTH : f.width, figure ? "image/jpeg" : f.type).then(function (img) {
       return S.toBase64(img.blob).then(function (b64) {
         if (!drawer) return;
         var item = drawer.item;
-        dropPending(figure ? item.image : item[key]);
-        var name = figure ? clean(item.id) || makeId(item.title, item.venue, drawer.index) : slug((item.org || {}).en) || "logo";
-        var path = freePath(figure ? "images/papers/" : f.dir, name, figure ? ".jpg" : ".png");
+        dropPending(figure ? item.image : cover ? coverOf(item).src : item[key]);
+        var name = figure ? clean(item.id) || makeId(item.title, item.venue, drawer.index) : f.name ? f.name(item) : slug((item.org || {}).en) || "logo";
+        var path = freePath(figure ? "images/papers/" : f.dir, name, figure || f.type === "image/jpeg" ? ".jpg" : ".png");
         drawer.pending[path] = { base64: b64, url: URL.createObjectURL(img.blob) };
         drawer.dirty = true;
         if (figure) {
@@ -1103,6 +1340,8 @@
             item.imageAlt = "Overview of " + shortTitle(item.title || "the method");
             formField("imageAlt").value = item.imageAlt;
           }
+        } else if (cover) {  // a new picture starts a fresh entry (no credit or figure caption carried over)
+          item.cover = [{ src: path, alt: clean(formField("cover-alt").value) }];
         } else {
           item[key] = path;
         }
@@ -1122,6 +1361,10 @@
       item.image = "";
       item.imageWidth = null;
       item.imageHeight = null;
+    } else if (f.t === "cover") {
+      dropPending(coverOf(item).src);
+      item.cover = [];
+      formField("cover-alt").value = "";
     } else {
       dropPending(item[key]);
       item[key] = "";
@@ -1232,6 +1475,7 @@
     data.home = d.home;
     data.news = d.news;
     data.pubs = d.pubs;
+    if (d.lab) data.lab = d.lab;
   }
 
   function undo() {
@@ -1244,7 +1488,7 @@
   function discard() {
     confirmBox("放弃所有没发布的修改？", "网站保持现在的样子，刚才的修改会全部丢失。", "放弃修改", true).then(function (ok) {
       if (!ok) return;
-      restore(JSON.stringify({ home: JSON.parse(base.home), news: JSON.parse(base.news), pubs: JSON.parse(base.pubs) }));
+      restore(JSON.stringify({ home: JSON.parse(base.home), news: JSON.parse(base.news), pubs: JSON.parse(base.pubs), lab: base.lab ? JSON.parse(base.lab) : null }));
       Object.keys(uploads).forEach(function (p) {
         URL.revokeObjectURL(urls[p]);
         delete urls[p];
@@ -1274,7 +1518,44 @@
   }
 
   function serialized(d) {
-    return { home: R.serialize(d.home), news: R.serialize(d.news), pubs: R.serialize(d.pubs) };
+    return { home: R.serialize(d.home), news: R.serialize(d.news), pubs: R.serialize(d.pubs), lab: d.lab ? R.serialize(d.lab) : null };
+  }
+
+  /* data/lab.json with every list and pair the lab editor touches present (missing ones are added at the end) */
+  function normalizeLab(l) {
+    var pair = function (o) { o = o && typeof o === "object" ? o : {}; return { en: o.en || "", zh: o.zh || "" }; };
+    l = l && typeof l === "object" ? l : {};
+    l.hero = l.hero || {};
+    l.hero.tagline = pair(l.hero.tagline);
+    l.hero.topics = l.hero.topics || [];
+    l.headings = l.headings || {};
+    ["about", "research", "work", "news", "publications", "contact"].forEach(function (k) { l.headings[k] = pair(l.headings[k]); });
+    l.projects = (l.projects || []).map(function (x) {
+      x.blurb = pair(x.blurb);
+      x.points = x.points || [];
+      return x;
+    });
+    l.stories = (l.stories || []).map(function (s) {
+      s.tag = pair(s.tag);
+      s.title = pair(s.title);
+      return s;
+    });
+    l.about = l.about || [];
+    l.acronym = l.acronym || [];
+    l.pi = l.pi || {};
+    l.pi.links = l.pi.links || [];
+    l.directions = (l.directions || []).map(function (d) {
+      d.title = pair(d.title);
+      d.summary = pair(d.summary);
+      d.topics = d.topics || [];
+      d.cover = d.cover || [];
+      d.papers = d.papers || [];
+      return d;
+    });
+    l.contactIntro = pair(l.contactIntro);
+    l.contact = l.contact || {};
+    l.contact.items = l.contact.items || [];
+    return l;
   }
 
   /* the lab page and its own data, or null when the repository has no lab page to update */
@@ -1286,6 +1567,20 @@
 
   function load() {
     return repo.head().then(function (sha) {
+      if (PAGE === "lab") {
+        return Promise.all([readData(sha), repo.read("lab/index.html", sha), repo.read("data/lab.json", sha)]).then(function (r) {
+          var lab = normalizeLab(parseJson(r[2], "data/lab.json"));
+          try {
+            R.buildLab(r[1], { home: r[0].home, news: r[0].news, publications: r[0].pubs, lab: lab });
+          } catch (e) {
+            throw new Error("仓库里的 lab/index.html 缺少自动生成标记，编辑器没法更新它。");
+          }
+          headSha = sha;
+          r[0].lab = lab;
+          data = r[0];
+          base = serialized(data);
+        });
+      }
       return Promise.all([readData(sha), repo.read("index.html", sha)]).then(function (r) {
         try {
           R.build(r[1], { home: r[0].home, news: r[0].news, publications: r[0].pubs });
@@ -1300,13 +1595,79 @@
   }
 
   function commitMessage() {
-    var msg = "网页编辑：" + (changes.length ? changes.join("；") : "更新内容");
+    var msg = "网页编辑：" + (PAGE === "lab" ? "实验室网站，" : "") + (changes.length ? changes.join("；") : "更新内容");
     return msg.length > 140 ? msg.slice(0, 139) + "…" : msg;
+  }
+
+  function published(res, done) {
+    if (res.sha) {
+      prevHead = res.head;
+      headSha = res.sha;
+    } else {
+      headSha = res.head;
+    }
+    done();
+    uploads = {};
+    changes = [];
+    undoStack = [];
+    busy("");
+    renderAll();
+    toast("已发布。网站一般在 1 分钟内更新。", {
+      action: "查看网站",
+      onAction: function () { window.open(new URL(PAGE === "lab" ? "lab/" : "./", CONFIG.siteUrl || SITE).href, "_blank", "noopener"); }
+    });
+  }
+
+  /* the pages of the featured works (lab/projects/<slug>/) that differ from the repository's;
+     a new work gets a new page (pages of works no longer listed are left alone) */
+  function projectFiles(d, head) {
+    return Promise.all(R.projectPages(d).map(function (page) {
+      return repo.read(page.path, head).catch(function (err) {
+        if (err.status === 404) return null;
+        throw err;
+      }).then(function (old) { return old === page.html ? null : { path: page.path, text: page.html }; });
+    })).then(function (list) { return list.filter(Boolean); });
+  }
+
+  /* the lab page: data/lab.json, lab/index.html and the project pages, rebuilt with the homepage's
+     latest news and papers */
+  function publishLab(isRetry) {
+    var text = R.serialize(data.lab);
+    busy("正在读取网站的最新版本…");
+    return repo.head().then(function (head) {
+      if (head === prevHead) head = headSha;  // GitHub can briefly report the branch as it was before our last publish
+      return Promise.all([readData(head), repo.read("lab/index.html", head), repo.read("data/lab.json", head)]).then(function (r) {
+        if (head !== headSha && R.serialize(normalizeLab(parseJson(r[2], "data/lab.json"))) !== base.lab) {
+          var e = new Error("实验室网站的内容在别处被改过（比如在另一台设备上发布过）。为了不覆盖那边的修改，这次没有发布。请记下你的修改，点“重新载入”后再改一次。");
+          e.conflict = true;
+          throw e;
+        }
+        var d = { home: r[0].home, news: r[0].news, publications: r[0].pubs, lab: data.lab };
+        var html = R.buildLab(r[1], d);
+        var files = [];
+        if (text !== base.lab) files.push({ path: "data/lab.json", text: text });
+        if (html !== r[1]) files.push({ path: "lab/index.html", text: html });
+        usedUploads().forEach(function (p) { files.push({ path: p, base64: uploads[p] }); });
+        return projectFiles(d, head).then(function (pages) {
+          files = files.concat(pages);
+          if (!files.length) return { head: head };
+          busy("正在上传 " + files.length + " 个文件…");
+          return repo.commit(head, files, commitMessage(), busy).then(function (sha) { return { head: head, sha: sha }; });
+        });
+      });
+    }).then(function (res) {
+      published(res, function () { base.lab = text; });
+    }).catch(function (err) {
+      busy("");
+      if (err.stale && !isRetry) return publishLab(true);
+      toast(err.message, err.conflict ? { error: true, action: "重新载入", onAction: reload } : { error: true });
+    });
   }
 
   function publish(isRetry) {
     finishEdit(true);
     if (drawer) return toast("请先保存或取消右边的编辑面板。");
+    if (PAGE === "lab") return publishLab(isRetry);
     var d = new Date(), home = JSON.parse(JSON.stringify(data.home));
     home.footer = home.footer || { links: [] };
     home.footer.updated = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2);
@@ -1332,33 +1693,24 @@
         if (texts.news !== base.news) files.push({ path: "data/news.json", text: texts.news });
         if (texts.pubs !== base.pubs) files.push({ path: "data/publications.json", text: texts.pubs });
         if (html !== remoteIndex) files.push({ path: "index.html", text: html });
-        if (lab) {  // the lab page shows the same news, research cards and papers
+        var labData = lab && { home: home, news: data.news, publications: data.pubs, lab: lab.data };
+        if (lab) {  // the lab page and its project pages show the same news and papers
           var labHtml = null;
-          try { labHtml = R.buildLab(lab.html, { home: home, news: data.news, publications: data.pubs, lab: lab.data }); } catch (e) {}
+          try { labHtml = R.buildLab(lab.html, labData); } catch (e) {}
           if (labHtml && labHtml !== lab.html) files.push({ path: "lab/index.html", text: labHtml });
         }
         usedUploads().forEach(function (p) { files.push({ path: p, base64: uploads[p] }); });
-        if (!files.length) return { head: head };
-        busy("正在上传 " + files.length + " 个文件…");
-        return repo.commit(head, files, commitMessage(), busy).then(function (sha) { return { head: head, sha: sha }; });
+        return (labData ? projectFiles(labData, head) : Promise.resolve([])).then(function (pages) {
+          files = files.concat(pages);
+          if (!files.length) return { head: head };
+          busy("正在上传 " + files.length + " 个文件…");
+          return repo.commit(head, files, commitMessage(), busy).then(function (sha) { return { head: head, sha: sha }; });
+        });
       });
     }).then(function (res) {
-      if (res.sha) {
-        prevHead = res.head;
-        headSha = res.sha;
-      } else {
-        headSha = res.head;
-      }
-      data.home = home;
-      base = texts;
-      uploads = {};
-      changes = [];
-      undoStack = [];
-      busy("");
-      renderAll();
-      toast("已发布。网站一般在 1 分钟内更新。", {
-        action: "查看网站",
-        onAction: function () { window.open(CONFIG.siteUrl || SITE, "_blank", "noopener"); }
+      published(res, function () {
+        data.home = home;
+        base = texts;
       });
     }).catch(function (err) {
       busy("");
@@ -1514,7 +1866,8 @@
       var b = e.target.closest("button");
       if (!b) return;
       finishEdit(true);
-      var target = document.querySelector('.masthead [data-set-lang="' + b.getAttribute("data-lang") + '"]');
+      var lang = b.getAttribute("data-lang");
+      var target = document.querySelector('.masthead [data-set-lang="' + lang + '"], .lang-switch [data-set-lang="' + lang + '"]');
       if (target) target.click();
       updateBar();
     });
@@ -1617,10 +1970,17 @@
       e.returnValue = "";
     });
     if (!/[?&]edit\b/.test(location.search)) history.replaceState(null, "", location.pathname + "?edit" + location.hash);
-    if (!S.storageGet(S.KEYS.hint)) {
-      S.storageSet(S.KEYS.hint, "1");
-      toast("点任意文字就能直接修改；鼠标移到条目上可以编辑、排序或删除；栏目标题右边的 ＋ 用来添加。");
+    var hintKey = PAGE === "lab" ? "yyAdmin.labHint" : S.KEYS.hint;
+    if (!S.storageGet(hintKey)) {
+      S.storageSet(hintKey, "1");
+      toast(PAGE === "lab" ? "点任意文字就能直接修改；鼠标移到卡片或条目上可以编辑、排序或删除；代表作、最新动态和研究方向都有“＋ 添加”按钮。" :
+        "点任意文字就能直接修改；鼠标移到条目上可以编辑、排序或删除；栏目标题右边的 ＋ 用来添加。");
     }
+  }
+
+  /* the sign-in page sends the owner back to this page afterwards */
+  function signIn() {
+    location.href = ADMIN + "?next=" + (PAGE === "lab" ? "lab" : "edit");
   }
 
   function fail(err) {
@@ -1631,7 +1991,7 @@
       error: true,
       action: expired ? "去登录" : "重试",
       onAction: function () {
-        if (expired) location.href = ADMIN + "?next=edit";
+        if (expired) signIn();
         else location.reload();
       }
     });
@@ -1641,7 +2001,7 @@
     buildChrome();
     var token = S.storageGet(S.KEYS.token), repoText = S.storageGet(S.KEYS.repo) || CONFIG.repo || "";
     if (!token) {
-      location.href = ADMIN + "?next=edit";
+      signIn();
       return;
     }
     busy("正在载入网站内容…");

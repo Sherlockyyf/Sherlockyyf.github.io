@@ -13,15 +13,16 @@
     <div class="login__card">
       <img class="login__photo" src="../images/yifan-yuan.jpg" width="1122" height="1402" alt="">
       <h1 class="login__title">网站后台</h1>
-      <p class="login__lead">登录后直接在主页上修改内容</p>
+      <p class="login__lead">登录后直接在主页或实验室网站上修改内容</p>
 
       <p class="login__checking" id="checking">正在确认登录状态…</p>
 
       <!-- already signed in on this device -->
       <div class="signed-in" id="signed-in" hidden>
         <p class="signed-in__who">已登录 <b id="who"></b></p>
-        <a class="btn btn--primary btn--block" id="go-edit" href="../?edit">进入编辑模式</a>
-        <p class="signed-in__note">以后在这台设备上打开主页，左下角会出现“✎ 编辑页面”按钮，访客看不到它。</p>
+        <a class="btn btn--primary btn--block" id="go-edit" href="../?edit">编辑个人主页</a>
+        <a class="btn btn--block signed-in__lab" id="go-lab" href="../lab/?edit">编辑实验室网站</a>
+        <p class="signed-in__note">以后在这台设备上打开主页或实验室网站，左下角会出现“✎ 编辑页面”按钮，访客看不到它。</p>
         <button type="button" class="link-btn" id="logout">退出登录</button>
       </div>
 

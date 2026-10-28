@@ -406,9 +406,18 @@
 
   /* ---------- the lab page (lab/index.html) ----------
      News, papers and the PI's name, title and photo come from the homepage's data; data/lab.json holds
-     what only the lab page shows: introduction, the MUSE acronym, research directions and contact. */
-  var LAB_REGIONS = ["lab-latest", "lab-about", "lab-pi", "lab-acronym", "lab-research", "lab-featured",
-    "lab-filters", "lab-publications", "lab-contact-intro", "lab-contact", "lab-credits"];
+     what only the lab page shows: the hero's tagline and topics, section headings, introduction, the MUSE
+     acronym, research directions, featured work (each with its own page), news stories and contact.
+     With ed these carry data-yy* hooks like the homepage. */
+  var LAB_HEADINGS = ["about", "research", "work", "news", "publications", "contact"];
+  var LAB_REGIONS = ["lab-tagline", "lab-topics", "lab-latest", "lab-about", "lab-pi", "lab-acronym", "lab-research", "lab-work",
+    "lab-news", "lab-filters", "lab-publications", "lab-contact-intro", "lab-contact", "lab-credits"]
+    .concat(LAB_HEADINGS.map(function (k) { return "lab-h-" + k; }));
+  var VENUES = {   // full names for the citations on project pages
+    EMNLP: "Proceedings of the {y} Conference on Empirical Methods in Natural Language Processing",
+    "ACM MM": "Proceedings of the ACM International Conference on Multimedia",
+    ICASSP: "IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)"
+  };
   var LINK_ICONS = { paper: "paper", code: "code", project: "globe" };
 
   function icon(id) {
@@ -419,34 +428,71 @@
     return news.filter(function (n) { return n.lab !== false; });
   }
 
+  /* in edit mode: news and papers are shared with the homepage and edited there */
+  function sharedNote(ed, what) {
+    return ed ? '<p class="yy-note">' + what + "和个人主页共用：请在个人主页的编辑模式里修改，发布后两边一起更新。</p>" : "";
+  }
+
   /* all the lab's news in the hero, a few lines at a time; lab.js scrolls them up one by one */
-  function ticker(news) {
+  function ticker(news, ed) {
     var items = labNews(news);
-    if (!items.length) return "";
+    if (!items.length) return sharedNote(ed, "动态");
     return [
       '<div class="ticker">',
       '  <span class="ticker__tag"><span class="en">News</span><span class="zh">最新</span></span>',
       '  <div class="ticker__view">',
       '    <ul class="ticker__list">'
     ].concat(items.map(function (n) {
-      return '      <li class="ticker__item"><span class="ticker__date">' + text(n.date) + '</span><span class="ticker__text"><span class="en">' +
+      return '      <li class="ticker__item"><span class="ticker__date">' + text(n.date) + '</span><span class="ticker__text">' +
+        (n.icon ? '<span class="ticker__icon" aria-hidden="true">' + text(n.icon) + "</span>" : "") + '<span class="en">' +
         inline(pick(n, "en")) + '</span><span class="zh">' + inline(pick(n, "zh")) + "</span></span></li>";
-    }), ["    </ul>", "  </div>", "</div>"]).join("\n");
+    }), ["    </ul>", "  </div>", "</div>"], ed ? [sharedNote(ed, "动态")] : []).join("\n");
   }
 
-  function acronym(l) {
-    return (l.acronym || []).map(function (a) {
+  /* the hero's tagline (==marked== words get the highlighter) and its row of topics */
+  function tagline(l, ed) {
+    var t = (l.hero || {}).tagline || {};
+    return '<span class="en"' + A(ed, "lab.hero.tagline.en", true) + ">" + inline(pick(t, "en", ed)) + '</span><span class="zh"' +
+      A(ed, "lab.hero.tagline.zh", true) + ">" + inline(pick(t, "zh", ed)) + "</span>";
+  }
+
+  function heroTopics(l, ed) {
+    var items = ((l.hero || {}).topics || []).map(function (t, i) {
+      return "<li" + I(ed, "heroTopics", i) + ">" + bi(t, ed, "lab.hero.topics." + i) + "</li>";
+    });
+    return items.concat(ed ? [ADD(ed, "heroTopics", "li")] : []).join("\n");
+  }
+
+  function labHeading(l, key, ed) {
+    return bi((l.headings || {})[key], ed, "lab.headings." + key);
+  }
+
+  function labAbout(l, ed) {
+    var out = [];
+    (l.about || []).forEach(function (p, i) {
+      var pair = biBlock("p", "", p, ed, "lab.about." + i);
+      if (ed) out.push('<div class="yy-group"' + I(ed, "labAbout", i) + ">", "  " + pair[0], "  " + pair[1], "</div>");
+      else out.push(pair[0], pair[1]);
+    });
+    if (ed) out.push(ADD(ed, "labAbout", "p"));
+    return out.join("\n");
+  }
+
+  function acronym(l, ed) {
+    return (l.acronym || []).map(function (a, i) {
+      var path = "lab.acronym." + i;
       return [
-        '<li class="acro reveal">',
-        '  <span class="acro__letter" aria-hidden="true">' + text(a.letter) + "</span>",
+        '<li class="acro reveal"' + I(ed, "acronym", i) + ">",
+        '  <span class="acro__letter" aria-hidden="true"' + A(ed, path + ".letter") + ">" + text(a.letter) + "</span>",
         '  <div class="acro__body">',
-        '    <strong class="acro__word">' + text(a.word) + (a.zh ? '<span class="zh"> · ' + text(a.zh) + "</span>" : "") + "</strong>"
-      ].concat(indent(biBlock("p", "", a.text), "    "), ["  </div>", "</li>"]).join("\n");
+        '    <strong class="acro__word">' + W(ed, path + ".word", text(a.word)) +
+          (a.zh || ed ? '<span class="zh"> · ' + W(ed, path + ".zh", text(a.zh)) + "</span>" : "") + "</strong>"
+      ].concat(indent(biBlock("p", "", a.text, ed, path + ".text"), "    "), ["  </div>", "</li>"]).join("\n");
     }).join("\n");
   }
 
   /* the PI: name, title and photo from home.json, links from lab.json */
-  function piCard(h, l) {
+  function piCard(h, l, ed) {
     var p = h.profile || {}, photo = p.photo || {}, n = p.name || {}, t = p.title || {}, pi = l.pi || {};
     return [
       '<img class="pi__photo" src="' + attr(rebase(photo.src)) + '"' + (photo.width && photo.height ? ' width="' + photo.width + '" height="' + photo.height + '"' : "") +
@@ -456,7 +502,9 @@
       '  <p class="pi__name"><span class="en">' + text(n.en) + ' <span class="pi__alt" lang="zh-CN">' + text(n.zh) + '</span></span><span class="zh">' +
         text(n.zh) + ' <span class="pi__alt" lang="en">' + text(n.en) + "</span></span></p>",
       '  <p class="pi__title"><span class="en">' + text((t.en || []).join(", ")) + '</span><span class="zh">' + text((t.zh || []).join(" ")) + "</span></p>",
-      '  <p class="pi__links">' + (pi.links || []).map(function (x) { return link(x.url, icon(x.icon || "link") + bi(x), ' class="pbtn"'); }).join("") + "</p>",
+      '  <p class="pi__links">' + (pi.links || []).map(function (x, i) {
+        return link(x.url, icon(x.icon || "link") + bi(x, ed, "lab.pi.links." + i), ' class="pbtn"' + I(ed, "piLinks", i));
+      }).join("") + (ed ? ADD(ed, "piLinks", "span") : "") + "</p>",
       "</div>"
     ].join("\n");
   }
@@ -466,48 +514,76 @@
     return String(p.tag || "").split(" · ")[0].trim() || p.title;
   }
 
-  /* a figure that opens large: the link points at the image, its caption waits in a <template> (lab.js) */
-  function zoomCaption(id, f, byId) {
-    var p = byId[f.paper];
-    return '<template id="' + id + '">' + bi(f.caption) + (p ? ' <a class="dfig__paper" href="#p-' + attr(p.id) + '">' + text(shortName(p)) + " · " +
-      text(p.venue) + "</a>" : "") + "</template>";
+  function byIds(pubs) {
+    var o = {};
+    pubs.forEach(function (p) { o[p.id] = p; });
+    return o;
   }
 
-  /* the pictures across the top of a direction card; a published figure among them opens large */
-  function cover(d, byId) {
+  function projectOf(l, slug) {
+    return (l.projects || []).filter(function (x) { return x.slug === slug; })[0];
+  }
+
+  /* ---------- featured work: tall panes in a row, each opening its project page ---------- */
+  function pane(x, i, pubs, ed) {
+    var p = byIds(pubs)[x.paper] || {}, path = "lab.projects." + i;
+    var second = p.code ? link(p.code, "<span>Code</span>", ' class="pane__btn pane__btn--ghost"') :
+      p.paper ? link(p.paper, "<span>Paper</span>", ' class="pane__btn pane__btn--ghost"') : "";
+    return ['<article class="pane tone-' + attr(x.tone || "steel") + ' reveal"' + I(ed, "projects", i) + ">",
+      '  <h3 class="pane__title">' + text(shortName(p) || x.slug) + "</h3>"]
+      .concat(indent(biBlock("p", "pane__blurb", x.blurb, ed, path + ".blurb"), "  "), [
+        x.visual ? '  <img class="pane__visual" src="' + attr(rebase(x.visual)) + '" alt="" loading="lazy">' : '  <span class="pane__visual"></span>',
+        '  <p class="pane__actions"><a class="pane__btn" href="projects/' + attr(x.slug) + '/"><span class="en">Learn more</span><span class="zh">了解更多</span></a>' + second + "</p>",
+        "</article>"
+      ]).join("\n");
+  }
+
+  /* ---------- latest news: a headline anyone can follow, its date and kind, a square picture ---------- */
+  function story(s, i, l, ed) {
+    var path = "lab.stories." + i, x = s.project ? projectOf(l, s.project) : null;
+    var href = x ? "projects/" + x.slug + "/" : rebase(safeUrl(s.url)), ext = /^https?:/i.test(href);
+    var a = function (inner, cls) {
+      return href ? '<a href="' + attr(href) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") + (cls ? ' class="' + cls + '"' : "") + ">" + inner + "</a>" : inner;
+    };
+    var img = s.image || (x && x.visual) || "";
+    return [
+      '<article class="story reveal"' + I(ed, "stories", i) + ">",
+      '  <div class="story__text">',
+      '    <h3 class="story__title">' + a(bi(s.title, ed, path + ".title"), "story__link") + "</h3>",
+      '    <p class="story__meta"><span class="story__date">' + text(s.date) + '</span><span class="story__tag">' +
+        bi(s.tag, ed, path + ".tag") + "</span>" + (href ? a('<span class="en">Learn more</span><span class="zh">了解更多</span><span class="story__chev" aria-hidden="true">›</span>', "story__more") : "") + "</p>",
+      "  </div>",
+      '  <span class="story__thumb tone-' + attr((x && x.tone) || "steel") + '" aria-hidden="true">' + (img ? '<img src="' + attr(rebase(img)) + '" alt="" loading="lazy">' : "") + "</span>",
+      "</article>"
+    ].join("\n");
+  }
+
+  /* ---------- research directions: picture cards in a row that scrolls sideways ---------- */
+  /* the picture across the top of a direction card */
+  function cover(d) {
     var shots = (d.cover || []).filter(function (c) { return c.src; });
     if (!shots.length) return [];
-    var out = ['  <div class="dir__cover dir__cover--' + shots.length + '">'];
-    shots.forEach(function (c, i) {
-      var img = '<img src="' + attr(rebase(c.src)) + '" alt="' + attr(c.alt || "") + '" loading="lazy"' +
-        (c.position ? ' style="object-position:' + attr(c.position) + '"' : "") + ">";
-      if (c.figure) {
-        var id = "zoom-" + d.id + "-" + i;
-        out.push('    <a class="dir__shot dir__shot--zoom" href="' + attr(rebase(c.src)) + '" target="_blank" rel="noopener" data-zoom="' + id + '">' + img + "</a>",
-          "    " + zoomCaption(id, c.figure, byId));
-      } else {
-        out.push('    <span class="dir__shot">' + img + "</span>");
-      }
-    });
-    out.push("  </div>");
-    return out;
+    return ['  <div class="dir__cover dir__cover--' + shots.length + '">'].concat(shots.map(function (c) {
+      return '    <span class="dir__shot"><img src="' + attr(rebase(c.src)) + '" alt="' + attr(c.alt || "") + '" loading="lazy"' +
+        (c.position ? ' style="object-position:' + attr(c.position) + '"' : "") + "></span>";
+    }), ["  </div>"]);
   }
 
-  /* one research direction as a card: picture, seal and title, one line, its topics, papers */
-  function direction(d, pubs) {
-    var byId = {};
-    pubs.forEach(function (p) { byId[p.id] = p; });
+  /* one research direction as a card: picture, seal and title, one line, its topics, papers;
+     its colour is a tone class (lab.css .tone-*) */
+  function direction(d, i, pubs, ed) {
+    var byId = byIds(pubs), path = "lab.directions." + i;
     var papers = (d.papers || []).map(function (id) { return byId[id]; }).filter(Boolean);
     var body = [
       '  <div class="dir__body">',
       '    <div class="dir__head">',
-      '      <span class="dir__seal" aria-hidden="true">' + text(d.seal) + "</span>",
-      '      <h3 class="dir__title">' + bi(d.title) + "</h3>",
+      '      <span class="dir__seal" aria-hidden="true"' + A(ed, path + ".seal") + ">" + text(d.seal) + "</span>",
+      '      <h3 class="dir__title">' + bi(d.title, ed, path + ".title") + "</h3>",
       "    </div>"
-    ].concat(indent(biBlock("p", "dir__text", d.summary), "    "));
+    ].concat(indent(biBlock("p", "dir__text", d.summary, ed, path + ".summary"), "    "));
     if ((d.topics || []).length) {
       body.push('    <ul class="dir__topics">');
-      d.topics.forEach(function (t) { body.push("      <li>" + bi(t) + "</li>"); });
+      d.topics.forEach(function (t, j) { body.push("      <li>" + bi(t, ed, path + ".topics." + j) + "</li>"); });
       body.push("    </ul>");
     }
     if (papers.length) {
@@ -518,39 +594,199 @@
       body.push("    </ul>");
     }
     body.push("  </div>");
-    return ['<article class="dir dir--' + attr(d.id) + ' spotlight reveal" id="dir-' + attr(d.id) + '">'].concat(cover(d, byId), body, ["</article>"]).join("\n");
+    var cls = "dir dir--" + attr(d.id) + " tone-" + attr(d.tone || "steel") + " spotlight reveal";
+    return ['<article class="' + cls + '" id="dir-' + attr(d.id) + '"' + I(ed, "directions", i) + ">"].concat(cover(d), body, ["</article>"]).join("\n");
   }
 
-  function buttons(p) {
-    return LINKS.filter(function (l) { return p[l[0]]; }).map(function (l) {
-      return link(p[l[0]], icon(LINK_ICONS[l[0]]) + "<span>" + l[1] + "</span>", ' class="pbtn"');
-    }).join("");
+  /* ---------- project pages (lab/projects/<slug>/): one template for every featured work ---------- */
+  function bibtex(p, slug) {
+    var y = yearOf(p), venue = String(p.venue || "").replace(/\s*(?:19|20)\d\d\s*$/, "").trim();
+    var names = String(p.authors || "").split(/\s*[,，]\s*/).filter(Boolean).map(function (n) { return n.replace(/[*†‡#]+/g, "").trim(); });
+    var key = ((names[0] || "").split(" ").pop().toLowerCase().replace(/[^a-z]/g, "") || "muse") + y + slug.split("-")[0].replace(/[^a-z0-9]/gi, "");
+    var f = [["title", p.title], ["author", names.join(" and ")]], type = "inproceedings";
+    if (p.type === "journal") {
+      var d = String(p.details || ""), j = /^([^,]+),/.exec(d), v = /(\d+)\((\d+)\):\s*(\d+)\s*[–-]+\s*(\d+)/.exec(d);
+      type = "article";
+      f.push(["journal", j ? j[1].trim() : venue]);
+      if (v) f.push(["volume", v[1]], ["number", v[2]], ["pages", v[3] + "--" + v[4]]);
+    } else if (p.type === "preprint") {
+      var ax = /(\d{4}\.\d{4,5})/.exec(String(p.details || "") + " " + String(p.paper || ""));
+      type = "article";
+      f.push(["journal", ax ? "arXiv preprint arXiv:" + ax[1] : "arXiv preprint"]);
+    } else if (p.type === "chapter") {
+      type = "incollection";
+      f.push(["booktitle", String(p.details || venue).replace(/\.$/, "")]);
+    } else {
+      f.push(["booktitle", (VENUES[venue] || venue).replace("{y}", y)]);
+    }
+    f.push(["year", y]);
+    var doi = /doi\.org\/(.+)$/i.exec(p.paper || "");
+    if (doi) f.push(["doi", doi[1]]);
+    else if (/^https?:/i.test(p.paper || "")) f.push(["url", p.paper]);
+    f = f.filter(function (x) { return x[1]; });
+    var w = Math.max.apply(null, f.map(function (x) { return x[0].length; }));
+    return "@" + type + "{" + key + ",\n" + f.map(function (x) {
+      return "  " + x[0] + new Array(w - x[0].length + 2).join(" ") + "= {" + x[1] + "}";
+    }).join(",\n") + "\n}";
   }
 
-  /* the selected papers as tabs, one panel each with figure, summary and links */
-  function featured(pubs) {
-    var sel = pubs.filter(function (p) { return p.selected; });
-    var tabs = sel.map(function (p, i) {
-      return '<button type="button" class="ftab' + (i ? "" : " is-active") + '" role="tab" id="ftab-' + attr(p.id) + '" aria-controls="feature-' +
-        attr(p.id) + '" aria-selected="' + !i + '"' + (i ? ' tabindex="-1"' : "") + '><span class="ftab__name">' + text(shortName(p)) +
-        '</span><span class="ftab__venue">' + text(p.venue) + "</span></button>";
+  var SPRITE = [
+    '<symbol id="i-paper" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></symbol>',
+    '<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m13.5 4-3 16"/></symbol>',
+    '<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></symbol>',
+    '<symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7h4v4H7c0 3 1 4 3 5"/><path d="M14 7h4v4h-4c0 3 1 4 3 5"/></symbol>',
+    '<symbol id="i-prev" viewBox="0 0 24 24"><path d="m14.5 5.5-6.5 6.5 6.5 6.5"/></symbol>'
+  ];
+
+  /* the page of one featured work: what it is in a sentence, the paper's own summary, three highlights,
+     the method figure, a citation to copy, and the other featured works */
+  function projectPage(data, slug) {
+    var l = data.lab || {}, x = projectOf(l, slug);
+    if (!x) return "";
+    base = "../../../";
+    try {
+      var byId = byIds(data.publications || []), p = byId[x.paper] || {}, name = shortName(p) || slug, blurb = x.blurb || {};
+      var sum = { en: p.summaryEn, zh: p.summaryZh }, url = "https://yifanyuan.com/lab/projects/" + slug + "/";
+      var year = (/^(\d{4})/.exec((((data.home || {}).footer || {}).updated) || "") || [])[1] || yearOf(p);
+      var heading = function (en, zh) { return '      <h2 class="project__h"><span class="en">' + en + '</span><span class="zh">' + zh + "</span></h2>"; };
+      var btn = function (key, label) { return p[key] ? link(p[key], icon(LINK_ICONS[key]) + "<span>" + label + "</span>", ' class="pbtn"') : ""; };
+      var others = (l.projects || []).filter(function (o) { return o.slug && o.slug !== slug; }).map(function (o) {
+        return '        <a class="pcard tone-' + attr(o.tone || "steel") + '" href="../' + attr(o.slug) + '/">' +
+          (o.visual ? '<span class="pcard__visual"><img src="' + attr(rebase(o.visual)) + '" alt="" loading="lazy"></span>' : "") +
+          '<span class="pcard__name">' + text(shortName(byId[o.paper] || {}) || o.slug) + '</span><span class="pcard__blurb"><span class="en">' +
+          text(plain(pick(o.blurb, "en"))) + '</span><span class="zh">' + text(plain(pick(o.blurb, "zh"))) + "</span></span></a>";
+      });
+      var out = [
+        "<!DOCTYPE html>",
+        '<html lang="en" class="lang-en">',
+        "<head>",
+        '  <meta charset="utf-8">',
+        '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+        "  <title>" + text(name) + " · MUSE Lab</title>",
+        "  <script>",
+        "    /* the language before first paint, as on the lab page: ?lang= → saved choice → browser language */",
+        "    (function () {",
+        "      var d = document.documentElement, l = null;",
+        '      try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}',
+        '      if (l !== "zh" && l !== "en") { try { l = localStorage.getItem("lang"); } catch (e) {} }',
+        '      if (l !== "zh" && l !== "en") { l = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }',
+        '      d.className = "js lang-" + l;',
+        '      d.lang = l === "zh" ? "zh-CN" : "en";',
+        "    })();",
+        "  </script>",
+        '  <meta name="description" content="' + attr(plain(pick(blurb, "en"))) + '">',
+        '  <link rel="canonical" href="' + url + '">',
+        '  <meta property="og:type" content="article">',
+        '  <meta property="og:site_name" content="MUSE Lab">',
+        '  <meta property="og:title" content="' + attr(name + " · MUSE Lab") + '">',
+        '  <meta property="og:description" content="' + attr(plain(pick(blurb, "en"))) + '">',
+        '  <meta property="og:url" content="' + url + '">'
+      ].concat(p.image ? ['  <meta property="og:image" content="https://yifanyuan.com/' + attr(p.image) + '">'] : [], [
+        '  <meta name="theme-color" content="#fbf8f2">',
+        '  <link rel="icon" type="image/png" href="../../../images/muse-favicon.png">',
+        '  <link rel="preload" href="../../../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>',
+        '  <link rel="preload" href="../../../assets/fonts/fraunces-semibold.woff2" as="font" type="font/woff2" crossorigin>',
+        '  <link rel="stylesheet" href="../../lab.css">',
+        "</head>",
+        '<body class="project-page">',
+        '  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">'
+      ], indent(SPRITE, "    "), [
+        "  </svg>",
+        "  <!-- Generated from data/lab.json (\"projects\") and data/publications.json by admin/render.js, like the",
+        "       lab page: run `node tools/render_site.js`, or publish from the page editor; hand edits are overwritten. -->",
+        "",
+        '  <div class="washes" aria-hidden="true"><span class="wash w1"></span><span class="wash w2"></span><span class="wash w3"></span><span class="wash w4"></span></div>',
+        "",
+        '  <header class="bar is-scrolled">',
+        '    <a class="brand" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt=""><span>MUSE Lab</span></a>',
+        '    <div class="tools">',
+        '      <a class="bar__back" href="../../#work">' + icon("prev") + '<span class="en">All featured work</span><span class="zh">全部代表作</span></a>',
+        '      <div class="lang-switch" role="group" aria-label="Language / 语言">',
+        '        <button type="button" data-set-lang="en" lang="en">EN</button>',
+        '        <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>',
+        "      </div>",
+        '      <a class="corner-logo" href="../../"><img src="../../../images/muse-logo.png" width="480" height="435" alt="MUSE Lab"></a>',
+        "    </div>",
+        "  </header>",
+        "",
+        '  <main class="project tone-' + attr(x.tone || "steel") + '" id="content">',
+        '    <section class="project__hero">',
+        '      <div class="project__intro">',
+        '        <p class="project__venue"><span class="pub-venue">' + text(p.venue) + "</span>" + (p.note ? '<span class="pub-badge">' + text(p.note) + "</span>" : "") + "</p>",
+        '        <h1 class="project__title">' + text(name) + "</h1>"
+      ], p.title && p.title !== name ? ['        <p class="project__paper">' + text(p.title) + "</p>"] : [],
+      indent(biBlock("p", "project__blurb", blurb), "        "), [
+        '        <p class="project__authors">' + authors(p.authors) + "</p>",
+        '        <p class="project__links">' + btn("paper", "Paper") + btn("code", "Code") + btn("project", "Project") +
+          '<a class="pbtn" href="#cite">' + icon("quote") + "<span>BibTeX</span></a></p>",
+        "      </div>"
+      ], x.visual ? ['      <div class="project__visual"><img src="' + attr(rebase(x.visual)) + '" alt=""></div>'] : [], ["    </section>"]);
+      if (sum.en || sum.zh) {
+        out.push("", '    <section class="project__section">', heading("Overview", "概览"),
+          '      <p class="project__text en">' + inline(pick(sum, "en")) + "</p>", '      <p class="project__text zh">' + inline(pick(sum, "zh")) + "</p>", "    </section>");
+      }
+      if ((x.points || []).length) {
+        out.push("", '    <section class="project__section">', heading("Highlights", "要点"), '      <ol class="project__points">');
+        x.points.forEach(function (pt) { out.push("        <li>" + bi(pt, false, "", true) + "</li>"); });
+        out.push("      </ol>", "    </section>");
+      }
+      if (p.image) {
+        out.push("", '    <section class="project__section project__section--wide">', heading("Method", "方法"),
+          '      <figure class="project__figure"><a href="' + attr(rebase(p.image)) + '" target="_blank" rel="noopener"><img src="' + attr(rebase(p.image)) + '"' +
+            (p.imageWidth && p.imageHeight ? ' width="' + p.imageWidth + '" height="' + p.imageHeight + '"' : "") + ' loading="lazy" alt="' + attr(p.imageAlt || p.title) + '"></a>' +
+            (p.imageAlt ? "<figcaption>" + text(p.imageAlt) + "</figcaption>" : "") + "</figure>", "    </section>");
+      }
+      out.push("", '    <section class="project__section" id="cite">', heading("Citation", "引用"),
+        '      <div class="project__bib"><pre><code>' + text(bibtex(p, slug)) + "</code></pre>" +
+          '<button type="button" class="pbtn project__copy" data-copy><span class="en">Copy</span><span class="zh">复制</span></button></div>', "    </section>");
+      if (others.length) {
+        out.push("", '    <section class="project__section project__section--wide">', heading("More featured work", "更多代表作"), '      <div class="project__more">');
+        out.push.apply(out, others);
+        out.push("      </div>", "    </section>");
+      }
+      out.push("  </main>", "",
+        '  <footer class="foot">',
+        "    <p>© " + text(year) + ' MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>',
+        '    <a class="to-top" href="../../">' + icon("prev") + '<span class="en">MUSE Lab home</span><span class="zh">实验室主页</span></a>',
+        "  </footer>",
+        "",
+        "  <script>",
+        "    /* the language switch (one choice for the whole lab site) and copying the citation */",
+        "    (function () {",
+        "      var root = document.documentElement;",
+        '      [].forEach.call(document.querySelectorAll("[data-set-lang]"), function (b) {',
+        '        b.addEventListener("click", function () {',
+        '          var l = b.getAttribute("data-set-lang");',
+        '          root.classList.remove("lang-en", "lang-zh");',
+        '          root.classList.add("lang-" + l);',
+        '          root.lang = l === "zh" ? "zh-CN" : "en";',
+        '          try { localStorage.setItem("lang", l); } catch (e) {}',
+        "        });",
+        "      });",
+        '      var copy = document.querySelector("[data-copy]");',
+        "      if (copy && navigator.clipboard) {",
+        '        copy.addEventListener("click", function () {',
+        '          navigator.clipboard.writeText(document.querySelector(".project__bib code").textContent).then(function () {',
+        '            copy.classList.add("is-done");',
+        '            setTimeout(function () { copy.classList.remove("is-done"); }, 1600);',
+        "          });",
+        "        });",
+        "      }",
+        "    })();",
+        "  </script>",
+        "</body>",
+        "</html>");
+      return out.join("\n") + "\n";
+    } finally {
+      base = "";
+    }
+  }
+
+  /* every project page as { path, html } */
+  function projectPages(data) {
+    return ((data.lab || {}).projects || []).filter(function (x) { return x.slug; }).map(function (x) {
+      return { path: "lab/projects/" + x.slug + "/index.html", html: projectPage(data, x.slug) };
     });
-    var panels = sel.map(function (p, i) {
-      var sum = { en: p.summaryEn, zh: p.summaryZh };
-      return [
-        '<article class="feature' + (i ? "" : " is-active") + '" role="tabpanel" id="feature-' + attr(p.id) + '" aria-labelledby="ftab-' + attr(p.id) + '">',
-        "  " + media(p),
-        '  <div class="feature__body">',
-        '    <div class="pub-meta"><span class="pub-venue">' + text(p.venue) + "</span>" + (p.note ? '<span class="pub-badge">' + text(p.note) + "</span>" : "") + "</div>",
-        '    <h4 class="feature__title">' + text(p.title) + "</h4>",
-        '    <p class="feature__authors">' + authors(p.authors) + "</p>"
-      ].concat(sum.en || sum.zh ? [
-        '    <p class="feature__desc en">' + inline(pick(sum, "en")) + "</p>",
-        '    <p class="feature__desc zh">' + inline(pick(sum, "zh")) + "</p>"
-      ] : [], ['    <p class="feature__links">' + buttons(p) + "</p>", "  </div>", "</article>"]).join("\n");
-    });
-    return ['<div class="ftabs" role="tablist" aria-labelledby="featured-title">'].concat(indent(tabs, "  "), ["</div>", '<div class="features">'],
-      indent(panels, "  "), ["</div>"]).join("\n");
   }
 
   function filters(h, pubs, l) {
@@ -602,11 +838,13 @@
     }).join("\n");
   }
 
-  function labContact(l) {
-    return ((l.contact || {}).items || []).map(function (x) {
-      return '<li class="crow reveal">' + icon(x.icon || "link") + '<span class="crow__label">' + bi(x.label) + '</span><span class="crow__value">' +
-        (x.url ? link(x.url, bi(x.value)) : bi(x.value)) + "</span></li>";
-    }).join("\n");
+  function labContact(l, ed) {
+    var items = ((l.contact || {}).items || []).map(function (x, i) {
+      var path = "lab.contact.items." + i, value = bi(x.value, ed, path + ".value");
+      return '<li class="crow reveal"' + I(ed, "labContact", i) + ">" + icon(x.icon || "link") + '<span class="crow__label">' +
+        bi(x.label, ed, path + ".label") + '</span><span class="crow__value">' + (x.url ? link(x.url, value) : value) + "</span></li>";
+    });
+    return items.concat(ed ? [ADD(ed, "labContact", "li")] : []).join("\n");
   }
 
   /* who took the photos on the research cards */
@@ -621,32 +859,42 @@
     }).join(" · ");
   }
 
-  function labSections(data) {
+  function labSections(data, ed) {
     var h = data.home || {}, news = data.news || [], pubs = data.publications || [], l = data.lab || {};
-    return {
-      "lab-latest": ticker(news),
-      "lab-about": (l.about || []).map(function (p) { return biBlock("p", "", p).join("\n"); }).join("\n"),
-      "lab-pi": piCard(h, l),
-      "lab-acronym": acronym(l),
-      "lab-research": (l.directions || []).map(function (d) { return direction(d, pubs); }).join("\n"),
-      "lab-featured": featured(pubs),
+    var parts = {
+      "lab-tagline": tagline(l, ed),
+      "lab-topics": heroTopics(l, ed),
+      "lab-latest": ticker(news, ed),
+      "lab-about": labAbout(l, ed),
+      "lab-pi": piCard(h, l, ed),
+      "lab-acronym": acronym(l, ed),
+      "lab-research": (l.directions || []).map(function (d, i) { return direction(d, i, pubs, ed); }).concat(ed ? [ADD(ed, "directions", "div")] : []).join("\n"),
+      "lab-work": (l.projects || []).map(function (x, i) { return pane(x, i, pubs, ed); }).concat(ed ? [ADD(ed, "projects", "div")] : []).join("\n"),
+      "lab-news": (ed ? [ADD(ed, "stories", "div")] : []).concat((l.stories || []).map(function (s, i) { return story(s, i, l, ed); })).join("\n"),
       "lab-filters": filters(h, pubs, l),
-      "lab-publications": labPublications(h, pubs),
-      "lab-contact-intro": bi(l.contactIntro),
-      "lab-contact": labContact(l),
+      "lab-publications": (ed ? sharedNote(ed, "论文") + "\n" : "") + labPublications(h, pubs),
+      "lab-contact-intro": bi(l.contactIntro, ed, "lab.contactIntro", true),
+      "lab-contact": labContact(l, ed),
       "lab-credits": credits(l)
     };
+    LAB_HEADINGS.forEach(function (k) { parts["lab-h-" + k] = labHeading(l, k, ed); });
+    return parts;
   }
 
-  function buildLab(html, data) {
+  /* the lab page's regions with links made relative to lab/ (the editor draws them with ed = true) */
+  function labParts(data, ed) {
     base = "../";
     try {
-      var parts = labSections(data);
-      LAB_REGIONS.forEach(function (name) { html = region(html, name, parts[name]); });
-      return html;
+      return labSections(data, ed);
     } finally {
       base = "";
     }
+  }
+
+  function buildLab(html, data) {
+    var parts = labParts(data, false);
+    LAB_REGIONS.forEach(function (name) { html = region(html, name, parts[name]); });
+    return html;
   }
 
   return {
@@ -662,6 +910,8 @@
     authors: authors,
     sections: sections,
     build: build,
-    buildLab: buildLab
+    labParts: labParts,
+    buildLab: buildLab,
+    projectPages: projectPages
   };
 });

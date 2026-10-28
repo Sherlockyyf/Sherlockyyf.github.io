@@ -124,6 +124,10 @@ input {
   color: var(--label);
 }
 
+.signed-in__lab {
+  margin-top: 10px;
+}
+
 .signed-in__note {
   margin: 14px 0 16px;
   font-size: 13px;

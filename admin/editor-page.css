@@ -181,6 +181,93 @@ h2 .yy-add-slot {
   display: none !important;
 }
 
+/* ---------- the lab page (lab/index.html) ---------- */
+/* no entrance animations while editing: the page is redrawn after every change */
+.yy-editing .hero__inner > *,
+.yy-editing .hl {
+  animation: none;
+}
+
+/* "+ 添加研究方向" and "+ 添加代表作" take the place of a card at the end of their row */
+.yy-editing .rail > .yy-add-slot {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 220px;
+  border: 2px dashed rgba(80, 102, 149, 0.32);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.yy-editing .rail { scroll-snap-type: none; }
+
+/* news: "+" above the list (new entries go first); the whole entry is no link while editing,
+   so its date and kind can be clicked */
+.yy-editing .stories > .yy-add-slot {
+  grid-column: 1 / -1;
+  padding: 0 0 18px;
+}
+
+.yy-editing .story__link::after { display: none; }
+
+.topics > .yy-add-slot,
+.pi__links > .yy-add-slot {
+  display: inline-flex;
+  align-items: center;
+}
+
+.topics > li.yy-add-slot {  /* not a topic chip itself */
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.contact__list > .yy-add-slot {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+}
+
+/* small entries (topic chips, link buttons): their buttons float just above them */
+.topics > [data-yy-item] > .yy-tools,
+.pi__links > [data-yy-item] > .yy-tools {
+  top: auto;
+  right: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(50%);
+}
+
+/* an invisible bridge over the gap, so the pointer can reach the buttons */
+.topics > [data-yy-item] > .yy-tools::after,
+.pi__links > [data-yy-item] > .yy-tools::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 10px;
+}
+
+/* news and papers are shared with the homepage and edited there */
+.yy-note {
+  max-width: 760px;
+  margin: 12px auto 0;
+  padding: 8px 14px;
+  border: 1px dashed rgba(80, 102, 149, 0.4);
+  border-radius: 12px;
+  background: rgba(243, 245, 250, 0.92);
+  font: 13px/1.6 "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  color: #3b4c72;
+  text-align: center;
+}
+
+.yy-preview .yy-note {
+  display: none;
+}
+
 /* the side panel pushes the page aside on wide screens, so the entry stays in view */
 @media (min-width: 1000px) {
   .yy-drawer-open body {

@@ -1,10 +1,11 @@
 /* Sign-in page: checks a fine-grained GitHub token against the site's repository, remembers it
-   on this device, and sends the owner to the homepage in edit mode (admin/editor.js). */
+   on this device, and sends the owner to the homepage in edit mode (admin/editor.js), or back to
+   the lab page when that is where they came from (?next=lab). */
 (function () {
   "use strict";
 
   var S = window.SiteAdmin, CONFIG = window.ADMIN_CONFIG || {};
-  var EDIT = new URL("../?edit", location.href).href;
+  var EDIT = new URL(/[?&]next=lab\b/.test(location.search) ? "../lab/?edit" : "../?edit", location.href).href;
 
   function $(sel) {
     return document.querySelector(sel);
@@ -67,7 +68,7 @@
     show("checking");
     S.connect(repoText, token, CONFIG).then(function (repo) {
       $("#who").textContent = repo.owner + "/" + repo.name;
-      if (/[?&]next=edit\b/.test(location.search)) return location.replace(EDIT);
+      if (/[?&]next=(edit|lab)\b/.test(location.search)) return location.replace(EDIT);
       show("in");
     }, function (err) {
       if (err.status === 401 || err.status === 404) S.storageRemove(S.KEYS.token);
