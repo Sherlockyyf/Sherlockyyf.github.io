@@ -212,7 +212,7 @@
   }
 
   /* ---------- sound: soft mallet notes on a pentatonic scale for the notes and strings
-     (higher on the screen = higher in pitch), and a short swing riff for a click.
+     (higher on the screen = higher in pitch), and a slow, gentle melody for a click.
      Browsers allow audio only after a click, tap or key press, so the first one wakes
      it up; the speaker button mutes it. ---------- */
   var PENTA = [0, 2, 4, 7, 9];
@@ -304,88 +304,85 @@
   /* a note on the staff sounds its place: top line G5 … bottom line C4 */
   function chimeAt(pos, x, level) { chime(Math.round((2 - pos) * 2), x, level); }
 
-  /* the click riff, an original swing lick: a run up to E, a blue-note turn, then a
-     C6/9 chord with a soft brassy swell. Beats at 168 bpm; pitches in semitones from middle C. */
-  var BEAT = 60 / 168;
-  var RIFF = [[0, 0.3, 7, 0.75], [0.33, 0.3, 9, 0.8], [0.66, 0.3, 12, 0.85], [1, 0.45, 16, 1], [1.5, 0.1, 15, 0.6], [1.62, 0.36, 16, 0.85]];
-  var RIFF_CHORD = [-12, 4, 9, 14, 19];   // C3 under E4 A4 D5 G5
-  var riffBus = null;
+  /* the click melody, an original slow phrase in E-flat major on a soft electric piano: a rising
+     arpeggio, a falling answer, then home to an E-flat 6/9 chord over a quiet pad.
+     Beats at 76 bpm; pitches in semitones from middle C. */
+  var BEAT = 60 / 76;
+  var MELODY = [   // [beat, length in beats, pitch, loudness]
+    [0, 0.5, 3, 0.5], [0.5, 0.5, 7, 0.55], [1, 0.5, 10, 0.6], [1.5, 1, 14, 0.66],
+    [2.5, 0.5, 12, 0.58], [3, 0.5, 10, 0.52], [3.5, 1.5, 7, 0.56],
+    [5, 0.5, 8, 0.48], [5.5, 0.5, 10, 0.52], [6, 2.5, 15, 0.6]
+  ];
+  var HARMONY = [  // [beat, length in beats, pitches]: E-flat, A-flat maj7, B-flat sus, E-flat 6/9
+    [0, 2.5, [-21, -9, -5, -2]], [2.5, 2.5, [-16, -9, -5, 0]], [5, 1, [-14, -7, -4]], [6, 3, [-21, -9, -2, 0, 5]]
+  ];
+  var TUNE_BEATS = 9;
+  var tuneBus = null;
 
   function hz(semis) { return 261.63 * Math.pow(2, semis / 12); }
 
-  /* an electric-piano note: a few sine partials, each fading at its own pace, damped at the end */
-  function piano(freq, t, len, level, out) {
-    var ac = audio.ctx;
-    [[1, 1, 0.5], [2, 0.3, 0.2], [3, 0.1, 0.12], [4, 0.04, 0.08]].forEach(function (p) {
+  /* a soft electric-piano note: sine partials over a gentle 20 ms attack, a long fade, and a bell-like
+     touch on top that dies away quickly (chords use only the first two partials) */
+  function keys(freq, t, len, level, out, partials) {
+    var ac = audio.ctx, peak = 0.1 * level * Math.pow(262 / freq, 0.25);   // high notes a little quieter
+    [[1, 1, 1.1], [2, 0.22, 0.45], [3, 0.05, 0.25], [4, 0.035, 0.12]].slice(0, partials || 4).forEach(function (p) {
       var o = ac.createOscillator(), g = ac.createGain();
       o.frequency.value = freq * p[0];
       g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.125 * level * p[1], t + 0.006);
-      g.gain.setTargetAtTime(0, t + 0.006, p[2]);
-      g.gain.setTargetAtTime(0, t + len, 0.05);
+      g.gain.linearRampToValueAtTime(peak * p[1], t + 0.02);
+      g.gain.setTargetAtTime(0, t + 0.02, p[2]);
+      g.gain.setTargetAtTime(0, t + len, 0.18);
       o.connect(g);
       g.connect(out);
       o.start(t);
-      o.stop(t + len + 0.4);
+      o.stop(t + len + 1.2);
     });
   }
 
-  /* a soft brass note: two detuned saws through a filter that opens ("bwah") and a shake that grows */
-  function brass(freq, t, len, out) {
-    var ac = audio.ctx, f = ac.createBiquadFilter(), g = ac.createGain(), lfo = ac.createOscillator(), shake = ac.createGain();
+  /* a quiet, warm pad under a chord: a triangle wave through a low filter, swelling in slowly */
+  function pad(freq, t, len, out) {
+    var ac = audio.ctx, o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain();
+    o.type = "triangle";
+    o.frequency.value = freq;
     f.type = "lowpass";
-    f.Q.value = 1.5;
-    f.frequency.setValueAtTime(450, t);
-    f.frequency.linearRampToValueAtTime(2000, t + 0.07);
-    f.frequency.setTargetAtTime(1000, t + 0.07, 0.25);
+    f.frequency.value = 900;
     g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.027, t + 0.035);
-    g.gain.setTargetAtTime(0.018, t + 0.035, 0.2);
-    g.gain.setTargetAtTime(0, t + len, 0.12);
-    lfo.frequency.value = 5.5;
-    shake.gain.setValueAtTime(0, t);
-    shake.gain.linearRampToValueAtTime(12, t + len);   // cents
-    lfo.connect(shake);
+    g.gain.linearRampToValueAtTime(0.012, t + 0.45);
+    g.gain.setTargetAtTime(0, t + len, 0.35);
+    o.connect(f);
     f.connect(g);
     g.connect(out);
-    [-7, 7].forEach(function (cents) {
-      var o = ac.createOscillator();
-      o.type = "sawtooth";
-      o.frequency.value = freq;
-      o.detune.value = cents;
-      shake.connect(o.detune);
-      o.connect(f);
-      o.start(t);
-      o.stop(t + len + 0.8);
-    });
-    lfo.start(t);
-    lfo.stop(t + len + 0.8);
+    o.start(t);
+    o.stop(t + len + 1.6);
   }
 
-  /* a click plays the riff, panned toward where it lands; a new click cuts the last one off */
-  function riff(x) {
+  /* a click plays the melody, panned a little toward where it lands; a new click fades the last one
+     out gently and starts it again */
+  function melody(x) {
     whenAudible(function () {
-      var ac = audio.ctx, t0 = ac.currentTime + 0.02, bus = ac.createGain(), dest = audio.input;
-      if (riffBus) {
-        var old = riffBus;
-        old.gain.setTargetAtTime(0, t0, 0.03);
-        setTimeout(function () { old.disconnect(); }, 400);
+      var ac = audio.ctx, t0 = ac.currentTime + 0.03, bus = ac.createGain(), dest = audio.input;
+      if (tuneBus) {
+        var old = tuneBus;
+        old.gain.setTargetAtTime(0, t0, 0.15);
+        setTimeout(function () { old.disconnect(); }, 1200);
       }
       if (ac.createStereoPanner) {
         var pan = ac.createStereoPanner();
-        pan.pan.value = clamp((x / W) * 2 - 1, -1, 1) * 0.4;
+        pan.pan.value = clamp((x / W) * 2 - 1, -1, 1) * 0.3;
         pan.connect(dest);
         dest = pan;
       }
+      bus.gain.value = 1.2;   // about as loud as the notes on the staff, with gentler peaks
       bus.connect(dest);
-      riffBus = bus;
-      RIFF.forEach(function (n) { piano(hz(n[2]), t0 + n[0] * BEAT, n[1] * BEAT, n[3], bus); });
-      var tc = t0 + 2 * BEAT;
-      RIFF_CHORD.forEach(function (s, i) {
-        piano(hz(s), tc, 1.3, i ? 0.5 : 0.75, bus);
-        if (i) brass(hz(s), tc, 0.8, bus);
+      tuneBus = bus;
+      MELODY.forEach(function (n) { keys(hz(n[2]), t0 + n[0] * BEAT, n[1] * BEAT, n[3], bus); });
+      HARMONY.forEach(function (c) {
+        c[2].forEach(function (s, i) {   // each chord rolled a little, lowest note first
+          keys(hz(s), t0 + c[0] * BEAT + i * 0.03, c[1] * BEAT, i ? 0.32 : 0.42, bus, 2);
+          pad(hz(s), t0 + c[0] * BEAT, c[1] * BEAT, bus);
+        });
       });
-      setTimeout(function () { if (riffBus === bus) { riffBus = null; bus.disconnect(); } }, 3500);
+      setTimeout(function () { if (tuneBus === bus) { tuneBus = null; bus.disconnect(); } }, (TUNE_BEATS * BEAT + 2.5) * 1000);
     });
   }
 
@@ -933,7 +930,7 @@
 
   function leave() { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; }
 
-  /* a click or tap in the hero: paint splash, a fan of notes, nearby strings ring, the riff
+  /* a click or tap in the hero: paint splash, a fan of notes, nearby strings ring, the melody
      (not while the page is being edited: a click there starts editing a text) */
   function play(x, y, target) {
     if (root.classList.contains("yy-editing")) return;
@@ -941,7 +938,7 @@
     burst(x, y);
     shake(x, y);
     if (!closest(target, ".sound")) {
-      if (audio) riff(x);
+      if (audio) melody(x);
       else tapAt = [x, y];
     }
     pointer.lastMove = performance.now();
@@ -1007,7 +1004,7 @@
       if (tap && Math.abs(e.clientX - tap.cx) < 12 && Math.abs(e.clientY - tap.cy) < 12 && performance.now() - tap.t < 600) play(tap.x, tap.y, tap.target);
       tap = null;
       wakeAudio();
-      if (tapAt) { riff(tapAt[0]); tapAt = null; }
+      if (tapAt) { melody(tapAt[0]); tapAt = null; }
     }, { passive: true });
     window.addEventListener("touchend", wakeAudio, { passive: true });
     window.addEventListener("keydown", wakeAudio);

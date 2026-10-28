@@ -484,7 +484,8 @@ img { max-width: 100%; height: auto; }
 
 .ticker__date {
   flex: none;
-  width: 60px;
+  min-width: 4.6em;   /* room for the italic digits' lean, whatever the font renders: never under the icon */
+  white-space: nowrap;
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 600;
@@ -1865,7 +1866,6 @@ main {
   .ticker__tag { margin-top: 0; }
   .ticker__view { flex: none; width: 100%; height: calc(var(--row) * 2); }
   .ticker__item { gap: 10px; font-size: 14px; line-height: 1.55; }
-  .ticker__date { width: 52px; }
   .ticker__text { display: -webkit-box; white-space: normal; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   .section { padding: 68px 16px 4px; }
   .sec-head { margin-bottom: 24px; }
