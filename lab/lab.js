@@ -246,22 +246,39 @@
     soft.connect(room);
     room.connect(wet);
     wet.connect(master);
-    return { ctx: ac, input: soft };
+    return { ctx: ac, input: soft, master: master };
   }
 
   function wakeAudio() {
     if (!soundOn) return;
-    if (!audio) audio = makeAudio();
+    if (!audio) {
+      audio = makeAudio();
+      nextNote = 0;   // a new context's clock starts again from zero
+      voices = 0;
+    }
     if (audio && audio.ctx.state !== "running") audio.ctx.resume().catch(function () {});
+  }
+
+  /* muting fades the sound out in a moment and then closes the audio, so nothing still scheduled
+     (the rest of a melody) comes back when the sound is turned on again */
+  function silence() {
+    var a = audio;
+    if (!a) return;
+    audio = null;
+    tuneBus = null;
+    a.master.gain.setTargetAtTime(0, a.ctx.currentTime, 0.03);
+    setTimeout(function () {
+      try { var p = a.ctx.close(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+    }, 200);
   }
 
   /* runs fn once the audio is really playing (a new context starts a moment later) */
   function whenAudible(fn) {
     if (!soundOn || !audio) return;
     if (audio.ctx.state === "running") { fn(); return; }
-    var asked = performance.now();
-    audio.ctx.resume().then(function () {
-      if (soundOn && audio.ctx.state === "running" && performance.now() - asked < 800) fn();
+    var asked = performance.now(), a = audio;
+    a.ctx.resume().then(function () {
+      if (soundOn && audio === a && a.ctx.state === "running" && performance.now() - asked < 800) fn();
     }, function () {});
   }
 
@@ -286,7 +303,7 @@
       g.connect(dest);
       o.start(t);
       o.stop(t + 1.8);
-      if (j === 0) o.onended = function () { voices--; if (panner) panner.disconnect(); };
+      if (j === 0) o.onended = function () { if (audio && audio.ctx === ac) voices--; if (panner) panner.disconnect(); };
     });
   }
 
@@ -399,13 +416,8 @@
       soundOn = !soundOn;
       try { localStorage.setItem("lab-sound", soundOn ? "on" : "off"); } catch (e) {}
       showSound();
-      if (soundOn) {
-        wakeAudio();
-        var x = soundBtn.getBoundingClientRect().left;
-        whenAudible(function () { chime(4, x, 0.7); chime(7, x, 0.6); });
-      } else if (audio) {
-        audio.ctx.suspend();
-      }
+      if (soundOn) wakeAudio();   // quietly: the button itself makes no sound
+      else silence();
     });
     showSound();
   }
@@ -413,7 +425,7 @@
   /* ---------- the music-and-painting hero ----------
      A soft brush "M" painted behind the title, a five-line staff that can be
      plucked, notes that float along it and leap when touched, and a
-     watercolour brush that follows the pointer. It only runs while the hero
+     watercolour brush that follows the pointer or a finger. It only runs while the hero
      is on screen; coordinates are relative to the hero. */
   var stage = document.querySelector(".hero");
   var canvas = document.getElementById("art");
@@ -434,7 +446,7 @@
   var disp = [], vel = [], tips = [], stamps = [], notes = [];
   var pointer = { x: -1e4, y: -1e4, px: -1e4, py: -1e4, vx: 0, active: false, lastMove: -1e9 };
   var lastPluck = [0, 0, 0, 0, 0];
-  var brush = null, ghost = null, ghostEnd = 0, hue = 0, lastRider = 0;
+  var brush = null, ghost = null, ghostEnd = 0, hue = 0, lastRider = 0, stroke = null;
   var start = performance.now(), last = start, running = false, onScreen = true;
 
   function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
@@ -645,15 +657,16 @@
 
   /* ---- watercolour brush: overlapping soft stamps that fade and bleed.
      The path is smoothed (quadratic curves through the midpoints), so fast
-     strokes bend into arcs; a big jump starts a new stroke instead of a line. ---- */
-  function paintTo(x, y, ghostly) {
+     strokes bend into arcs; a big jump starts a new stroke instead of a line.
+     A finger moves faster than a mouse, so its stroke thins out less. ---- */
+  function paintTo(x, y, ghostly, finger) {
     var now = performance.now();
     if (!brush) { brush = { x: x, y: y, mx: x, my: y, t: now, w: 8 }; return; }
     var dx = x - brush.x, dy = y - brush.y, dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < 2) return;
     if (dist > 160) { brush = { x: x, y: y, mx: x, my: y, t: now, w: 8 }; return; }
-    var speed = dist / Math.max(8, now - brush.t);
-    var target = clamp((mobile ? 15 : 22) - speed * 7, 5, mobile ? 15 : 22);
+    var speed = dist / Math.max(8, now - brush.t), full = mobile ? 15 : 22;
+    var target = finger ? clamp(full + 2 - speed * 3, 8, full + 2) : clamp(full - speed * 7, 5, full);
     var w = brush.w + (target - brush.w) * 0.25;
     var mx = (brush.x + x) / 2, my = (brush.y + y) / 2;
     var len = Math.hypot(brush.x - brush.mx, brush.y - brush.my) + Math.hypot(mx - brush.x, my - brush.y);
@@ -928,7 +941,7 @@
     return { x: e.clientX - r.left, y: e.clientY - r.top };
   }
 
-  function leave() { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; }
+  function leave() { pointer.active = false; pointer.x = pointer.y = -1e4; brush = null; stroke = null; }
 
   /* a click or tap in the hero: paint splash, a fan of notes, nearby strings ring, the melody
      (not while the page is being edited: a click there starts editing a text) */
@@ -974,35 +987,65 @@
     }
     document.addEventListener("visibilitychange", run);
 
+    /* the brush follows a mouse or pen, and a finger while it drags. A finger that sets off sideways
+       paints (and plucks the strings, as the mouse does); one that sets off up or down scrolls the
+       page, because the hero only lets the browser pan vertically (lab.css), and the browser then
+       cancels the touch. */
     window.addEventListener("pointermove", function (e) {
-      if (e.pointerType === "touch") return;   // a finger scrolls the page instead of painting
+      var finger = e.pointerType === "touch";
+      if (finger && !e.isPrimary) return;   // one finger paints; a second one is ignored
       var p = inHero(e), now = performance.now();
       if (!p) { if (pointer.active) leave(); return; }
-      if (ghost) { ghost = null; brush = null; }
-      if (now - pointer.lastMove > 250) brush = null;
+      if (finger) {
+        if (!stroke || !stroke.on && !decide(e)) return;
+      } else {
+        if (ghost) { ghost = null; brush = null; }
+        if (now - pointer.lastMove > 250) brush = null;
+      }
       pointer.vx = pointer.x > -1e3 ? p.x - pointer.x : 0;
       pointer.x = p.x;
       pointer.y = p.y;
       pointer.active = true;
       pointer.lastMove = now;
-      paintTo(p.x, p.y, false);
+      paintTo(p.x, p.y, false, finger);
       hideHintSoon();
     }, { passive: true });
 
-    /* mouse and pen play on press; a finger plays when a tap ends, so swiping to scroll stays quiet */
+    /* a finger's first few pixels wait until it is clear where it is heading: sideways it paints,
+       from where it came down (the browser leaves a sideways touch to the page); up or down the
+       browser scrolls the page and cancels the touch, so a scroll leaves no dab of paint */
+    function decide(e) {
+      var dx = e.clientX - stroke.cx, dy = e.clientY - stroke.cy;
+      if (dx * dx + dy * dy < 144) return false;
+      if (Math.abs(dy) > Math.abs(dx)) { stroke = null; return false; }
+      stroke.on = true;
+      ghost = null;
+      brush = null;
+      paintTo(stroke.x, stroke.y, false, true);
+      return true;
+    }
+
+    /* mouse and pen play on press; a finger plays when a tap ends, so a swipe paints or scrolls quietly */
     var tap = null;
     window.addEventListener("pointerdown", function (e) {
       if (e.pointerType === "mouse") wakeAudio();
       var p = inHero(e);
+      if (e.pointerType === "touch" && e.isPrimary) stroke = p ? { x: p.x, y: p.y, cx: e.clientX, cy: e.clientY, on: false } : null;
       if (!p) return;
       if (e.pointerType === "touch") tap = { x: p.x, y: p.y, cx: e.clientX, cy: e.clientY, t: performance.now(), target: e.target };
       else play(p.x, p.y, e.target);
     }, { passive: true });
-    window.addEventListener("pointercancel", function () { tap = null; }, { passive: true });
-    /* a touch only counts as permission to play once the tap ends */
+    /* the browser took the touch over to scroll the page */
+    window.addEventListener("pointercancel", function (e) {
+      tap = null;
+      if (e.pointerType === "touch") leave();
+    }, { passive: true });
+    /* a touch only counts as permission to play once the tap ends. A lifted finger is gone, unlike a
+       mouse: the strings settle and the next touch starts a new stroke. */
     window.addEventListener("pointerup", function (e) {
       if (tap && Math.abs(e.clientX - tap.cx) < 12 && Math.abs(e.clientY - tap.cy) < 12 && performance.now() - tap.t < 600) play(tap.x, tap.y, tap.target);
       tap = null;
+      if (e.pointerType === "touch" && e.isPrimary) leave();
       wakeAudio();
       if (tapAt) { melody(tapAt[0]); tapAt = null; }
     }, { passive: true });

@@ -311,6 +311,15 @@ img { max-width: 100%; height: auto; }
   min-height: 100svh;
 }
 
+/* a finger that sets off sideways paints on the hero (lab.js); one that sets off up or down still
+   scrolls the page. The second value is for browsers that let pinch-zoom be named. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero {
+    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
+  }
+}
+
 /* multiplied onto the paper like watercolour */
 #art {
   position: absolute;
