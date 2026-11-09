@@ -134,6 +134,43 @@ input {
   color: var(--muted);
 }
 
+/* links to the visitor statistics at Statcounter (and the Flag Counter) */
+.stats {
+  margin: 0 0 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.stats__title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--label);
+}
+
+.stats__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stats__grid .btn {
+  min-height: 40px;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.stats__grid .btn:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.stats__note {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
 .field {
   display: flex;
   flex-direction: column;

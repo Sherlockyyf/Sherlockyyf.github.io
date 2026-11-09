@@ -635,6 +635,20 @@
     '<symbol id="i-prev" viewBox="0 0 24 24"><path d="m14.5 5.5-6.5 6.5 6.5 6.5"/></symbol>'
   ];
 
+  /* the visitor statistics at the end of every page (the homepage and the lab page carry the same lines
+     by hand, outside the generated parts): Statcounter counts visits invisibly; visits, visitors' IPs
+     and a visitor map are seen at statcounter.com */
+  var STATCOUNTER = [
+    "  <!-- Statcounter (project 13365820): visits, visitor IPs and a visitor map at statcounter.com -->",
+    "  <script>",
+    "    var sc_project = 13365820;",
+    "    var sc_invisible = 1;",
+    '    var sc_security = "bf63664a";',
+    "  </script>",
+    '  <script src="https://www.statcounter.com/counter/counter.js" async></script>',
+    '  <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13365820/0/bf63664a/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>'
+  ];
+
   /* the page of one featured work: what it is in a sentence, the paper's own summary, three highlights,
      the method figure, a citation to copy, and the other featured works */
   function projectPage(data, slug) {
@@ -770,9 +784,9 @@
         "        });",
         "      }",
         "    })();",
-        "  </script>",
-        "</body>",
-        "</html>");
+        "  </script>");
+      out.push.apply(out, STATCOUNTER);
+      out.push("</body>", "</html>");
       return out.join("\n") + "\n";
     } finally {
       base = "";
