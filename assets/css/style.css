@@ -1435,6 +1435,67 @@ img {
   margin-left: 10px;
 }
 
+/* the Flag Counter at the right of the footer: a white card around the image (its background, text and
+   border colours are set in the image's address); below the text on phones */
+.page__footer-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto 1fr;   /* the last row takes up the card's height, so the two lines stay together */
+  column-gap: 32px;
+  align-items: start;
+}
+
+.page__footer-inner > * {
+  grid-column: 1;
+}
+
+.page__footer-inner > .page__footer-flags {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  line-height: 0;
+  transition: border-color 0.2s ease;
+}
+
+.page__footer-inner > .page__footer-flags:hover {
+  border-color: var(--accent-border);
+}
+
+.page__footer-flags[hidden] {
+  display: none;
+}
+
+.page__footer-flags img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* below 1440px the round back-to-top button (fixed at the bottom right) would sit on the card at the end of
+   the page: leave it room under the card */
+@media (min-width: 721px) and (max-width: 1440px) {
+  .page__footer-inner:has(> .page__footer-flags:not([hidden])) {
+    padding-bottom: 78px;
+  }
+}
+
+@media (max-width: 720px) {
+  .page__footer-inner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
+  .page__footer-inner > .page__footer-flags {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+    margin-top: 10px;
+  }
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 1320px) {
   .site-nav a {
