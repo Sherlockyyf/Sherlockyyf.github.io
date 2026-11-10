@@ -110,8 +110,9 @@ lab/projects/<地址>/  每个代表作的项目页（整页由 data/ 生成，�
 ## 访问统计
 
 - Statcounter（项目号 13365820，账号 Sherlockyyf）在每个页面末尾隐形计数：主页 `index.html` 和 `lab/index.html` 的统计代码手写在 `</body>` 前（标记之外，编辑器不会改动），项目页的代码由 `admin/render.js` 里的 `STATCOUNTER` 生成。查看统计要登录 statcounter.com：访问量 `/p13365820/summary/`、访客 IP 明细 `/p13365820/visitor/`、访客世界地图 `/p13365820/visitor_map/`。后台登录页（`admin/`）里有这三个入口。免费版的 IP 明细只保留最近 500 次访问，汇总数据长期保留。
-- Flag Counter（计数器 KXdW）显示在每个页面页脚的白色卡片里：访客来自哪些国家，每国一面国旗和人数。电脑上排成两行五列，手机上排成两列。主页和 `lab/index.html` 的代码手写在页脚标记之外，项目页的由 `admin/render.js` 里的 `FLAGS` 生成，三处要保持一致。颜色、列数都写在图片地址里（`bg_` 背景、`txt_` 文字、`border_` 边框、`columns_` 列数、`maxflags_` 最多几面国旗），直接改地址就行，计数器编号 `KXdW` 不能动。每次加载图片就算一次访问，所以图片不能延迟加载（不加 `loading="lazy"`）；图片加载成功后卡片才显示，被拦截时页脚不会留空卡片。点卡片打开公开的统计页 `https://info.flagcounter.com/KXdW`，后台登录页的“各国访客”也指向它。同一访客 24 小时内只算一次，页脚的图片大约延迟 5 分钟更新。
-- 想排除自己的访问：Statcounter 在后台给自己的浏览器设置屏蔽 Cookie（Blocking Cookie）；Flag Counter 在统计页最底部点 “Ignore this browser”。
+- 访问量和访客 IP 只在后台可见：这三个页面不登录 Statcounter 账号打不开，网站上不显示任何统计数字。
+- 不要再加 Flag Counter 这类公开计数器：2026-11-10 加过 Flag Counter（页脚的国旗卡片），当天按要求撤下。它的服务条款不允许隐藏计数器，统计页也是公开的，没法做到只在后台可见。
+- 想排除自己的访问，可以在 Statcounter 后台给自己的浏览器设置屏蔽 Cookie（Blocking Cookie）。
 
 ## 配色与动效
 
