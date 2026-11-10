@@ -23,17 +23,16 @@
         <a class="btn btn--primary btn--block" id="go-edit" href="../?edit">编辑个人主页</a>
         <a class="btn btn--block signed-in__lab" id="go-lab" href="../lab/?edit">编辑实验室网站</a>
         <p class="signed-in__note">以后在这台设备上打开主页或实验室网站，左下角会出现“✎ 编辑页面”按钮，访客看不到它。</p>
-        <!-- visitor statistics: Statcounter counts every page invisibly (code at the end of each page); the Flag Counter
-             shows visitors' flags in every footer, its statistics page is public -->
+        <!-- visitor statistics: Statcounter counts every page invisibly (code at the end of each page); the numbers and
+             IPs are only seen at statcounter.com after signing in, the site itself shows none -->
         <section class="stats" aria-label="访问统计">
           <h2 class="stats__title">访问统计</h2>
           <div class="stats__grid">
             <a class="btn" href="https://statcounter.com/p13365820/summary/" target="_blank" rel="noopener">访问量</a>
             <a class="btn" href="https://statcounter.com/p13365820/visitor/" target="_blank" rel="noopener">访客 IP</a>
             <a class="btn" href="https://statcounter.com/p13365820/visitor_map/" target="_blank" rel="noopener">世界地图</a>
-            <a class="btn" href="https://info.flagcounter.com/KXdW" target="_blank" rel="noopener">各国访客</a>
           </div>
-          <p class="stats__note">前三项要登录 Statcounter 查看，免费版的 IP 明细只保留最近 500 次访问；各国访客是 Flag Counter 的公开页面，不用登录。</p>
+          <p class="stats__note">只有登录 Statcounter 账号才能查看，网站上不显示统计；免费版的 IP 明细保留最近 500 次访问。</p>
         </section>
         <button type="button" class="link-btn" id="logout">退出登录</button>
       </div>

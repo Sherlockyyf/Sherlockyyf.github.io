@@ -649,15 +649,6 @@
     '  <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13365820/0/bf63664a/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>'
   ];
 
-  /* the Flag Counter in the footer (the homepage and the lab page carry the same image by hand): the flags of
-     the countries visitors come from, details at info.flagcounter.com/KXdW. Loading the image is the count, so
-     it is never lazy; phones get the two-column version; the card shows once a real counter has loaded (not the
-     1x1 image sent without a Referer, nor the 300x250 "not authorized" notice) */
-  var FLAGS = '    <a class="foot__flags" href="https://info.flagcounter.com/KXdW" target="_blank" rel="noopener" hidden><picture>' +
-    '<source media="(max-width: 600px)" srcset="https://s05.flagcounter.com/count2/KXdW/bg_FFFFFF/txt_5D6370/border_FFFFFF/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/">' +
-    '<img src="https://s05.flagcounter.com/count2/KXdW/bg_FFFFFF/txt_5D6370/border_FFFFFF/columns_5/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter"' +
-    " onload=\"this.closest('a').hidden = this.naturalWidth < 20 || this.naturalHeight == 250\"></picture></a>";
-
   /* the page of one featured work: what it is in a sentence, the paper's own summary, three highlights,
      the method figure, a citation to copy, and the other featured works */
   function projectPage(data, slug) {
@@ -768,7 +759,6 @@
         '  <footer class="foot">',
         "    <p>© " + text(year) + ' MUSE Lab · <span class="en">College of Artificial Intelligence, Shenzhen University</span><span class="zh">深圳大学人工智能学院</span></p>',
         '    <a class="to-top" href="../../">' + icon("prev") + '<span class="en">MUSE Lab home</span><span class="zh">实验室主页</span></a>',
-        FLAGS,
         "  </footer>",
         "",
         "  <script>",
