@@ -29,7 +29,7 @@
     id: "", title: "", authors: "", venue: "", type: "conference", details: "", note: "",
     paper: "", code: "", project: "", theme: "", tag: "",
     selected: false, image: "", imageWidth: null, imageHeight: null, imageAlt: "",
-    summaryEn: "", summaryZh: ""
+    summaryEn: "", summaryZh: "", bibtex: ""
   };
 
   function normalize(item, fields) {
@@ -558,45 +558,52 @@
     ].join("\n");
   }
 
-  /* ---------- research directions: cards in a row that scrolls sideways ---------- */
-  /* the direction's illustration, as the card's faded background (decoration: no alt text) */
-  function backdrop(d) {
+  /* ---------- research directions: one card per direction. On the page the cards turn like pages as it
+     scrolls: each sticks under the section title and the next slides up over it (lab.css, lab.js) ---------- */
+  /* the direction's illustration, the big picture on the right of its card (decoration: no alt text) */
+  function picture(d) {
     var c = (d.cover || []).filter(function (x) { return x.src; })[0];
-    return c ? ['  <img class="dir__bg" src="' + attr(rebase(c.src)) + '" alt="" loading="lazy"' +
-      (c.position ? ' style="object-position:' + attr(c.position) + '"' : "") + ">"] : [];
+    return c ? ['<div class="dir__pic"><img src="' + attr(rebase(c.src)) + '" alt="" loading="lazy"' +
+      (c.position ? ' style="object-position:' + attr(c.position) + '"' : "") + "></div>"] : [];
   }
 
-  /* one research direction as a card: seal and title, one line, its topics, papers, over its picture;
-     its colour is a tone class (lab.css .tone-*) */
-  function direction(d, i, pubs, ed) {
-    var byId = byIds(pubs), path = "lab.directions." + i;
+  /* one research direction as a card: on the left its page number, seal and title, one line, its topics
+     and papers; on the right its picture. Its colour is a tone class (lab.css .tone-*); the inner "page"
+     is what shrinks and fades while the next card covers it, the article itself sticks and floats in */
+  function direction(d, i, n, pubs, ed) {
+    var byId = byIds(pubs), path = "lab.directions." + i, pic = picture(d);
     var papers = (d.papers || []).map(function (id) { return byId[id]; }).filter(Boolean);
+    var two = function (k) { return ("0" + k).slice(-2); };
     var body = [
-      '  <div class="dir__body">',
-      '    <div class="dir__head">',
-      '      <span class="dir__seal" aria-hidden="true"' + A(ed, path + ".seal") + ">" + text(d.seal) + "</span>",
-      '      <h3 class="dir__title">' + bi(d.title, ed, path + ".title") + "</h3>",
-      "    </div>"
-    ].concat(indent(biBlock("p", "dir__text", d.summary, ed, path + ".summary"), "    "));
+      '<div class="dir__body">',
+      '  <div class="dir__head">',
+      '    <span class="dir__seal" aria-hidden="true"' + A(ed, path + ".seal") + ">" + text(d.seal) + "</span>",
+      '    <h3 class="dir__title">' + bi(d.title, ed, path + ".title") + "</h3>",
+      '    <span class="dir__count" aria-hidden="true">' + two(i + 1) + "<span>/ " + two(n) + "</span></span>",
+      "  </div>"
+    ].concat(indent(biBlock("p", "dir__text", d.summary, ed, path + ".summary"), "  "));
     if ((d.topics || []).length) {
-      body.push('    <ul class="dir__topics">');
-      d.topics.forEach(function (t, j) { body.push("      <li>" + bi(t, ed, path + ".topics." + j) + "</li>"); });
-      body.push("    </ul>");
+      body.push('  <ul class="dir__topics">');
+      d.topics.forEach(function (t, j) { body.push("    <li>" + bi(t, ed, path + ".topics." + j) + "</li>"); });
+      body.push("  </ul>");
     }
     if (papers.length) {
-      body.push('    <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>', '    <ul class="dir__papers">');
+      body.push('  <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>', '  <ul class="dir__papers">');
       papers.forEach(function (p) {
-        body.push('      <li><a href="#p-' + attr(p.id) + '"><span class="dir__name">' + text(shortName(p)) + '</span><span class="dir__venue">' + text(p.venue) + "</span></a></li>");
+        body.push('    <li><a href="#p-' + attr(p.id) + '"><span class="dir__name">' + text(shortName(p)) + '</span><span class="dir__venue">' + text(p.venue) + "</span></a></li>");
       });
-      body.push("    </ul>");
+      body.push("  </ul>");
     }
-    body.push("  </div>");
-    var cls = "dir dir--" + attr(d.id) + " tone-" + attr(d.tone || "steel") + " spotlight reveal";
-    return ['<article class="' + cls + '" id="dir-' + attr(d.id) + '"' + I(ed, "directions", i) + ">"].concat(backdrop(d), body, ["</article>"]).join("\n");
+    body.push("</div>");
+    var cls = "dir dir--" + attr(d.id) + " tone-" + attr(d.tone || "steel") + " reveal";
+    return ['<article class="' + cls + '" id="dir-' + attr(d.id) + '"' + I(ed, "directions", i) + ">",
+      '  <div class="dir__page spotlight' + (pic.length ? "" : " dir__page--text") + '">']
+      .concat(indent(body, "    "), indent(pic, "    "), ["  </div>", "</article>"]).join("\n");
   }
 
   /* ---------- project pages (lab/projects/<slug>/): one template for every featured work ---------- */
   function bibtex(p, slug) {
+    if (String(p.bibtex || "").trim()) return String(p.bibtex).trim();   // the authors' own citation, exactly as given
     var y = yearOf(p), venue = String(p.venue || "").replace(/\s*(?:19|20)\d\d\s*$/, "").trim();
     var names = String(p.authors || "").split(/\s*[,，]\s*/).filter(Boolean).map(function (n) { return n.replace(/[*†‡#]+/g, "").trim(); });
     var key = ((names[0] || "").split(" ").pop().toLowerCase().replace(/[^a-z]/g, "") || "muse") + y + slug.split("-")[0].replace(/[^a-z0-9]/gi, "");
@@ -895,7 +902,7 @@
       "lab-about": labAbout(l, ed),
       "lab-pi": piCard(h, l, ed),
       "lab-acronym": acronym(l, ed),
-      "lab-research": (l.directions || []).map(function (d, i) { return direction(d, i, pubs, ed); }).concat(ed ? [ADD(ed, "directions", "div")] : []).join("\n"),
+      "lab-research": (l.directions || []).map(function (d, i, list) { return direction(d, i, list.length, pubs, ed); }).concat(ed ? [ADD(ed, "directions", "div")] : []).join("\n"),
       "lab-work": (l.projects || []).map(function (x, i) { return pane(x, i, pubs, ed); }).concat(ed ? [ADD(ed, "projects", "div")] : []).join("\n"),
       "lab-news": (ed ? [ADD(ed, "stories", "div")] : []).concat((l.stories || []).map(function (s, i) { return story(s, i, l, ed); })).join("\n"),
       "lab-filters": filters(h, pubs, l),

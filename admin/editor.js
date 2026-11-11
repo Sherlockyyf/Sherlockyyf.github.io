@@ -266,6 +266,8 @@
           { k: "summaryZh", t: "rich", label: "中文简介", show: shown },
           { k: "summaryEn", t: "rich", label: "English summary", show: shown },
           { group: "高级", collapsed: true },
+          { k: "bibtex", t: "code", label: "引用（BibTeX）", optional: "可选，留空时按上面的信息自动生成", rows: 8, placeholder: "@inproceedings{…}",
+            hint: "代表作的项目页最后显示这段引用，原样照抄；从论文页面复制 BibTeX 粘贴进来即可。" },
           { k: "id", label: "编号", optional: "页面内跳转用（#pub-编号），只能用小写字母、数字和 -，留空自动生成" }
         ];
       },
@@ -481,7 +483,7 @@
         { k: "title", bi: true, label: "标题" },
         { k: "summary", bi: true, t: "rich", label: "一句话简介" },
         { k: "topics", t: "lines", label: "课题标签", hint: "每行一个，中文和英文按行对应。" },
-        { k: "cover", t: "cover", label: "背景插画", dir: "images/", width: COVER_WIDTH, type: "image/jpeg",
+        { k: "cover", t: "cover", label: "配图", dir: "images/", width: COVER_WIDTH, type: "image/jpeg",
           name: function (d) { return "dir-" + (clean(d.id) || slug(d.title.en) || "new"); } },
         { k: "papers", t: "papers", label: "代表工作", optional: "可选" },
         { group: "高级", collapsed: true },
@@ -978,6 +980,9 @@
           '<button type="button" data-insert="†" title="通讯作者">插入 †</button></span></div>' + input(f.k, id, f.placeholder));
       case "rich":
         return wrap(f.bi ? label() + pair(area) : label(id) + area(f.k, id));
+      case "code":  // kept exactly as typed, in a fixed-width font (a BibTeX entry)
+        return wrap(label(id) + '<textarea class="code-input" id="' + id + '" name="' + f.k + '" rows="' + (f.rows || 6) + '" spellcheck="false" autocomplete="off"' +
+          (f.placeholder ? ' placeholder="' + esc(f.placeholder) + '"' : "") + "></textarea>");
       default:
         if (f.bi) return wrap(label() + pair(function (name, inputId) { return input(name, inputId, ""); }));
         if (f.pdf) {
