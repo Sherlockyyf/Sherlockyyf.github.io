@@ -222,32 +222,63 @@
      of all the cards underneath stay in view, one above the other; while the next card slides over it, a
      card shrinks a touch, pales and is cut off where the next card begins, keeping only its strip. Bottom
      margins (taken back by the next card) make all cards let go together, about 40px of scroll after the
-     last one arrives (lab.css: the column's ::after). Computers keep the sideways rows; no stacking with
-     reduced motion, while editing (not in preview), or when a card would not fit below the strips above
-     it. The editor redraws the cards, so they are looked up each time. ---------- */
+     last one arrives (lab.css: the column's ::after). A card does not stop dead where it sticks: it runs on
+     a little past its place and springs back, the faster it came the further (a damped spring on its
+     `translate`, slow enough to see). Computers keep the sideways rows; no stacking with reduced motion,
+     while editing (not in preview), or when a card would not fit below the strips above it. The editor
+     redraws the cards, so they are looked up each time. ---------- */
   var phone = window.matchMedia("(max-width: 700px)");
+  var SPRING = { most: 24, per: 0.035, period: 0.9, fade: 0.38, done: 1.7 };   // px at most, px per px/s of speed, s, s, s
   function stackOnPhones(section, listSel, cardSel, headSel) {
     var list = section && section.querySelector(listSel);
     if (!list) return;
     var queued = false, lastWidth = 0, tops = [], heights = [];
+    var shift = [], lastLaid = [], bounce = [], lastY = window.scrollY, lastT = 0;
     var cardsNow = function () { return all(":scope > " + cardSel, list); };
     var unstack = function (c) {
-      ["top", "scale", "clipPath", "marginTop", "marginBottom"].forEach(function (k) { c.style[k] = ""; });
+      ["top", "scale", "translate", "clipPath", "marginTop", "marginBottom"].forEach(function (k) { c.style[k] = ""; });
       c.style.removeProperty("--veil");
     };
-    var turn = function () {   // one read of the positions, then the writes
+    var turn = function (now) {   // one read of the positions, then the writes
       queued = false;
       if (!section.classList.contains("is-stacked")) return;
-      var cards = cardsNow();
-      var at = cards.map(function (c) { return c.getBoundingClientRect().top; });   // scaled from the top, so the top edge holds
-      for (var i = 0; i < cards.length - 1; i++) {
-        var h = heights[i] || 1, strip = tops[i + 1] - tops[i];
-        var p = Math.max(0, Math.min(1, (tops[i] + h - at[i + 1]) / Math.max(1, h - strip)));   // 0: the next card is below, 1: only the strip shows
-        var s = 1 - 0.03 * p, shown = Math.max(0, Math.min(h, at[i + 1] - at[i]));   // what the card in front leaves uncovered
-        cards[i].style.scale = p ? s.toFixed(4) : "";
-        cards[i].style.clipPath = shown < h ? "inset(0 0 " + Math.max(0, h - shown / s).toFixed(1) + "px 0)" : "";
-        cards[i].style.setProperty("--veil", (0.3 * p).toFixed(3));
+      now = typeof now === "number" ? now : performance.now();
+      var cards = cardsNow(), n = cards.length, y = window.scrollY;
+      var speed = (y - lastY) / Math.max(1, now - lastT) * 1000;   // px/s, positive when the page moves on
+      lastY = y;
+      lastT = now;
+      var laid = cards.map(function (c, i) { return c.getBoundingClientRect().top - (shift[i] || 0); });   // where it sits without its spring (scaled from the top, so the top edge holds)
+      var seen = [], springing = false, i;
+      for (i = 0; i < n; i++) {
+        if (lastLaid[i] != null && lastLaid[i] > tops[i] + 0.5 && laid[i] <= tops[i] + 0.5 && speed > 0) {   // it has just come to its place
+          var amp = Math.min(SPRING.most, speed * SPRING.per);
+          bounce[i] = amp >= 1.5 ? { t0: now, amp: amp } : null;
+        }
+        if (laid[i] > tops[i] + 0.5) bounce[i] = null;   // on its way again: no spring
+        lastLaid[i] = laid[i];
+        var b = bounce[i], off = 0;
+        if (b) {
+          var t = (now - b.t0) / 1000;
+          if (t < SPRING.done) {
+            off = -b.amp * Math.exp(-t / SPRING.fade) * Math.sin(t * 2 * Math.PI / SPRING.period);   // on up past its place first, then back
+            springing = true;
+          } else bounce[i] = null;
+        }
+        shift[i] = off;
+        seen[i] = laid[i] + off;
       }
+      for (i = 0; i < n; i++) {
+        var c = cards[i];
+        c.style.translate = shift[i] ? "0 " + shift[i].toFixed(2) + "px" : "";
+        if (i === n - 1) continue;
+        var h = heights[i] || 1, strip = tops[i + 1] - tops[i];
+        var p = Math.max(0, Math.min(1, (tops[i] + h - seen[i + 1]) / Math.max(1, h - strip)));   // 0: the next card is below, 1: only the strip shows
+        var s = 1 - 0.03 * p, shown = Math.max(0, Math.min(h, seen[i + 1] - seen[i]));   // what the card in front leaves uncovered
+        c.style.scale = p ? s.toFixed(4) : "";
+        c.style.clipPath = shown < h ? "inset(0 0 " + Math.max(0, h - shown / s).toFixed(1) + "px 0)" : "";
+        c.style.setProperty("--veil", (0.3 * p).toFixed(3));
+      }
+      if (springing) queueTurn();   // keep the spring going after the scrolling stops
     };
     var queueTurn = function () {
       if (!queued) { queued = true; requestAnimationFrame(turn); }
@@ -255,6 +286,9 @@
     var stack = function () {
       var cards = cardsNow();
       cards.forEach(unstack);
+      shift = [];
+      lastLaid = [];
+      bounce = [];
       var editing = root.classList.contains("yy-editing") && !root.classList.contains("yy-preview");
       var on = phone.matches && !reduce && !editing && cards.length > 1;
       section.classList.toggle("is-stacked", on);
