@@ -203,132 +203,123 @@
       </div>
     </section>
 
-    <!-- ===================== Research: the directions as pages that turn while the page scrolls (lab.js) ===================== -->
-    <section class="section" id="research">
-      <div class="sec-head reveal">
-        <span class="sec-num">02</span>
-        <h2 class="sec-title" id="research-title"><!-- lab-h-research:start --><span class="en">Research Directions</span><span class="zh">研究方向</span><!-- lab-h-research:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 17, 110 7, 170 12 S 255 15, 296 9"/></svg></h2>
+    <!-- ===================== Research: the directions as cards in a row that scrolls sideways (on phones a column that stacks as the page scrolls) ===================== -->
+    <section class="section section--wide" id="research">
+      <div class="section__inner">
+        <div class="sec-head reveal">
+          <span class="sec-num">02</span>
+          <h2 class="sec-title" id="research-title"><!-- lab-h-research:start --><span class="en">Research Directions</span><span class="zh">研究方向</span><!-- lab-h-research:end --><svg class="stroke" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 13 C 60 17, 110 7, 170 12 S 255 15, 296 9"/></svg></h2>
+          <div class="sec-tools">
+            <button type="button" class="arrow-btn" data-rail="-1" disabled><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg><span class="vh en">Previous</span><span class="vh zh">上一项</span></button>
+            <button type="button" class="arrow-btn" data-rail="1"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg><span class="vh en">Next</span><span class="vh zh">下一项</span></button>
+          </div>
+        </div>
       </div>
-      <div class="dirs" role="group" aria-labelledby="research-title">
+      <div class="rail dirs" role="group" aria-labelledby="research-title">
         <!-- lab-research:start -->
-        <article class="dir dir--visual tone-blue reveal" id="dir-visual">
-          <div class="dir__page spotlight">
-            <div class="dir__body">
-              <div class="dir__head">
-                <span class="dir__seal" aria-hidden="true">绘</span>
-                <h3 class="dir__title"><span class="en">Image &amp; Video Generation and Editing</span><span class="zh">图像视频生成与编辑</span></h3>
-                <span class="dir__count" aria-hidden="true">01<span>/ 05</span></span>
-              </div>
-              <p class="dir__text en">Why diffusion models fail on certain concepts, and how to generate and edit images and videos precisely while keeping meaning and identity intact.</p>
-              <p class="dir__text zh">探究扩散模型为何在特定概念上失效，在保持语义与身份不变的前提下，精确地生成与编辑图像和视频。</p>
-              <ul class="dir__topics">
-                <li><span class="en">Inside diffusion models</span><span class="zh">扩散模型的内部机理</span></li>
-                <li><span class="en">Disentangled, controllable editing</span><span class="zh">属性解耦与可控编辑</span></li>
-                <li><span class="en">Identity-preserving image and video editing</span><span class="zh">保持身份的图像与视频编辑</span></li>
-                <li><span class="en">Reliability of generative editing</span><span class="zh">生成式编辑的可靠性评估</span></li>
-              </ul>
-              <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
-              <ul class="dir__papers">
-                <li><a href="#p-mm26"><span class="dir__name">Concept Brittleness</span><span class="dir__venue">ACM MM 2026</span></a></li>
-                <li><a href="#p-jas25"><span class="dir__name">Semantic Discrepancy</span><span class="dir__venue">IEEE/CAA JAS 2025</span></a></li>
-                <li><a href="#p-icassp23"><span class="dir__name">DO-FAM</span><span class="dir__venue">ICASSP 2023</span></a></li>
-                <li><a href="#p-icassp22"><span class="dir__name">VR-FAM</span><span class="dir__venue">ICASSP 2022</span></a></li>
-              </ul>
+        <article class="dir dir--visual tone-blue spotlight reveal" id="dir-visual">
+          <img class="dir__bg" src="../images/dir-visual.webp" alt="" loading="lazy">
+          <div class="dir__body">
+            <div class="dir__head">
+              <span class="dir__seal" aria-hidden="true">绘</span>
+              <h3 class="dir__title"><span class="en">Image &amp; Video Generation and Editing</span><span class="zh">图像视频生成与编辑</span></h3>
             </div>
-            <div class="dir__pic"><img src="../images/dir-visual.webp" alt="" loading="lazy"></div>
+            <p class="dir__text en">Why diffusion models fail on certain concepts, and how to generate and edit images and videos precisely while keeping meaning and identity intact.</p>
+            <p class="dir__text zh">探究扩散模型为何在特定概念上失效，在保持语义与身份不变的前提下，精确地生成与编辑图像和视频。</p>
+            <ul class="dir__topics">
+              <li><span class="en">Inside diffusion models</span><span class="zh">扩散模型的内部机理</span></li>
+              <li><span class="en">Disentangled, controllable editing</span><span class="zh">属性解耦与可控编辑</span></li>
+              <li><span class="en">Identity-preserving image and video editing</span><span class="zh">保持身份的图像与视频编辑</span></li>
+              <li><span class="en">Reliability of generative editing</span><span class="zh">生成式编辑的可靠性评估</span></li>
+            </ul>
+            <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
+            <ul class="dir__papers">
+              <li><a href="#p-mm26"><span class="dir__name">Concept Brittleness</span><span class="dir__venue">ACM MM 2026</span></a></li>
+              <li><a href="#p-jas25"><span class="dir__name">Semantic Discrepancy</span><span class="dir__venue">IEEE/CAA JAS 2025</span></a></li>
+              <li><a href="#p-icassp23"><span class="dir__name">DO-FAM</span><span class="dir__venue">ICASSP 2023</span></a></li>
+              <li><a href="#p-icassp22"><span class="dir__name">VR-FAM</span><span class="dir__venue">ICASSP 2022</span></a></li>
+            </ul>
           </div>
         </article>
-        <article class="dir dir--understand tone-lavender reveal" id="dir-understand">
-          <div class="dir__page spotlight">
-            <div class="dir__body">
-              <div class="dir__head">
-                <span class="dir__seal" aria-hidden="true">懂</span>
-                <h3 class="dir__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></h3>
-                <span class="dir__count" aria-hidden="true">02<span>/ 05</span></span>
-              </div>
-              <p class="dir__text en">Models that understand video, images and text, put to work on real tasks.</p>
-              <p class="dir__text zh">让模型读懂视频、图像与文字，并落到真实场景中。</p>
-              <ul class="dir__topics">
-                <li><span class="en">Moment retrieval and highlights</span><span class="zh">视频时刻检索与高光检测</span></li>
-                <li><span class="en">Story-aware video editing</span><span class="zh">懂剧情的智能剪辑</span></li>
-                <li><span class="en">Virtual try-on quality checks</span><span class="zh">虚拟试衣失真检测</span></li>
-                <li><span class="en">Multimodal retrieval and moderation</span><span class="zh">多模态信息检索与审核</span></li>
-              </ul>
+        <article class="dir dir--understand tone-lavender spotlight reveal" id="dir-understand">
+          <img class="dir__bg" src="../images/dir-understand.webp" alt="" loading="lazy">
+          <div class="dir__body">
+            <div class="dir__head">
+              <span class="dir__seal" aria-hidden="true">懂</span>
+              <h3 class="dir__title"><span class="en">Multimodal Understanding &amp; Applications</span><span class="zh">多模态理解与应用</span></h3>
             </div>
-            <div class="dir__pic"><img src="../images/dir-understand.webp" alt="" loading="lazy"></div>
+            <p class="dir__text en">Models that understand video, images and text, put to work on real tasks.</p>
+            <p class="dir__text zh">让模型读懂视频、图像与文字，并落到真实场景中。</p>
+            <ul class="dir__topics">
+              <li><span class="en">Moment retrieval and highlights</span><span class="zh">视频时刻检索与高光检测</span></li>
+              <li><span class="en">Story-aware video editing</span><span class="zh">懂剧情的智能剪辑</span></li>
+              <li><span class="en">Virtual try-on quality checks</span><span class="zh">虚拟试衣失真检测</span></li>
+              <li><span class="en">Multimodal retrieval and moderation</span><span class="zh">多模态信息检索与审核</span></li>
+            </ul>
           </div>
         </article>
-        <article class="dir dir--trust tone-green reveal" id="dir-trust">
-          <div class="dir__page spotlight">
-            <div class="dir__body">
-              <div class="dir__head">
-                <span class="dir__seal" aria-hidden="true">信</span>
-                <h3 class="dir__title"><span class="en">Trustworthy LLMs &amp; Agents</span><span class="zh">可信大模型与智能体</span></h3>
-                <span class="dir__count" aria-hidden="true">03<span>/ 05</span></span>
-              </div>
-              <p class="dir__text en">LLMs and agents that stay reliable through long dialogues and multi-agent workflows: they keep to their constraints, catch their own mistakes and can show their sources.</p>
-              <p class="dir__text zh">让大模型与智能体在长程对话与多智能体协作中保持可靠：守得住约束、查得出错误、说得出依据。</p>
-              <ul class="dir__topics">
-                <li><span class="en">Predicting and steering hallucinations</span><span class="zh">幻觉风险的预测与干预</span></li>
-                <li><span class="en">State integrity in long dialogues</span><span class="zh">长程对话的状态保持</span></li>
-                <li><span class="en">Constraints across agent handoffs</span><span class="zh">多智能体交接中的约束保持</span></li>
-                <li><span class="en">Reflective search for code generation</span><span class="zh">代码生成的反思式搜索</span></li>
-                <li><span class="en">Grounded survey writing</span><span class="zh">有依据的综述写作</span></li>
-              </ul>
-              <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
-              <ul class="dir__papers">
-                <li><a href="#p-state"><span class="dir__name">StateTrack</span><span class="dir__venue">EMNLP 2026</span></a></li>
-                <li><a href="#p-remcts"><span class="dir__name">ReMCTS</span><span class="dir__venue">EMNLP 2026</span></a></li>
-                <li><a href="#p-surveygraph"><span class="dir__name">SurveyGraph</span><span class="dir__venue">EMNLP 2026</span></a></li>
-                <li><a href="#p-handoff"><span class="dir__name">Agent Handoffs</span><span class="dir__venue">Preprint 2026</span></a></li>
-              </ul>
+        <article class="dir dir--trust tone-green spotlight reveal" id="dir-trust">
+          <img class="dir__bg" src="../images/dir-trust.webp" alt="" loading="lazy">
+          <div class="dir__body">
+            <div class="dir__head">
+              <span class="dir__seal" aria-hidden="true">信</span>
+              <h3 class="dir__title"><span class="en">Trustworthy LLMs &amp; Agents</span><span class="zh">可信大模型与智能体</span></h3>
             </div>
-            <div class="dir__pic"><img src="../images/dir-trust.webp" alt="" loading="lazy"></div>
+            <p class="dir__text en">LLMs and agents that stay reliable through long dialogues and multi-agent workflows: they keep to their constraints, catch their own mistakes and can show their sources.</p>
+            <p class="dir__text zh">让大模型与智能体在长程对话与多智能体协作中保持可靠：守得住约束、查得出错误、说得出依据。</p>
+            <ul class="dir__topics">
+              <li><span class="en">Predicting and steering hallucinations</span><span class="zh">幻觉风险的预测与干预</span></li>
+              <li><span class="en">State integrity in long dialogues</span><span class="zh">长程对话的状态保持</span></li>
+              <li><span class="en">Constraints across agent handoffs</span><span class="zh">多智能体交接中的约束保持</span></li>
+              <li><span class="en">Reflective search for code generation</span><span class="zh">代码生成的反思式搜索</span></li>
+              <li><span class="en">Grounded survey writing</span><span class="zh">有依据的综述写作</span></li>
+            </ul>
+            <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
+            <ul class="dir__papers">
+              <li><a href="#p-state"><span class="dir__name">StateTrack</span><span class="dir__venue">EMNLP 2026</span></a></li>
+              <li><a href="#p-remcts"><span class="dir__name">ReMCTS</span><span class="dir__venue">EMNLP 2026</span></a></li>
+              <li><a href="#p-surveygraph"><span class="dir__name">SurveyGraph</span><span class="dir__venue">EMNLP 2026</span></a></li>
+              <li><a href="#p-handoff"><span class="dir__name">Agent Handoffs</span><span class="dir__venue">Preprint 2026</span></a></li>
+            </ul>
           </div>
         </article>
-        <article class="dir dir--emotion tone-pink reveal" id="dir-emotion">
-          <div class="dir__page spotlight">
-            <div class="dir__body">
-              <div class="dir__head">
-                <span class="dir__seal" aria-hidden="true">情</span>
-                <h3 class="dir__title"><span class="en">Emotion AI</span><span class="zh">情感智能</span></h3>
-                <span class="dir__count" aria-hidden="true">04<span>/ 05</span></span>
-              </div>
-              <p class="dir__text en">AI that reads human emotion faithfully and offers the right kind of companionship and support.</p>
-              <p class="dir__text zh">让 AI 读懂人的情绪，给出恰当的陪伴与支持。</p>
-              <ul class="dir__topics">
-                <li><span class="en">Multimodal emotion recognition</span><span class="zh">多模态情绪识别</span></li>
-                <li><span class="en">Hallucinations in emotion descriptions</span><span class="zh">情绪描述中的幻觉</span></li>
-                <li><span class="en">Emotional support conversation</span><span class="zh">情感支持对话</span></li>
-                <li><span class="en">Companions with memory and personality</span><span class="zh">有记忆、有人格的 AI 伙伴</span></li>
-              </ul>
-              <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
-              <ul class="dir__papers">
-                <li><a href="#p-ch7"><span class="dir__name">AU &amp; Expression</span><span class="dir__venue">Book Chapter 2023</span></a></li>
-                <li><a href="#p-ch8"><span class="dir__name">ExpressionFlow</span><span class="dir__venue">Book Chapter 2023</span></a></li>
-                <li><a href="#p-jig20"><span class="dir__name">Micro-expression</span><span class="dir__venue">JIG 2020</span></a></li>
-              </ul>
+        <article class="dir dir--emotion tone-pink spotlight reveal" id="dir-emotion">
+          <img class="dir__bg" src="../images/dir-emotion.webp" alt="" loading="lazy">
+          <div class="dir__body">
+            <div class="dir__head">
+              <span class="dir__seal" aria-hidden="true">情</span>
+              <h3 class="dir__title"><span class="en">Emotion AI</span><span class="zh">情感智能</span></h3>
             </div>
-            <div class="dir__pic"><img src="../images/dir-emotion.webp" alt="" loading="lazy"></div>
+            <p class="dir__text en">AI that reads human emotion faithfully and offers the right kind of companionship and support.</p>
+            <p class="dir__text zh">让 AI 读懂人的情绪，给出恰当的陪伴与支持。</p>
+            <ul class="dir__topics">
+              <li><span class="en">Multimodal emotion recognition</span><span class="zh">多模态情绪识别</span></li>
+              <li><span class="en">Hallucinations in emotion descriptions</span><span class="zh">情绪描述中的幻觉</span></li>
+              <li><span class="en">Emotional support conversation</span><span class="zh">情感支持对话</span></li>
+              <li><span class="en">Companions with memory and personality</span><span class="zh">有记忆、有人格的 AI 伙伴</span></li>
+            </ul>
+            <p class="dir__label"><span class="en">Representative work</span><span class="zh">代表工作</span></p>
+            <ul class="dir__papers">
+              <li><a href="#p-ch7"><span class="dir__name">AU &amp; Expression</span><span class="dir__venue">Book Chapter 2023</span></a></li>
+              <li><a href="#p-ch8"><span class="dir__name">ExpressionFlow</span><span class="dir__venue">Book Chapter 2023</span></a></li>
+              <li><a href="#p-jig20"><span class="dir__name">Micro-expression</span><span class="dir__venue">JIG 2020</span></a></li>
+            </ul>
           </div>
         </article>
-        <article class="dir dir--embodied tone-sand reveal" id="dir-embodied">
-          <div class="dir__page spotlight">
-            <div class="dir__body">
-              <div class="dir__head">
-                <span class="dir__seal" aria-hidden="true">机</span>
-                <h3 class="dir__title"><span class="en">Embodied AI</span><span class="zh">具身智能</span></h3>
-                <span class="dir__count" aria-hidden="true">05<span>/ 05</span></span>
-              </div>
-              <p class="dir__text en">Robots that perceive, plan and act reliably through long tasks, and keep improving after deployment.</p>
-              <p class="dir__text zh">让机器人在长周期任务中看得懂、想得清、做得稳。</p>
-              <ul class="dir__topics">
-                <li><span class="en">End-to-end long-horizon decisions</span><span class="zh">端到端长程决策</span></li>
-                <li><span class="en">Test-time adaptation for VLA models</span><span class="zh">VLA 模型的测试时自适应</span></li>
-                <li><span class="en">Fine manipulation for industry</span><span class="zh">工业场景中的精细操作</span></li>
-              </ul>
+        <article class="dir dir--embodied tone-sand spotlight reveal" id="dir-embodied">
+          <img class="dir__bg" src="../images/dir-embodied.webp" alt="" loading="lazy">
+          <div class="dir__body">
+            <div class="dir__head">
+              <span class="dir__seal" aria-hidden="true">机</span>
+              <h3 class="dir__title"><span class="en">Embodied AI</span><span class="zh">具身智能</span></h3>
             </div>
-            <div class="dir__pic"><img src="../images/dir-embodied.webp" alt="" loading="lazy"></div>
+            <p class="dir__text en">Robots that perceive, plan and act reliably through long tasks, and keep improving after deployment.</p>
+            <p class="dir__text zh">让机器人在长周期任务中看得懂、想得清、做得稳。</p>
+            <ul class="dir__topics">
+              <li><span class="en">End-to-end long-horizon decisions</span><span class="zh">端到端长程决策</span></li>
+              <li><span class="en">Test-time adaptation for VLA models</span><span class="zh">VLA 模型的测试时自适应</span></li>
+              <li><span class="en">Fine manipulation for industry</span><span class="zh">工业场景中的精细操作</span></li>
+            </ul>
           </div>
         </article>
         <!-- lab-research:end -->
