@@ -45,7 +45,7 @@
   },
   {
     "id": "remcts",
-    "title": "ReMCTS: Reflection-Enhanced Monte Carlo Tree Search for Code Generation",
+    "title": "ReMCTS: Reflect-Enhanced Monte Carlo Tree Search Strategy for Code Generation",
     "authors": "Wang Huifei, Huang Xinying, Sun Yiheng, Yifan Yuan†",
     "venue": "EMNLP 2026",
     "type": "conference",
