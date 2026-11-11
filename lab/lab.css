@@ -1888,25 +1888,27 @@ main {
   .dir { width: min(320px, 84vw); }
   .dir__body { padding: 18px; }
   /* research and featured work on phones: columns instead of rows, and lab.js stacks them as the page
-     scrolls (.is-stacked). All cards stick at one height (set by lab.js); a card being covered rises by its
-     title strip and pales, so its title stays in view above the next card. The cards only fade in, and the
-     rise follows the scroll exactly (no transform transition) */
+     scrolls (.is-stacked). Each card sticks one title strip lower than the one before (tops set by lab.js),
+     so the titles of all the cards underneath stay in view; a card being covered shrinks a touch towards
+     its top, pales, and keeps only its strip. The cards only fade in (no float), so lab.js always knows
+     where they are; the strips are kept slim so that five cards fit on a phone */
   #research .rail.dirs, #work .rail.panes { flex-direction: column; overflow: visible; scroll-snap-type: none; padding: 4px var(--gutter) 0; }
   #research .dir, #work .pane { width: auto; }
   #research.is-stacked .dirs, #work.is-stacked .panes { gap: 96px; padding-bottom: 8px; }
   #research.is-stacked .dirs::after, #work.is-stacked .panes::after { content: ""; flex: none; height: 1px; margin-top: -56px; }   /* the last card stays ~40px before all leave */
   #research.is-stacked .dir, #work.is-stacked .pane {
     position: sticky;
-    translate: none;   /* stacked cards fade in without floating up, so lab.js always knows where they are */
+    translate: none;
+    transform-origin: 50% 0;
     transition: opacity 0.75s var(--ease-out) var(--d, 0s);
   }
   #research.is-stacked .dir:hover, #work.is-stacked .pane:hover { transform: none; }
   #research.is-stacked .dir::after, #work.is-stacked .pane::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; background: var(--paper); opacity: var(--veil, 0); pointer-events: none; }
-  #research.is-stacked .dir__body { padding-top: 12px; }
-  #research.is-stacked .dir__head { align-items: center; margin-bottom: 10px; }
-  #research.is-stacked .dir__seal { width: 36px; height: 36px; border-radius: 10px; font-size: 23px; }
-  #work.is-stacked .pane { padding-top: 16px; }
-  #work.is-stacked .pane__title { font-size: 22px; }
+  #research.is-stacked .dir__body { padding-top: 10px; }
+  #research.is-stacked .dir__head { align-items: center; gap: 10px; margin-bottom: 10px; }
+  #research.is-stacked .dir__seal { width: 32px; height: 32px; border-radius: 9px; font-size: 21px; }
+  #work.is-stacked .pane { padding-top: 12px; }
+  #work.is-stacked .pane__title { font-size: 20px; }
   #work.is-stacked .pane__blurb { min-height: 0; margin: 8px 0 12px; }
   #work.is-stacked .pane__visual { height: 200px; aspect-ratio: auto; margin-bottom: 14px; }
   .pane { width: min(330px, 84vw); padding: 24px 22px 22px; border-radius: 22px; }

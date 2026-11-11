@@ -218,40 +218,35 @@
   centreRows();
 
   /* ---------- phones: the research cards and the featured-work panes are columns (lab.css) that stack as
-     the page scrolls. The cards of a column all stick at one height, a title strip below the top bar; while
-     the next card slides up over a card, that card rises by the strip and pales, so its title stays in view
-     just above the newcomer (the card before it goes under). Bottom margins (taken back by the next card)
-     make all cards let go together, about 40px of scroll after the last one arrives (lab.css: the column's
-     ::after). Computers keep the sideways rows; no
-     stacking with reduced motion, while editing (not in preview), or when a card would not fit below the
-     strip. The editor redraws the cards, so they are looked up each time. ---------- */
+     the page scrolls. Each card sticks lower than the one before by that card's title strip, so the titles
+     of all the cards underneath stay in view, one above the other; while the next card slides over it, a
+     card shrinks a touch, pales and is cut off where the next card begins, keeping only its strip. Bottom
+     margins (taken back by the next card) make all cards let go together, about 40px of scroll after the
+     last one arrives (lab.css: the column's ::after). Computers keep the sideways rows; no stacking with
+     reduced motion, while editing (not in preview), or when a card would not fit below the strips above
+     it. The editor redraws the cards, so they are looked up each time. ---------- */
   var phone = window.matchMedia("(max-width: 700px)");
   function stackOnPhones(section, listSel, cardSel, headSel) {
     var list = section && section.querySelector(listSel);
     if (!list) return;
-    var queued = false, stickAt = 0, strip = 0, lastWidth = 0, heights = [], rise = [];
+    var queued = false, lastWidth = 0, tops = [], heights = [];
     var cardsNow = function () { return all(":scope > " + cardSel, list); };
     var unstack = function (c) {
-      ["top", "transform", "clipPath", "marginTop", "marginBottom"].forEach(function (k) { c.style[k] = ""; });
+      ["top", "scale", "clipPath", "marginTop", "marginBottom"].forEach(function (k) { c.style[k] = ""; });
       c.style.removeProperty("--veil");
     };
     var turn = function () {   // one read of the positions, then the writes
       queued = false;
       if (!section.classList.contains("is-stacked")) return;
-      var cards = cardsNow(), n = cards.length;
-      var laid = cards.map(function (c, i) { return c.getBoundingClientRect().top + (rise[i] || 0); });   // where each card sits without its rise
-      var seen = [];
-      seen[n - 1] = laid[n - 1];
-      rise[n - 1] = 0;
-      for (var i = n - 2; i >= 0; i--) {
-        var h = heights[i] || 1;
-        var p = Math.max(0, Math.min(1, (stickAt + h - laid[i + 1]) / h));   // 0: the next card is below, 1: it sits where this one stuck
-        rise[i] = strip * p;
-        seen[i] = laid[i] - rise[i];
-        var shown = Math.max(0, Math.min(h, seen[i + 1] - seen[i]));   // what the card in front leaves uncovered
-        cards[i].style.transform = p ? "translateY(" + (-rise[i]).toFixed(1) + "px)" : "";
-        cards[i].style.clipPath = shown < h ? "inset(0 0 " + (h - shown).toFixed(1) + "px 0)" : "";
-        cards[i].style.setProperty("--veil", (0.35 * p).toFixed(3));
+      var cards = cardsNow();
+      var at = cards.map(function (c) { return c.getBoundingClientRect().top; });   // scaled from the top, so the top edge holds
+      for (var i = 0; i < cards.length - 1; i++) {
+        var h = heights[i] || 1, strip = tops[i + 1] - tops[i];
+        var p = Math.max(0, Math.min(1, (tops[i] + h - at[i + 1]) / Math.max(1, h - strip)));   // 0: the next card is below, 1: only the strip shows
+        var s = 1 - 0.03 * p, shown = Math.max(0, Math.min(h, at[i + 1] - at[i]));   // what the card in front leaves uncovered
+        cards[i].style.scale = p ? s.toFixed(4) : "";
+        cards[i].style.clipPath = shown < h ? "inset(0 0 " + Math.max(0, h - shown / s).toFixed(1) + "px 0)" : "";
+        cards[i].style.setProperty("--veil", (0.3 * p).toFixed(3));
       }
     };
     var queueTurn = function () {
@@ -260,26 +255,26 @@
     var stack = function () {
       var cards = cardsNow();
       cards.forEach(unstack);
-      rise = [];
       var editing = root.classList.contains("yy-editing") && !root.classList.contains("yy-preview");
       var on = phone.matches && !reduce && !editing && cards.length > 1;
       section.classList.toggle("is-stacked", on);
       if (!on) return;
-      strip = 0;
-      cards.forEach(function (c) {   // the strip: down to the bottom of the tallest title, and a little air
+      var t = (parseFloat(getComputedStyle(root).getPropertyValue("--bar-h")) || 58) + 10;
+      tops = [];
+      heights = cards.map(function (c, i) {   // each card sticks below the title strips of all the ones before it
         var head = c.querySelector(headSel);
-        if (head) strip = Math.max(strip, Math.ceil(head.getBoundingClientRect().bottom - c.getBoundingClientRect().top) + 8);
+        tops[i] = t;
+        t += head ? Math.ceil(head.getBoundingClientRect().bottom - c.getBoundingClientRect().top) + 6 : 48;
+        return c.offsetHeight;
       });
-      stickAt = (parseFloat(getComputedStyle(root).getPropertyValue("--bar-h")) || 58) + 10 + (strip || 56);
-      heights = cards.map(function (c) { return c.offsetHeight; });
-      var tallest = Math.max.apply(null, heights);
-      if (tallest > window.innerHeight - 8 - stickAt) {
+      if (cards.some(function (c, i) { return tops[i] + heights[i] > window.innerHeight - 8; })) {
         section.classList.remove("is-stacked");
         return;
       }
+      var end = Math.max.apply(null, cards.map(function (c, i) { return tops[i] + heights[i]; }));
       cards.forEach(function (c, i) {
-        var m = tallest - heights[i];   // all reach the end of the column together (the column's ::after keeps them a little longer)
-        c.style.top = stickAt + "px";
+        var m = end - (tops[i] + heights[i]);   // all reach the end of the column together (the column's ::after keeps them a little longer)
+        c.style.top = tops[i] + "px";
         c.style.marginBottom = m + "px";
         if (cards[i + 1]) cards[i + 1].style.marginTop = -m + "px";
       });
