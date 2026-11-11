@@ -822,6 +822,9 @@ main {
 .rail.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
 .rail img { -webkit-user-drag: none; }
 
+/* every card of every row fits in the window (lab.js): the rows sit in the middle and their arrows go away */
+.rail.is-centred { padding-left: var(--row-pad); padding-right: var(--row-pad); }
+
 /* ---------- research directions: picture cards, tinted like the homepage cards, one tint per direction ---------- */
 .dir {
   position: relative;

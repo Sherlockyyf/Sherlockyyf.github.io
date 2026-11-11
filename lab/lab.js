@@ -185,6 +185,38 @@
     row.addEventListener("dragstart", function (e) { e.preventDefault(); });
   });
 
+  /* a computer wide enough to show every card of every row at once: the rows are centred in the window and
+     their arrows are put away (nothing to scroll to). Otherwise, as before, the first card lines up with the
+     page and the row runs out to the right edge. Both rows centre or neither, so they never disagree; not on
+     phones (columns there, lab.css) nor while editing (the "+" slot makes a row longer). */
+  var rows = all(".rail"), narrow = window.matchMedia("(max-width: 700px)");
+  var centreRows = function () {
+    rows.forEach(function (r) { r.classList.remove("is-centred"); r.style.removeProperty("--row-pad"); });
+    var editing = root.classList.contains("yy-editing") && !root.classList.contains("yy-preview");
+    var gutter = parseFloat(getComputedStyle(root).getPropertyValue("--gutter")) || 24;
+    var widths = rows.map(function (r) {
+      var kids = all(":scope > *", r), gap = parseFloat(getComputedStyle(r).columnGap) || 0;
+      return kids.reduce(function (w, k) { return w + k.offsetWidth; }, 0) + gap * Math.max(0, kids.length - 1);
+    });
+    var fit = !editing && !narrow.matches && rows.length > 0 && rows.every(function (r, i) { return widths[i] <= r.clientWidth - 2 * gutter; });
+    rows.forEach(function (r, i) {
+      if (fit) {
+        r.classList.add("is-centred");
+        r.style.setProperty("--row-pad", (r.clientWidth - widths[i]) / 2 + "px");
+        r.scrollLeft = 0;
+      }
+      var tools = (closest(r, "section") || document).querySelector(".sec-tools");
+      if (tools) tools.style.visibility = fit ? "hidden" : "";
+      r.dispatchEvent(new Event("scroll"));   // the arrows follow
+    });
+  };
+  window.addEventListener("resize", centreRows);
+  if ("MutationObserver" in window) {
+    rows.forEach(function (r) { new MutationObserver(centreRows).observe(r, { childList: true }); });   // the editor redraws the cards
+    new MutationObserver(centreRows).observe(root, { attributes: true, attributeFilter: ["class"] });   // editing, preview
+  }
+  centreRows();
+
   /* ---------- phones: the research cards and the featured-work panes are columns (lab.css) that stack as
      the page scrolls. The cards of a column all stick at one height, a title strip below the top bar; while
      the next card slides up over a card, that card rises by the strip and pales, so its title stays in view
