@@ -1,6 +1,6 @@
 /* MUSE Lab page (lab/index.html): language switch, note sounds, the music-and-painting hero,
-   the news ticker, navigation, scroll reveal, the rows of research cards and featured-work
-   panes, and the publication filters. */
+   the news ticker, navigation, scroll reveal, the research cards that turn like pages, the row
+   of featured-work panes, and the publication filters. */
 (function () {
   "use strict";
   var root = document.documentElement;
@@ -131,7 +131,7 @@
     }, reduce ? 0 : 600);
   });
 
-  /* ---------- rows of cards that scroll sideways (research directions, featured work), snapping to
+  /* ---------- rows of cards that scroll sideways (featured work), snapping to
      a card. The arrows in the section's head move one card on, a mouse can drag a row; fingers and
      trackpads scroll it natively. The editor redraws the cards but not the rows, so everything hangs
      on the rows. ---------- */
@@ -184,6 +184,62 @@
     });
     row.addEventListener("dragstart", function (e) { e.preventDefault(); });
   });
+
+  /* ---------- research directions: pages that turn as the page scrolls (as in moushen.ai's 商业应用).
+     With .is-stacked on the section, each card sticks under the section title (lab.css) and, while the
+     next card slides up over it, its page shrinks to 96% towards its top and fades out; the pages are
+     given one height (the tallest), so each covers the one before exactly. The cards stay a plain list on
+     phones, with reduced motion, while editing (not in preview) and when the cards would not fit below the
+     title in the window. The editor redraws the cards, so they are looked up each time. ---------- */
+  var research = document.getElementById("research"), dirs = research && research.querySelector(".dirs");
+  if (dirs) {
+    var phone = window.matchMedia("(max-width: 700px)"), turnQueued = false, stickAt = 0;
+    var dirCards = function () { return all(":scope > .dir", dirs); };
+    var turnPages = function () {
+      turnQueued = false;
+      var cards = dirCards(), stacked = research.classList.contains("is-stacked");
+      cards.forEach(function (c, i) {
+        var page = c.querySelector(".dir__page"), next = cards[i + 1], p = 0;
+        if (!page) return;
+        if (stacked && next) {   // 0 until the next card reaches this one's bottom, 1 once it sits where this one sticks
+          p = 1 - (next.getBoundingClientRect().top - stickAt) / (c.offsetHeight || 1);
+          p = Math.max(0, Math.min(1, p));
+        }
+        page.style.transform = p ? "scale(" + (1 - 0.04 * p).toFixed(4) + ")" : "";
+        page.style.opacity = p ? (1 - p).toFixed(3) : "";
+      });
+    };
+    var queueTurn = function () {
+      if (!turnQueued) { turnQueued = true; requestAnimationFrame(turnPages); }
+    };
+    var stackPages = function () {
+      var editing = root.classList.contains("yy-editing") && !root.classList.contains("yy-preview");
+      var want = !reduce && !editing && !phone.matches, cards = dirCards();
+      var pages = cards.map(function (c) { return c.querySelector(".dir__page"); }).filter(Boolean);
+      pages.forEach(function (pg) { pg.style.minHeight = ""; });
+      research.style.removeProperty("--dirs-tail");
+      research.classList.toggle("is-stacked", want);
+      if (want && cards.length) {   // the tallest page must fit between where the cards stick and the window's bottom
+        stickAt = parseFloat(getComputedStyle(cards[0]).top) || 0;
+        var tallest = Math.max.apply(null, pages.map(function (pg) { return pg.offsetHeight; }));
+        if (tallest > window.innerHeight - stickAt - 12) research.classList.remove("is-stacked");
+        else {
+          pages.forEach(function (pg) { pg.style.minHeight = tallest + "px"; });
+          var head = research.querySelector(".sec-head");   // the title lets go when the cards do
+          if (head) research.style.setProperty("--dirs-tail", Math.max(34, stickAt + tallest - (parseFloat(getComputedStyle(head).top) || 0) - head.offsetHeight) + "px");
+        }
+      }
+      turnPages();
+    };
+    window.addEventListener("scroll", queueTurn, { passive: true });
+    window.addEventListener("resize", stackPages);
+    if ("MutationObserver" in window) {
+      new MutationObserver(stackPages).observe(dirs, { childList: true });
+      new MutationObserver(stackPages).observe(root, { attributes: true, attributeFilter: ["class"] });   // language, editing, preview
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(stackPages);   // the brush font changes the heights
+    stackPages();
+  }
 
   /* ---------- news ticker in the hero: every few seconds the list moves up one item and the
      top one goes round to the end. It waits while the pointer or keyboard focus is on it;

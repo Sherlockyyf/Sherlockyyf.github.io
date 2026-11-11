@@ -803,8 +803,8 @@ main {
   padding: 0 var(--gutter);
 }
 
-/* ---------- rows of cards that scroll sideways (research directions, featured work): the first card
-   in line with the page, the row running out to the window's edges (lab.js: arrows and dragging) ---------- */
+/* ---------- rows of cards that scroll sideways (featured work): the first card in line with the page,
+   the row running out to the window's edges (lab.js: arrows and dragging) ---------- */
 .rail {
   --edge: max(var(--gutter), calc((100% - 1120px) / 2 + var(--gutter)));
   display: flex;
@@ -822,74 +822,118 @@ main {
 .rail.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
 .rail img { -webkit-user-drag: none; }
 
-/* ---------- research directions: picture cards, tinted like the homepage cards, one tint per direction ---------- */
-.dir {
-  position: relative;
-  overflow: hidden;
+/* ---------- research directions: pages that turn as the page scrolls, as in moushen.ai's 商业应用. With
+   .is-stacked (set by lab.js) the title stays under the top bar, each direction's card sticks below it and
+   the next card slides up over it, while the covered one shrinks a little towards its top and fades out.
+   Without it (phones, reduced motion, editing, a window too short for a card, no script) the cards are a
+   plain list. One tint per direction, like the homepage cards. ---------- */
+#research { --dirs-top: calc(var(--bar-h) + 92px); }   /* where the cards stick: under the title */
+
+.dirs {
   display: flex;
   flex-direction: column;
-  width: min(352px, 82vw);
-  border: 1px solid var(--tc-border);
-  border-radius: 20px;
-  background-color: var(--tc-bg);
-  box-shadow: var(--shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  gap: 28px;
 }
 
-.dir:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+/* the title's bottom margin reaches as far down as the cards (--dirs-tail, lab.js), so that title and
+   cards let go and leave together; the list moves back up by as much */
+#research.is-stacked .sec-head { position: sticky; top: calc(var(--bar-h) + 16px); margin-bottom: var(--dirs-tail, 34px); }
+#research.is-stacked .dirs { gap: 150px; margin-top: calc(34px - var(--dirs-tail, 34px)); }   /* gap: the scroll a card stays whole before the next one comes over it */
+#research.is-stacked .dirs::after { content: ""; flex: none; height: 1px; margin-top: -60px; }   /* the last card stays 90px of scroll before all leave */
+#research.is-stacked .dir { position: sticky; top: var(--dirs-top); }
+#research.is-stacked .dir__page { will-change: transform, opacity; }
 
-/* the direction's illustration as the card's background, fading out towards the bottom behind the text */
-.dir__bg {
+/* the card itself (the article around it floats in and sticks; lab.js shrinks and fades this one) */
+.dir__page {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+  gap: 40px;
+  min-height: 390px;
+  padding: 30px;
+  border: 1px solid var(--tc-border);
+  border-radius: 28px;
+  background-color: var(--tc-bg);
+  background-image: radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), var(--glow), transparent 62%),
+    linear-gradient(160deg, var(--tc-bg) 35%, var(--tc-deep));
+  box-shadow: 0 -10px 30px rgba(36, 52, 88, 0.05), var(--shadow);
+  transform-origin: 50% 0;
+}
+
+.dir__page--text { grid-template-columns: minmax(0, 1fr); }
+
+/* the direction's illustration, framed on the right */
+.dir__pic {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 10px 26px rgba(36, 52, 88, 0.08);
+}
+
+.dir__pic img {
   position: absolute;
   inset: 0;
-  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 50% 30%;
-  opacity: 0.34;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to bottom, #000, rgba(0, 0, 0, 0.55) 55%, transparent 95%);
-  mask-image: linear-gradient(to bottom, #000, rgba(0, 0, 0, 0.55) 55%, transparent 95%);
-  transition: transform 0.8s var(--ease-out), opacity 0.4s ease;
+  transition: transform 0.9s var(--ease-out);
 }
 
-.dir:hover .dir__bg { opacity: 0.46; transform: scale(1.04); }
+.dir__page:hover .dir__pic img { transform: scale(1.04); }
 
+/* the text, centred down the card as on moushen.ai */
 .dir__body {
-  position: relative;
-  z-index: 1;
-  flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 22px;
+  justify-content: center;
+  min-width: 0;
 }
 
 .dir__head {
   display: flex;
-  align-items: flex-end;
-  gap: 14px;
-  margin-bottom: 10px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
 }
+
+/* the page number, "01 / 05", at the end of the title's line */
+.dir__count {
+  flex: none;
+  align-self: flex-start;
+  margin: 2px 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--tc-accent);
+}
+
+.dir__count span { margin-left: 5px; opacity: 0.5; }
 
 .dir__seal {
   flex: none;
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 14px;
+  width: 58px;
+  height: 58px;
+  border-radius: 15px;
   background: var(--tc-seal);
   box-shadow: 0 0 0 3px var(--tc-bg), inset 0 0 0 2px rgba(255, 255, 255, 0.45), 0 8px 18px rgba(36, 52, 88, 0.16);
   font-family: var(--font-brush);
-  font-size: 34px;
+  font-size: 37px;
   line-height: 1;
   color: #fff;
   transform: rotate(-6deg);
   transition: transform 0.4s var(--ease-out);
 }
 
-.dir:hover .dir__seal { transform: rotate(0deg) scale(1.06); }
+.dir__page:hover .dir__seal { transform: rotate(0deg) scale(1.06); }
 
 /* stamped on when the card comes into view */
 .js-reveal .dir .dir__seal { opacity: 0; }
@@ -901,21 +945,21 @@ main {
 }
 
 .dir__title {
-  margin: 0 0 2px;
+  margin: 0;
   font-family: var(--font-display);
-  font-size: 19px;
+  font-size: 25px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.25;
   color: var(--heading);
   text-wrap: balance;
 }
 
-.lang-zh .dir__title { font-size: 21px; font-weight: 400; letter-spacing: 0.02em; }
+.lang-zh .dir__title { font-size: 29px; font-weight: 400; letter-spacing: 0.03em; }
 
 .dir__text {
   margin: 0;
-  font-size: 14.5px;
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.7;
   color: var(--text-soft);
 }
 
@@ -923,7 +967,7 @@ main {
 .dir__topics {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px;
   margin: 14px 0 0;
   padding: 0;
   list-style: none;
@@ -940,7 +984,7 @@ main {
 }
 
 .dir__label {
-  margin: auto 0 8px;
+  margin: 0 0 8px;
   padding-top: 18px;
   font-size: 11.5px;
   font-weight: 700;
@@ -951,10 +995,11 @@ main {
 
 .lang-zh .dir__label { letter-spacing: 0.2em; }
 
+/* representative work in two columns */
 .dir__papers {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -962,14 +1007,15 @@ main {
 
 .dir__papers a {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 7px 12px;
+  flex-direction: column;
+  gap: 1px;
+  height: 100%;
+  padding: 7px 12px 8px;
   border: 1px solid var(--tc-border);
-  border-radius: 11px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.75);
   font-size: 14px;
+  line-height: 1.4;
   color: var(--heading);
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
@@ -977,14 +1023,13 @@ main {
 .dir__papers a:hover {
   border-color: var(--tc-accent);
   background: #fff;
-  transform: translateX(3px);
+  transform: translateY(-2px);
   text-decoration: none;
 }
 
 .dir__venue {
-  flex: none;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 12.5px;
   font-style: italic;
   font-weight: 600;
   color: var(--tc-accent);
@@ -1858,6 +1903,8 @@ main {
   .project__hero { grid-template-columns: 1fr; gap: 32px; }
   .project__visual { max-width: 460px; }
   .project__more { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dir__page { grid-template-columns: minmax(0, 1fr) minmax(0, 0.86fr); gap: 26px; padding: 26px; }
+  .dir__papers { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 700px) {
@@ -1882,8 +1929,16 @@ main {
   .section--wide { padding-right: 0; padding-left: 0; }
   .sec-tools { display: none; }   /* phones swipe the rows */
   .rail { gap: 14px; padding-bottom: 26px; }
-  .dir { width: min(320px, 84vw); }
-  .dir__body { padding: 18px; }
+  /* research: a plain list, each card with its picture on top */
+  .dirs { gap: 18px; }
+  .dir__page { grid-template-columns: 1fr; gap: 0; min-height: 0; padding: 0; border-radius: 22px; }
+  .dir__pic { order: -1; min-height: 0; aspect-ratio: 1200 / 560; border-radius: 0; box-shadow: none; }
+  .dir__body { padding: 18px 18px 20px; }
+  .dir__count { font-size: 14px; }
+  .dir__seal { width: 50px; height: 50px; font-size: 32px; }
+  .dir__title { font-size: 21px; }
+  .lang-zh .dir__title { font-size: 24px; }
+  .dir__text { font-size: 14.5px; }
   .pane { width: min(330px, 84vw); padding: 24px 22px 22px; border-radius: 22px; }
   .pane__title { font-size: 26px; }
   .story { grid-template-columns: minmax(0, 1fr) 96px; gap: 16px; padding: 20px 0; }
