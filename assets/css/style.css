@@ -1148,26 +1148,15 @@ img {
   opacity: 0.75;
 }
 
+/* the full list shows every paper at once (no scroll box) */
 #full-publications {
-  max-height: 460px;
-  overflow-y: auto;
   margin-bottom: 24px;
-  padding-right: 8px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(80, 102, 149, 0.4) var(--accent-soft);
 }
 
-#full-publications::-webkit-scrollbar,
 .news-box::-webkit-scrollbar {
   width: 8px;
 }
 
-#full-publications::-webkit-scrollbar-track {
-  border-radius: 999px;
-  background: var(--accent-soft);
-}
-
-#full-publications::-webkit-scrollbar-thumb,
 .news-box::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: rgba(80, 102, 149, 0.4);
@@ -1723,10 +1712,6 @@ img {
 
   .sidebar {
     position: static;
-  }
-
-  #full-publications {
-    max-height: none;
   }
 
   .js-reveal * {
