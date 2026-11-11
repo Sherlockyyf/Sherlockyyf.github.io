@@ -483,7 +483,7 @@
         { k: "title", bi: true, label: "标题" },
         { k: "summary", bi: true, t: "rich", label: "一句话简介" },
         { k: "topics", t: "lines", label: "课题标签", hint: "每行一个，中文和英文按行对应。" },
-        { k: "cover", t: "cover", label: "配图", dir: "images/", width: COVER_WIDTH, type: "image/jpeg",
+        { k: "cover", t: "cover", label: "背景插画", dir: "images/", width: COVER_WIDTH, type: "image/jpeg",
           name: function (d) { return "dir-" + (clean(d.id) || slug(d.title.en) || "new"); } },
         { k: "papers", t: "papers", label: "代表工作", optional: "可选" },
         { group: "高级", collapsed: true },

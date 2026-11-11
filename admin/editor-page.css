@@ -201,16 +201,6 @@ h2 .yy-add-slot {
 
 .yy-editing .rail { scroll-snap-type: none; }
 
-/* research directions are a plain list while editing (lab.js); "+ 添加研究方向" comes last */
-.yy-editing .dirs > .yy-add-slot {
-  display: grid;
-  place-items: center;
-  min-height: 96px;
-  border: 2px dashed rgba(80, 102, 149, 0.32);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.4);
-}
-
 /* news: "+" above the list (new entries go first); the whole entry is no link while editing,
    so its date and kind can be clicked */
 .yy-editing .stories > .yy-add-slot {
