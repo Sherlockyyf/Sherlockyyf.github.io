@@ -515,8 +515,8 @@
         "zh": "具身智能"
       },
       "summary": {
-        "en": "Robots that perceive, plan and act reliably through long tasks, and keep improving after deployment.",
-        "zh": "让机器人在长周期任务中看得懂、想得清、做得稳。"
+        "en": "Robots that perceive, plan and act reliably through long tasks, and keep improving after deployment. Our recent work keeps VLA models from executing multi-step action chunks blind: they take in the robot's live state while generating, and let each step draw on the visual and language features it needs.",
+        "zh": "让机器人在长周期任务中看得懂、想得清、做得稳。近期工作让 VLA 模型一次规划多步动作时不再“闭眼执行”：边生成边接入机器人的实时状态，并让每一步动作按需取用不同层次的视觉与语言信息。"
       },
       "topics": [
         {
